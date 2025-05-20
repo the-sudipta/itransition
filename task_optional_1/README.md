@@ -1,4 +1,3 @@
-
 # 🧠 Optional Task — Cross-Language Code Mirror (Advanced)
 
 > ⚡ **Objective:**  
@@ -43,28 +42,33 @@ Language A → outputs → Language B code → which outputs → Language A code
 
 | ✅ Must Do | ❌ Must Not Do |
 |-----------|----------------|
-| Use only **two languages** | ❌ Don’t create or write extra files |
+| Use only **two languages** | ❌ Don’t create or write extra helper files |
 | Keep the solution in **one single file** | ❌ Don’t use I/O to read your own source |
 | Use **manual string crafting** | ❌ Don’t access source via reflection or meta-programming |
 | Ensure the cycle works 100% | ❌ No file access, no external inputs |
+| Self-delete after transformation | ❌ Don’t leave both `.php` and `.py` present at the same time |
+
+> ⚠️ Both conversions must only involve a single file at any time (e.g., `task_optional_1.php` ↔ `task_optional_1.py`).  
+> No secondary temp files, result files, or intermediates are allowed.
 
 ---
 
-## 📦 Output Demonstration (Example)
+## 🚀 How to Run (PHP → Python → PHP)
 
-Suppose you write code in `JavaScript` (A) that outputs code in `Python` (B).
+Suppose you write code in `PHP` (A) that outputs code in `Python` (B).  
+Your original file is: `task_optional_1.php`
 
-### What to demonstrate:
+To execute and verify the mirror cycle, run the following commands:
 
 ```bash
-$ node solution.js > solution.py
-$ python3 solution.py > result.js
-$ diff solution.js result.js  # ✅ No difference — they match
+php task_optional_1.php
+python task_optional_1.py
 ```
 
-✅ This proves the cycle: `JS ➝ PY ➝ JS`
-
-You may reverse this direction or use other languages like `PHP ➝ Java ➝ PHP`, etc.
+Each step should:
+- Convert to the next language
+- Delete the current file
+- Leave only **one file** in the folder at a time
 
 ---
 
@@ -72,12 +76,12 @@ You may reverse this direction or use other languages like `PHP ➝ Java ➝ PHP
 
 1. Upload the **source code file** (only one file).
 2. Record a **video or screenshots** showing:
-   - Running language A file and redirecting output to language B
-   - Running language B file and getting back original code
-   - Final `diff` or comparison of input vs. output
+   - Running language A file and generating B
+   - Running language B file and getting back A
+   - Final `diff` or comparison of input vs. output (should be identical)
 
 3. Submit the video/screenshots + code to:  
-📧 `p.lebedev@itransition.com`
+   📧 `p.lebedev@itransition.com`
 
 ---
 
@@ -86,6 +90,7 @@ You may reverse this direction or use other languages like `PHP ➝ Java ➝ PHP
 - Your file **must not** use `readFile`, `fs`, or similar file reading
 - You **cannot access** your source via reflection, `__file__`, etc.
 - You **must not** use any API that gives access to the script body
+- You **must not** produce multiple files — just **one at a time**
 - You **can** use tricks like escaping quotes, managing newlines, etc.
 
 ---
