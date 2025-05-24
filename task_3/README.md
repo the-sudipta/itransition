@@ -135,7 +135,7 @@ Choose your dice:
 
 ## 📤 Submission Requirements
 
-Email to `p.lebedev@itransition.com` with:
+Email to `itransition` with:
 
 1. **Video (public link)** demonstrating:  
    - Launch with **4 identical dice** (`1,2,3,4,5,6` ×4).  
