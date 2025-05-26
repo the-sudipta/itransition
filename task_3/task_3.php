@@ -107,7 +107,10 @@ class FairRandomProtocol{
         return ['r'=>$r,'key'=>$key,'hmac'=>HmacGenerator::generate($key,(string)$r)];
     }
     public function reveal(array $g){
-        echo "The computer's secret was {$g['r']}\n";
+        /** encode the raw bytes into hex so it prints cleanly */
+        $keyHex = bin2hex($g['key']);
+        echo "Revealed key (hex): $keyHex\n";
+        echo "Revealed number: {$g['r']}\n";
     }
     public function verify(array $g): bool{
         return hash_equals($g['hmac'],HmacGenerator::generate($g['key'],(string)$g['r']));
