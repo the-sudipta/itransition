@@ -30,18 +30,29 @@
 ## 🗄️ Database Schema & Unique Index (MySQL)
 
 ```sql
+-- 1) Users table
 CREATE TABLE users (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(100) NOT NULL,
-  email VARCHAR(255) NOT NULL,
-  password_hash VARCHAR(255) NOT NULL,
-  last_login DATETIME,
-  status ENUM('active','blocked') NOT NULL DEFAULT 'active',
-  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+                      id        INT                     NOT NULL AUTO_INCREMENT,
+                      email     VARCHAR(255)            NOT NULL,
+                      password  VARCHAR(255)            NOT NULL,                -- stores the user’s password (you can hash it in your PHP code)
+                      status    ENUM('active','blocked') NOT NULL DEFAULT 'active',
+                      role      ENUM('user','admin')    NOT NULL DEFAULT 'user',
+                      PRIMARY KEY (id),
+                      UNIQUE INDEX idx_users_email_unique (email)
 ) ENGINE=InnoDB;
 
--- Enforce email uniqueness at the storage level:
-CREATE UNIQUE INDEX idx_users_email_unique ON users(email);
+-- 2) Log table
+CREATE TABLE logs (
+                     id         INT             NOT NULL AUTO_INCREMENT,
+                     user_id    INT             NOT NULL,
+                     log_type   VARCHAR(50)     NOT NULL,                        -- e.g. 'login', 'block', 'delete'
+                     created_at DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                     PRIMARY KEY (id),
+                     INDEX idx_logs_user (user_id),
+                     FOREIGN KEY (user_id) REFERENCES users(id)
+                        ON DELETE CASCADE
+) ENGINE=InnoDB;
+
 ```
 
 > **Note:** Run these statements in **phpMyAdmin** or via the MySQL CLI bundled with XAMPP.

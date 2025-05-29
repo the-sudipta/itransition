@@ -1,0 +1,266 @@
+/* =============================
+   Color Variables (Black & Gold)
+   ============================= */
+:root {
+    --brand-dark:   #000000;    /* pure black */
+    --brand-light:  #D4AF37;    /* classic gold */
+    --btn-primary:  #D4AF37;    /* gold */
+    --btn-hover:    #E5C449;    /* lighter gold for hover */
+    --bg-page:      #121212;    /* very dark gray */
+    --bg-form:      #1E1E1E;    /* dark charcoal */
+    --input-bg:     #2A2A2A;    /* slightly lighter */
+    --text-light:   #FFFFFF;    /* white text */
+    --text-muted:   #BBBBBB;    /* muted text */
+}
+
+/* Reset & Base */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body, html {
+    height: 100%;
+    font-family: Arial, sans-serif;
+    background: var(--bg-page);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-light);
+}
+
+/* Container */
+.container {
+    background: var(--bg-form);
+    border-radius: 10px;
+    box-shadow: 0 14px 28px rgba(0,0,0,0.75),
+    0 10px 10px rgba(0,0,0,0.50);
+    position: relative;
+    overflow: hidden;
+    width: 768px;
+    max-width: 100%;
+    min-height: 480px;
+}
+
+/* FORM CONTAINERS */
+.form-container {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    transition: all 0.6s ease-in-out;
+}
+.sign-in-container {
+    left: 0;
+    width: 50%;
+    z-index: 2;
+}
+.sign-up-container {
+    left: 0;
+    width: 50%;
+    opacity: 0;
+    z-index: 1;
+}
+.container.right-panel-active .sign-in-container {
+    transform: translateX(100%);
+}
+.container.right-panel-active .sign-up-container {
+    transform: translateX(100%);
+    opacity: 1;
+    z-index: 5;
+    animation: show 0.6s;
+}
+
+/* OVERLAY */
+.overlay-container {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    overflow: hidden;
+    transition: transform 0.6s ease-in-out;
+    z-index: 100;
+}
+.container.right-panel-active .overlay-container {
+    transform: translateX(-100%);
+}
+.overlay {
+    background: linear-gradient(to right, var(--brand-dark), var(--brand-light));
+    color: var(--text-light);
+    position: relative;
+    left: -100%;
+    height: 100%;
+    width: 200%;
+    transform: translateX(0);
+    transition: transform 0.6s ease-in-out;
+}
+.container.right-panel-active .overlay {
+    transform: translateX(50%);
+}
+
+.overlay-panel {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    top: 0;
+    height: 100%;
+    width: 50%;
+    transform: translateX(0);
+    transition: transform 0.6s ease-in-out;
+    padding: 0 40px;
+}
+.overlay-left {
+    transform: translateX(-20%);
+}
+.container.right-panel-active .overlay-left {
+    transform: translateX(0);
+}
+.overlay-right {
+    right: 0;
+    transform: translateX(0);
+}
+.container.right-panel-active .overlay-right {
+    transform: translateX(20%);
+}
+
+@keyframes show {
+    0%   { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+/* FORM ELEMENTS */
+form {
+    background: var(--bg-form);
+    display: flex;
+    flex-direction: column;
+    padding: 0 50px;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+form h1 {
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+form input {
+    background: var(--input-bg);
+    border: none;
+    color: var(--text-light);
+    padding: 12px 15px;
+    margin: 8px 0;
+    width: 100%;
+}
+form input::placeholder {
+    color: var(--text-muted);
+}
+form input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(212,175,55,0.5);
+}
+form a {
+    color: var(--btn-primary);
+    font-size: 14px;
+    text-decoration: none;
+    margin-top: 15px;
+}
+
+/* Primary Buttons */
+form button {
+    border: none;
+    padding: 12px 45px;
+    margin-top: 20px;
+    background-color: var(--btn-primary);
+    color: var(--brand-dark);
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 80ms ease-in;
+}
+form button:hover {
+    background-color: var(--btn-hover);
+}
+form button:active {
+    transform: scale(0.95);
+}
+form button:focus {
+    outline: none;
+}
+
+/* Ghost Overlay Buttons */
+#signInAlt,
+#signUpAlt {
+    background: rgba(212,175,55,0.2);
+    border: 2px solid var(--btn-primary);
+    border-radius: 50px;
+    color: var(--btn-primary);
+    padding: 12px 30px;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition:
+            background 0.3s ease,
+            color 0.3s ease,
+            transform 0.3s ease,
+            box-shadow 0.3s ease;
+}
+#signInAlt:hover,
+#signUpAlt:hover {
+    background: var(--btn-primary);
+    color: var(--brand-dark);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    transform: translateY(-3px) scale(1.02);
+}
+#signInAlt:active,
+#signUpAlt:active {
+    transform: translateY(-1px) scale(0.98);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+/* =============================
+   Toggle Links (OR Sign In / OR Sign Up)
+   ============================= */
+#signUp,
+#signIn {
+    background: none;
+    border: none;
+    box-shadow: none !important;
+    color: var(--btn-primary);
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    margin-top: 10px;
+    padding: 0;
+    transition: color 0.3s ease;
+}
+#signUp:hover,
+#signIn:hover {
+    color: var(--btn-hover);
+    text-decoration: underline;
+}
+
+/* =============================
+   Glow Behind Overlay Sign-Up Button
+   ============================= */
+#signUpAlt {
+    position: relative;
+}
+#signUpAlt::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 120%;
+    height: 120%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(212,175,55,0.3) 0%, transparent 70%);
+    z-index: -1;
+    border-radius: 50px;
+}
