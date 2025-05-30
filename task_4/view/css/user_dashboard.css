@@ -28,10 +28,39 @@ body {
     overflow: hidden;
 }
 
+/* -------------------------------------------------------------------
+   FORCE TOOLBAR BUTTONS INTO A ROW IN THE CARD HEADER
+   ------------------------------------------------------------------- */
+
 .card-header {
     background-color: var(--bg-card);
     border-bottom: 2px solid var(--brand-gold);
     padding: 1rem 1.5rem;
+}
+
+/* Ensure the btn-group is laid out as a horizontal flex container */
+.card-header .btn-group {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 0.5rem; /* spacing between icons */
+}
+
+/* Make sure each button inside the group stays inline-flex for proper centering */
+.card-header .btn-group .btn {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+/* If you’re wrapping logout in a form, keep it aligned on the same baseline */
+.card-header form {
+    margin: 0;
+    display: inline-flex;
+}
+
+/* Slightly tighten the margins so nothing jumps down onto its own line */
+.card-header .btn-outline-gold {
+    margin: 0;
 }
 
 /* 1) Big, bold header */

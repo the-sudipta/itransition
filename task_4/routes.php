@@ -25,6 +25,9 @@ $backend_routes = [
 
 
     'signup_controller' => '/itransition/controller/user/UserSignupController.php',
+    'user_block_controller' => '/itransition/controller/user/UserBlockController.php',
+    'user_unblock_controller' => '/itransition/controller/user/UserUnblockController.php',
+    'user_delete_controller' => '/itransition/controller/user/UserDeleteController.php',
 
 
 
@@ -83,14 +86,6 @@ $js_routes = [
     'login_js' => '/itransition/view/js/login.js',
 
 
-
-];
-
-$tools_routes = [
-
-    'add_check_to_json' => '/itransition/tools/code_checker/add_check_to_json.php',
-    'custom_consistency_checker' => '/itransition/tools/code_checker/custom_consistency_checker.php',
-    'custom_consistency_checker_items' => '/itransition/tools/code_checker/custom_consistency_checker_items.json',
 
 ];
 

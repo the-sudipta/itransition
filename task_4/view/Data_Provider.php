@@ -79,3 +79,31 @@ function getUserLogStats(int $userId): array
 }
 
 
+
+/**
+ * Turn a DATETIME string (or null) into [ formattedDate, formattedTime ].
+ * If input is null/empty, returns ['', ''].
+ */
+function formatDT($dtStr): array {
+    if (empty($dtStr)) {
+        return ['', ''];
+    }
+
+    $dt  = new DateTime($dtStr);
+    $day = (int)$dt->format('j');
+
+    // build ordinal: 1st, 2nd, 3rd, … 11th, 12th, 13th, …
+    $suffix = 'th';
+    if (!in_array($day % 100, [11,12,13])) {
+        $mod10 = $day % 10;
+        if      ($mod10 === 1) $suffix = 'st';
+        elseif  ($mod10 === 2) $suffix = 'nd';
+        elseif  ($mod10 === 3) $suffix = 'rd';
+    }
+
+    $date = $day . $suffix . ' ' . $dt->format('F, Y');
+    $time = $dt->format('g:i A');
+
+    return [$date, $time];
+}
+

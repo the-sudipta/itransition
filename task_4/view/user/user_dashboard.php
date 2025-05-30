@@ -15,6 +15,9 @@ try{
 
     // Backend Routes
     $logoutController_file     = $backend_routes['logout_controller'];
+    $user_block_controller     = $backend_routes['user_block_controller'];
+    $user_delete_controller     = $backend_routes['user_delete_controller'];
+    $user_unblock_controller     = $backend_routes['user_unblock_controller'];
 
     // Frontends Path
     $login_page                     = $routes['login'];
@@ -101,6 +104,9 @@ ob_end_flush();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Task 4: User Management Dashboard</title>
+    <!--  Alert Box  -->
+    <link rel="stylesheet" href="<?php echo $alert_box_css; ?>">
+    <script src="<?php echo $alert_box_script; ?>"></script>
     <!-- Bootstrap CSS -->
     <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.4.0/dist/css/bootstrap.min.css"
@@ -113,23 +119,58 @@ ob_end_flush();
     >
     <link rel="stylesheet" href="<?php echo $user_dashboard_css; ?>">
 
+
 </head>
 <body>
+
+<!-- Alerts placeholder -->
+<div id="alerts-container"></div>
+
+
 <div class="container py-4">
     <div class="card shadow-sm">
         <!-- TOOLBAR -->
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h4 class="mb-0">User Management</h4>
-            <div class="btn-group">
-                <button id="blockBtn"   class="btn btn-outline-gold">Block</button>
-                <button id="unblockBtn" class="btn btn-outline-gold">
-                    <i class="bi bi-unlock-fill"></i>
+        <form method="post" id="usersForm">
+        <div class="card-header d-flex align-items-center">
+            <!-- Title -->
+            <h4 class="mb-0 ml-1">User Management</h4>
+
+            <!-- All four buttons in one row, spaced by gap -->
+            <div class="d-flex gap-2 ms-4">
+                <button type="submit"
+                        class="btn btn-outline-gold"
+                        title="Block"
+                        formaction="<?php echo $user_block_controller; ?>">
+                    <i class="bi bi-shield-slash-fill"></i>
                 </button>
-                <button id="deleteBtn"  class="btn btn-outline-gold">
+                <button type="submit"
+                        class="btn btn-outline-gold"
+                        title="Unblock"
+                        formaction="<?php echo $user_unblock_controller; ?>">
+                    <i class="bi bi-key-fill"></i>
+                </button>
+                <button type="submit"
+                        class="btn btn-outline-gold"
+                        title="Delete"
+                        formaction="<?php echo $user_delete_controller; ?>">
                     <i class="bi bi-trash-fill"></i>
                 </button>
+<!--                <form action="--><?php //echo $logoutController_file; ?><!--" method="post">-->
+                    <button
+                            id="logoutBtn"
+                            type="submit"
+                            class="btn btn-outline-gold"
+                            title="Logout"
+                            style="cursor: pointer"
+                            formaction="<?php echo $logoutController_file; ?>"
+                    >
+                        <i class="bi bi-box-arrow-right"></i>
+                    </button>
+<!--                </form>-->
             </div>
         </div>
+
+
 
         <!-- TABLE -->
         <div class="card-body p-0">
@@ -158,27 +199,16 @@ ob_end_flush();
                             $name  = getUserName($u['id']);
                             $stats = getUserLogStats($u['id']);
 
-                            // Helper to format date+time
-                            function formatDT($dtStr) {
-                                if (! $dtStr) return ['',''];
-                                $dt   = new DateTime($dtStr);
-                                $day  = (int)$dt->format('j');
-                                $date = ordinal($day) . ' ' . $dt->format('F, Y');
-                                $time = $dt->format('g:i A');
-                                return [$date, $time];
-                            }
-
                             list($loginDate, $loginTime)       = formatDT($stats['lastLogin']);
                             list($activityDate, $activityTime) = formatDT($stats['lastActivity']);
                             list($regDate, $regTime)           = formatDT($stats['registrationTime']);
-                            ?>
+                        ?>
                             <tr>
                                 <td>
-                                    <input
-                                            type="checkbox"
-                                            class="form-check-input row-checkbox"
-                                            value="<?= $u['id'] ?>"
-                                    >
+                                    <input type="checkbox"
+                                           name="ids[]"
+                                           class="form-check-input row-checkbox"
+                                           value="<?= $u['id'] ?>">
                                 </td>
                                 <td><?= htmlspecialchars($name) ?></td>
                                 <td><?= htmlspecialchars($u['email']) ?></td>
@@ -229,13 +259,13 @@ ob_end_flush();
                 </table>
             </div>
         </div>
+        </form>
     </div>
 </div>
 
 <!-- Bootstrap JS (for dropdowns, etc.) -->
-<script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.4.0/dist/js/bootstrap.bundle.min.js"
-></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.4.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="<?php echo $userActions_js; ?>"></script>
 <script>
     // SELECT / DESELECT ALL CHECKBOXES
     const selectAll   = document.getElementById('selectAll');
@@ -247,10 +277,7 @@ ob_end_flush();
     // TODO: hook up blockBtn, unblockBtn, deleteBtn via AJAX or form-post
 </script>
 
-
-
 <script src="<?php echo $script_js; ?>"></script>
-
 
 <script>
     // ----------   Backend Message Handling   -----------------
@@ -261,8 +288,16 @@ ob_end_flush();
             warning: "<?php echo addslashes($warning); ?>",
             error:   "<?php echo addslashes($error); ?>"
         });
+        // remove all GET parameters from the URL
+        if (window.history.replaceState) {
+            const cleanUrl = window.location.origin + window.location.pathname;
+            window.history.replaceState(null, '', cleanUrl);
+        }
     };
 </script>
+
+
+
 
 </body>
 </html>

@@ -19,9 +19,9 @@ $forbidden_error_page = $routes['forbidden_error'];
 $logout_controller = $backend_routes["logout_controller"];
 
 // Image Path
-$logo_svg          = $image_routes['logo_svg'];
-$return_icon = $image_routes['return_btn'];
-$return_icon_green = $image_routes['return_btn_green'];
+$logo_svg          = '';
+$return_icon = '';
+$return_icon_green = '';
 
 // JS Path
 $jquery_min_script = $js_routes['jquery_min_script'];
@@ -34,11 +34,16 @@ $route = '';
 $error_message = '';
 $error_type = 'message';
 $user_role = '';
+$user_id = -1;
 if(isset($_SESSION["user_role"])){
     $user_role = $_SESSION["user_role"];
 }
 
-if($_SESSION["user_id"] > 0){
+if(isset($_SESSION["user_id"])){
+    $user_id = $_SESSION["user_id"];
+}
+
+if($user_id > 0){
 
     if(strtolower($user_role) === "admin"){
         $route = $admin_dashboard_page;
@@ -274,9 +279,9 @@ if($_SESSION["user_id"] > 0){
 </div>
 <br>
 <h1>404</h1>
-<p><strong>The robot checked inventory, billing, even the bank — but this page? Nowhere to be found! Confused and still searching...</strong></p>
+<p><strong>The robot checked everywhere — but this page? Nowhere to be found! Confused and still searching...</strong></p>
 <p>Oops! This page doesn’t exist in the system</p>
 <a href="<?php echo $route.'?'.$error_type.'='.$error_message;?>" class="btn">Return</a>
-<div class="footer">Inventory Management System by Black Box Tech</div>
+<div class="footer">User Management System</div>
 </body>
 </html>

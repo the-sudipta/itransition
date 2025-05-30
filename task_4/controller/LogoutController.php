@@ -21,6 +21,7 @@ try {
 
     session_destroy();
 
+    // Add Log
     // Redirect to homepage
     header("Location: {$root_page}");
     exit;
