@@ -4,6 +4,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/itransition/routes.php';
 global $routes, $backend_routes, $image_routes, $css_routes, $js_routes;
 
 $loginController_file = $backend_routes['login_controller'];
+$signupController_file = $backend_routes['signup_controller'];
 
 
 // CSS Path
@@ -15,7 +16,7 @@ $alert_box_script = $js_routes['alert_box_script'];
 $utility_functions_script = $js_routes['utility_functions_script'];
 $login_js = $js_routes['login_js'];
 
-// Message from Backend
+// Alert Message from Backend
 $info    = isset($_GET['message'])          ? htmlspecialchars($_GET['message'])          : '';
 $success = isset($_GET['success_message'])  ? htmlspecialchars($_GET['success_message'])  : '';
 $warning = isset($_GET['warning_message'])  ? htmlspecialchars($_GET['warning_message'])  : '';
@@ -31,11 +32,16 @@ $error   = isset($_GET['error_message'])    ? htmlspecialchars($_GET['error_mess
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Login / Registration</title>
+    <title>User Management Portal</title>
+    <script src="<?php echo $utility_functions_script; ?>"></script>
     <link rel="stylesheet" href="<?php echo $login_css; ?>">
     <!--  Alert Box  -->
     <link rel="stylesheet" href="<?php echo $alert_box_css; ?>">
     <script src="<?php echo $alert_box_script; ?>"></script>
+    <!--  Password Icon  -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"/>
+
+
 
 </head>
 <body>
@@ -47,11 +53,28 @@ $error   = isset($_GET['error_message'])    ? htmlspecialchars($_GET['error_mess
 
     <!-- SIGN UP FORM -->
     <div class="form-container sign-up-container">
-        <form id="signUpForm">
+        <form
+                action="<?php echo $signupController_file; ?>"
+                method="post"
+                id="signup_form"
+                onsubmit="return validateForm(this, {
+                    rules: {
+                        name: [
+                          'required',
+                          { rule: 'minLength', value: 3 },
+                          { rule: 'maxLength', value: 16 },
+                          v => /^[A-Za-z. ]+$/.test(v) || 'Only letters, spaces, and dots allowed.'
+                        ],
+                        email:    ['required','email'],
+                        password: ['required','passwordWeak']
+                    }
+                });"
+        >
             <h1>Create Account</h1>
-            <input type="text" placeholder="Name" required />
-            <input type="email" placeholder="Email" required />
-            <input type="password" placeholder="Password" required minlength="1" />
+            <input type="text" id="signup_name" name="name" placeholder="Name" />
+            <input type="email" id="signup_email" name="email" placeholder="Email" />
+            <input type="password" id="signup_password" name="password" placeholder="Password"/>
+            <i class="bi bi-eye-fill text-muted toggle-password" data-target="signup_password" style="position:absolute; top:57%; right:4rem; transform:translateY(-50%); cursor:pointer;"></i>
             <button type="submit">Sign Up</button>
             <span>or</span>
             <button type="button" class="ghost" id="signIn">Sign In</button>
@@ -60,10 +83,21 @@ $error   = isset($_GET['error_message'])    ? htmlspecialchars($_GET['error_mess
 
     <!-- SIGN IN FORM -->
     <div class="form-container sign-in-container">
-        <form id="signInForm">
+        <form
+                action="<?php echo $loginController_file; ?>"
+                method="post"
+                id="login_form"
+                onsubmit="return validateForm(this, {
+                    rules: {
+                        email:    ['required','email'],
+                        password: ['required','passwordWeak']
+                    }
+                });"
+        >
             <h1>Sign In</h1>
-            <input type="email" placeholder="Email" required />
-            <input type="password" placeholder="Password" required minlength="1" />
+            <input type="email" id="login_email" name="email" placeholder="Email"  />
+            <input type="password" id="login_password" name="password" placeholder="Password"/>
+            <i class="bi bi-eye-fill text-muted toggle-password" data-target="login_password" style="position:absolute; top:51%; right:4rem; transform:translateY(-50%); cursor:pointer;"></i>
 <!--            <a href="#">Forgot your password?</a>-->
             <button type="submit">Sign In</button>
             <span>or</span>
@@ -106,6 +140,25 @@ $error   = isset($_GET['error_message'])    ? htmlspecialchars($_GET['error_mess
         }
     };
 </script>
+
+<script>
+    // Password view or hide control
+    document.querySelectorAll('.toggle-password').forEach(icon => {
+        icon.addEventListener('click', () => {
+            const input = document.getElementById(icon.dataset.target);
+            if (!input) return;
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.replace('bi-eye-fill', 'bi-eye-slash-fill');
+            } else {
+                input.type = 'password';
+                icon.classList.replace('bi-eye-slash-fill', 'bi-eye-fill');
+            }
+        });
+    });
+</script>
+
+
 
 </body>
 </html>

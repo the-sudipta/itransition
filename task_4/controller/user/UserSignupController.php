@@ -9,6 +9,7 @@ try{
     setCustomErrorHandler();
     require_once $_SERVER['DOCUMENT_ROOT'] . '/itransition/model/userRepo.php';
     require_once $_SERVER['DOCUMENT_ROOT'] . '/itransition/model/logsRepo.php';
+    require_once $_SERVER['DOCUMENT_ROOT'] . '/itransition/model/user_detailsRepo.php';
     require_once $_SERVER['DOCUMENT_ROOT'] . '/itransition/routes.php';
     global $routes;
 
@@ -16,10 +17,10 @@ try{
 
 
 //    Page Links
-    $Login_page = $routes['login'];
+    $User_Signup_page = $routes['login'];
+    $login_page = $routes['login'];
     $forbidden_error_page = $routes['forbidden_error'];
-    $Admin_Dashboard_page = $routes['admin_dashboard'];
-    $User_dashboard_page = $routes['user_dashboard'];
+    $User_Signup_page = $routes['user_signup'];
 
     $errorMessage = "";
     $everythingOKCounter = 0;
@@ -29,12 +30,13 @@ try{
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         /// Check the session first
+        $email = trim($_POST['email'] ?? ''); // Trim whitespace first
+        $password = $_POST['password'];
+        $name = $_POST['name'];
 
 
         echo generateNoticeText("Request Receiving Notification", "Got Request!");
 
-        $email = trim($_POST['email'] ?? ''); // Trim whitespace first
-        $password = $_POST['password'];
         //* Email Validation
         if ($email === '' || mb_strlen($email) > 120) {
             $everythingOK = false;
@@ -44,7 +46,6 @@ try{
                 "Email Error",
                 "Email cannot be empty and must be at most 120 characters."
             );
-
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $everythingOK = false;
             $everythingOKCounter++;
@@ -53,7 +54,6 @@ try{
                 "Email Error",
                 "Please enter a valid email address with a valid format."
             );
-
         } else {
             $everythingOK = true;
         }
@@ -69,66 +69,67 @@ try{
             $everythingOK = TRUE;
         }
 
+        //* Name Validation
+        if ($name === '' || mb_strlen($name) > 255) {
+            $everythingOK = false;
+            $everythingOKCounter++;
+            $errorMessage = urldecode("Name cannot be empty and must be at most 255 characters");
+            echo generateErrorText(
+                "Name Error",
+                "Name cannot be empty and must be at most 255 characters."
+            );
+        }
 
         if ($everythingOK && $everythingOKCounter === 0) {
-            $data = findUserByEmailAndPassword($email, $password);
+            $data = findUserByEmail($email);
 
             echo generateSuccessText("Validation Passed", "Everything is ok");
             echo generateNoticeText("ID found", "ID = ".isset($data["id"]));
-
-            if ($data && isset($data["id"])) {
-
-                $log_inserted_id = createLog("login", $current_date_time, $data["id"]);
-                if($log_inserted_id > 0){
-                    $_SESSION["data"] = $data;
-                    $_SESSION["user_id"] = $data["id"];
-                    $_SESSION["user_role"] = $data["role"];
-                    $_SESSION["user_status"] = $data["status"];
-
-                    if (strtolower($data['role']) === 'user' && strtolower($data['status']) === 'active') {
-                        navigate($User_dashboard_page);
-                        exit;
-                    } else {
-
-                        if(strtolower($data['status']) !== 'active'){
-                            $errorMessage = urldecode("Your account is blocked");
-                            navigate($Login_page, $errorMessage);
-                            echo generateErrorText("Account Activation Error", "This account is not active. It is blocked");
+            if($data === null){
+                // Email is Unique (Tested through PHP Code)
+                $inserted_id = createUser($email, $password, strtolower('user'), strtolower('active'));
+                if($inserted_id > 0){
+                    // insert Name
+                    $user_details_inserted_id = createUser_Details($name, $inserted_id);
+                    if($user_details_inserted_id > 0){
+                        // insert log
+                        $log_inserted_id = createLog("signup", $current_date_time, $inserted_id);
+                        if($log_inserted_id > 0){
+                            navigate($login_page, "Registration successful","success_message");
+                            exit;
+                        }else{
+                            $errorMessage = urldecode("Log can not be inserted");
+                            navigate($User_Signup_page, $errorMessage);
+                            echo generateErrorText("Log Error", "Log can not be inserted");
                             exit;
                         }
-
-                        $errorMessage = urldecode("Role did not match to any valid roles");
-                        navigate($Login_page, $errorMessage);
-                        echo generateErrorText("Role Error", "Role did not match to any valid roles");
+                    }else{
+                        $errorMessage = urldecode("User details can not be inserted");
+                        navigate($User_Signup_page, $errorMessage);
+                        echo generateErrorText("User_details Error", "Name can not be inserted");
                         exit;
                     }
-                }else{
-                    $errorMessage = urldecode("Log can not be inserted");
-                    navigate($Login_page, $errorMessage);
-                    echo generateErrorText("Log Error", "Log can not be inserted");
-                    exit;
                 }
-
-            } else {
-                echo generateErrorText("Data Not Found Error", "Returning to Login page because Username Password did not match");
-                $errorMessage = urldecode("Username and Password did not match");
-                navigate($Login_page, $errorMessage);
+            }else{
+                $errorMessage = urldecode("Email is already in use");
+                navigate($User_Signup_page, $errorMessage);
+                echo generateErrorText("Unique Email Error", "This email is already in the database");
                 exit;
             }
         } else {
-            echo generateErrorText("User Input Validation Error", "Returning to Login page because The data user provided is not properly validated like 
+            echo generateErrorText("User Input Validation Error", "Returning to Signup page because The data user provided is not properly validated like 
                 in password: 1-upper_case, 1-lower_case, 1-number, 1-special_character and at least 8 character long it must be provided");
-            navigate($Login_page, $errorMessage);
+            navigate($User_Signup_page, $errorMessage);
             exit;
         }
-
     }else{
         $_SESSION['backend_direct_access'] = true;
         navigate($forbidden_error_page);
     }
+
 } catch (Throwable $e){
 //    Redirect to 500 Internal Server Error Page
-    $error_location = "LoginController";
+    $error_location = "SignupController";
     $error_message = $e->getMessage();
     show_error_page($error_location, $error_message, "internal_server_error");
 }

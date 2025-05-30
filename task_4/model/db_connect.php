@@ -15,7 +15,7 @@ function db_conn()
         $servername = "localhost";
         $username = "root";
         $password = "";
-        $dbname = "";
+        $dbname = "itansition_task_4";
 
         // Create connection
         $conn = new mysqli($servername, $username, $password, $dbname);

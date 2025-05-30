@@ -53,6 +53,19 @@ CREATE TABLE logs (
                         ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
+-- 3) User_Details table
+CREATE TABLE `user_details` (
+                               `id`       INT(11)            NOT NULL AUTO_INCREMENT,
+                               `user_id`  INT(11)            NOT NULL,
+                               `name`     VARCHAR(255)       NOT NULL,
+                               PRIMARY KEY (`id`),
+                               UNIQUE KEY `idx_user_details_user_id` (`user_id`),
+                               CONSTRAINT `user_details_ibfk_1`
+                                  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+                                     ON DELETE CASCADE
+) ENGINE=InnoDB
+  DEFAULT CHARSET=utf8mb4
+  COLLATE=utf8mb4_general_ci;
 ```
 
 > **Note:** Run these statements in **phpMyAdmin** or via the MySQL CLI bundled with XAMPP.

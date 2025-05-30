@@ -111,27 +111,6 @@ try{
     $error   = isset($_GET['error_message'])    ? htmlspecialchars($_GET['error_message'])    : '';
 
 
-    // Dashboard Card Data
-    $sales = getDashboardSales();
-    $revenue = getDashboardRevenue();
-    $profit = getDashboardProfit();
-    $cost = getDashboardCost();
-    $quantity_in_hand = getDashboardQuantityInHand();
-    $total_product_purchased = getDashboardTotalPurchase();
-    $purchase_product_cost = getDashboardProductPurchaseCost();
-    $number_of_returns = getDashboardReturnProduct();
-    $number_of_categories = getDashboardNumberOfCategories();
-    $sales_array = getPerMonthSalesInArray();
-    $purchase_array = getPerMonthPurchaseInArray();
-    $revenue_array = getPerMonthRevenueInArray();
-    $profit_array = getPerMonthProfitInArray();
-    $top_selling_product_array = getTopSellingProducts();
-    $low_quantity_product_array = getLowQuantityStocks();
-
-    $to_be_received = $_SESSION['to_be_received'] ??  0;
-    $cancel = $_SESSION['cancelled_items'] ??  0;
-    $return = $_SESSION['return_amount'] ??  0;
-
 
 } catch (Throwable $e){
 //    Redirect to 500 Internal Server Error Page
@@ -745,30 +724,6 @@ ob_end_flush();
                 <span class="menu-icon"><img src="<?php echo $home_image; ?>" alt="Dashboard Icon"></span>
                 <span class="menu-text">Dashboard</span>
             </a>
-            <a href="<?php echo $admin_inventory_page; ?>">
-                <span class="menu-icon"><img src="<?php echo $inventory_image; ?>" alt="Inventory Icon"></span>
-                <span class="menu-text">Inventory</span>
-            </a>
-            <a href="<?php echo $admin_billing_page; ?>">
-                <span class="menu-icon"><img src="<?php echo $manage_store_image; ?>" alt="Billing Icon"></span>
-                <span class="menu-text">Billing</span>
-            </a>
-            <a href="<?php echo $admin_returns_page; ?>">
-                <span class="menu-icon"><img src="<?php echo $huge_icons_delivery_image; ?>" alt="Returns Icon"></span>
-                <span class="menu-text">Returns</span>
-            </a>
-            <a href="<?php echo $admin_bank_page; ?>">
-                <span class="menu-icon"><img src="<?php echo $arct_icons_bank_image ; ?>" alt="Bank Icon"></span>
-                <span class="menu-text">Bank</span>
-            </a>
-            <a href="<?php echo $admin_reports_page; ?>">
-                <span class="menu-icon"><img src="<?php echo $report_image; ?>" alt="Reports Icon"></span>
-                <span class="menu-text">Reports</span>
-            </a>
-            <a href="<?php echo $admin_employees_page; ?>">
-                <span class="menu-icon"><img src="<?php echo $suppliers_image; ?>" alt="Employees Icon"></span>
-                <span class="menu-text">Employees</span>
-            </a>
         </nav>
         <div class="sidebar-footer">
             <a href="<?php echo $admin_settings_page; ?>">
@@ -795,131 +750,33 @@ ob_end_flush();
         <div class="dashboard-grid">
             <!-- Row 1 -->
             <div class="card row-1-col-1 sales-overview">
-                <h4>Sales Overview</h4>
-                <div class="metrics">
-                    <div class="metric-block">
-                        <img src="<?php echo $sales_icon; ?>" class="metric-icon-blue" alt="Sales Icon">
-                        <div class="metric-info">
-                            <strong><?php echo $sales;?> ৳</strong>
-                            <span>Sales</span>
-                        </div>
-                    </div>
-                    <div class="metric-block">
-                        <img src="<?php echo $revenue_icon; ?>" class="metric-icon-purple" alt="Revenue Icon">
-                        <div class="metric-info">
-                            <strong><?php echo $revenue; ?> ৳</strong>
-                            <span>Revenue</span>
-                        </div>
-                    </div>
-                    <div class="metric-block">
-                        <img src="<?php echo $profit_icon; ?>" class="metric-icon-orange" alt="Profit Icon">
-                        <div class="metric-info">
-                            <strong><?php echo $profit; ?> ৳</strong>
-                            <span>Profit</span>
-                        </div>
-                    </div>
-                    <div class="metric-block">
-                        <img src="<?php echo $cost_icon; ?>" class="metric-icon-green" alt="Cost Icon">
-                        <div class="metric-info">
-                            <strong><?php echo $cost; ?> ৳</strong>
-                            <span>Cost</span>
-                        </div>
-                    </div>
-                </div>
+
+
             </div>
 
             <div class="card row-1-col-2 inventory-summary">
-                <h4>Inventory Summary</h4>
-                <div class="overview-metrics">
-                    <div class="overview-block">
-                        <img src="<?php echo $quantity_icon; ?>" class="icon-orange" alt="Quantity Icon" />
-                        <div class="overview-info">
-                            <strong><?php echo $quantity_in_hand; ?></strong> <br>
-                            <span>Quantity in Hand</span>
-                        </div>
-                    </div>
-                    <div class="overview-block">
-                        <img src="<?php echo $on_the_way_icon; ?>" class="icon-purple" alt="To be received Icon" />
-                        <div class="overview-info">
-                            <strong><?php echo $to_be_received; ?></strong> <br>
-                            <span>To be received</span>
-                        </div>
-                    </div>
-                </div>
+
             </div>
 
             <!-- Row 2 -->
             <div class="card row-2-col-1 purchase-overview">
-                <h4>Purchase Overview</h4>
-                <div class="overview-metrics">
-                    <div class="overview-block">
-                        <img src="<?php echo $purchase_icon; ?>" class="icon-blue" alt="Purchase Icon" />
-                        <div class="overview-info">
-                            <strong><?php echo $total_product_purchased; ?></strong>
-                            <span>Purchase</span>
-                        </div>
-                    </div>
-                    <div class="overview-block">
-                        <img src="<?php echo $cost_icon; ?>" class="icon-green" alt="Cost Icon" />
-                        <div class="overview-info">
-                            <strong><?php echo $purchase_product_cost; ?> ৳</strong>
-                            <span>Cost</span>
-                        </div>
-                    </div>
-                    <div class="overview-block">
-                        <img src="<?php echo $cancel_icon; ?>" class="icon-purple" alt="Cancel Icon" />
-                        <div class="overview-info">
-                            <strong><?php echo $cancel; ?></strong>
-                            <span>Cancel</span>
-                        </div>
-                    </div>
-                    <div class="overview-block">
-                        <img src="<?php echo $profit_icon; ?>" class="icon-orange" alt="Return Icon" />
-                        <div class="overview-info">
-                            <strong><?php echo $return; ?> ৳</strong>
-                            <span>Return</span>
-                        </div>
-                    </div>
-                </div>
+
             </div>
 
 
             <div class="card row-2-col-2 product-summary">
-                <h4>Product Summary</h4>
-                <div class="overview-metrics">
-                    <div class="overview-block">
-                        <img src="<?php echo $suppliers_icon; ?>" class="icon-blue" alt="Return Product Icon" />
-                        <div class="overview-info">
-                            <strong><?php echo $number_of_returns; ?></strong> <br>
-                            <span>Return Product</span>
-                        </div>
-                    </div>
-                    <div class="overview-block">
-                        <img src="<?php echo $categories_icon; ?>" class="icon-purple" alt="Category Icon" />
-                        <div class="overview-info">
-                            <strong><?php echo $number_of_categories; ?></strong> <br>
-                            <span>Number of Categories</span>
-                        </div>
-                    </div>
-                </div>
+
             </div>
 
 
             <!-- Row 3 -->
             <div class="chart-box row-3-col-1">
-                <h4>Sales & Purchase</h4>
-                <div class="chart-container">
-                    <canvas id="barChart"></canvas>
-                </div>
+
             </div>
 
 
             <div class="chart-box row-3-col-2">
-                <h4>Sales Summary</h4>
-                <div class="chart-container">
-                    <canvas id="lineChart"></canvas>
-<!--                    <div class="loading">Loading chart data...</div>-->
-                </div>
+
             </div>
 
 
@@ -953,20 +810,6 @@ ob_end_flush();
             </div>
 
             <div class="stock-box row-4-col-2 low-quantity-stock">
-<!--                <h4>Low Quantity Stock <a href="#" class="see-all-link">See All</a></h4>-->
-                <?php $low_quantity_product_array = getLowQuantityStocks(); ?>
-                <ul class="low-stock-list">
-                    <?php foreach ($low_quantity_product_array as $product): ?>
-                        <li>
-                            <img src="<?php echo $product_image_upload_folder.'/'.htmlspecialchars($product['image']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
-                            <div class="low-stock-info">
-                                <strong><?php echo htmlspecialchars($product['name']); ?></strong>
-                                <span>Remaining Quantity : <?php echo $product['remaining_quantity']; ?> pcs</span>
-                            </div>
-                            <span class="low">Low</span>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
 
             </div>
 
@@ -977,317 +820,6 @@ ob_end_flush();
 
 
 <script src="<?php echo $script_js; ?>"></script>
-
-
-<script>
-    // Bar Chart
-    document.addEventListener("DOMContentLoaded", function () {
-        const x_axis = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        const y_axis_sales = <?php echo json_encode($sales_array); ?>;
-        const y_axis_purchase =  <?php echo json_encode($purchase_array); ?>;
-
-        const canvas = document.getElementById("barChart");
-        const ctx = canvas.getContext("2d");
-
-        // SALES GRADIENT: bottom ➝ top (green blend)
-        const gradientSales = ctx.createLinearGradient(0, canvas.height, 0, 0);
-        gradientSales.addColorStop(0.00, "#46A46C");  // Dark Green
-        gradientSales.addColorStop(0.48, "#51CC5D");
-        gradientSales.addColorStop(1.00, "#57DA65");  // Bright Lime Green
-
-        // PURCHASE GRADIENT: bottom ➝ top (violet to blue blend)
-        const gradientPurchase = ctx.createLinearGradient(0, canvas.height, 0, 0);
-        gradientPurchase.addColorStop(0.00, "#817AF3");  // Deep Violet
-        gradientPurchase.addColorStop(0.48, "#74B0FA");
-        gradientPurchase.addColorStop(1.00, "#79D0F1");  // Sky Blue
-
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: x_axis,
-                datasets: [
-                    {
-                        label: "Sales",
-                        data: y_axis_sales,
-                        backgroundColor: gradientSales,
-                        borderRadius: 6,
-                        barPercentage: 0.6,
-                        categoryPercentage: 0.5
-                    },
-                    {
-                        label: "Purchase",
-                        data: y_axis_purchase,
-                        backgroundColor: gradientPurchase,
-                        borderRadius: 6,
-                        barPercentage: 0.6,
-                        categoryPercentage: 0.5
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                layout: {
-                    padding: {
-                        top: 10,
-                        bottom: -4,
-                        left: 0,
-                        right: 0
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'bottom',
-                        labels: {
-                            usePointStyle: true,     // ← Makes the legend circular
-                            pointStyle: 'circle',    // ← Circle instead of rectangle
-                            boxWidth: 10,
-                            padding: 20,
-                            font: {
-                                size: 13,
-                                weight: '500'
-                            },
-                            color: '#333'
-                        }
-                    },
-                    tooltip: {
-                        backgroundColor: '#333',
-                        titleFont: { size: 13 },
-                        bodyFont: { size: 13 },
-                        padding: 10,
-                        cornerRadius: 4
-                    }
-                },
-                scales: {
-                    x: {
-                        grid: {
-                            display: false
-                        },
-                        ticks: {
-                            font: {
-                                size: 12,
-                                weight: '500'
-                            },
-                            color: '#666'
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        suggestedMax: 40000,
-                        grid: {
-                            color: '#eee',
-                            drawBorder: false
-                        },
-                        ticks: {
-                            font: {
-                                size: 12
-                            },
-                            color: '#666'
-                        }
-                    }
-                }
-            }
-        });
-    });
-</script>
-
-
-<script>
-    // Line Chart
-    document.addEventListener("DOMContentLoaded", function () {
-        const ctx = document.getElementById("lineChart").getContext("2d");
-
-        const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        const revenueData = <?php echo json_encode($revenue_array); ?>;
-        const profitData = <?php echo json_encode($profit_array); ?>;
-
-        // === Catmull-Rom Interpolation ===
-        function smoothInterpolate(data, steps = 30) {
-            const result = [];
-            for (let i = 0; i < data.length - 1; i++) {
-                const p0 = data[i - 1 < 0 ? 0 : i - 1];
-                const p1 = data[i];
-                const p2 = data[i + 1];
-                const p3 = data[i + 2 >= data.length ? data.length - 1 : i + 2];
-
-                for (let j = 0; j < steps; j++) {
-                    const t = j / steps;
-                    const t2 = t * t;
-                    const t3 = t2 * t;
-
-                    const value = 0.5 * (
-                        (2 * p1) +
-                        (-p0 + p2) * t +
-                        (2 * p0 - 5 * p1 + 4 * p2 - p3) * t2 +
-                        (-p0 + 3 * p1 - 3 * p2 + p3) * t3
-                    );
-                    result.push(Math.max(value, 0));
-                }
-            }
-            result.push(data[data.length - 1]);
-            return result.map(v => Math.round(v));
-        }
-
-        const stepsPerSegment = 30;
-        const interpolatedRevenue = smoothInterpolate(revenueData, stepsPerSegment);
-        const interpolatedProfit = smoothInterpolate(profitData, stepsPerSegment);
-
-        const interpolatedLabels = [];
-        const totalPoints = interpolatedRevenue.length;
-        for (let i = 0; i < totalPoints; i++) {
-            interpolatedLabels.push(i % stepsPerSegment === 0 ? labels[Math.floor(i / stepsPerSegment)] : '');
-        }
-
-        // === Vertical Hover Line Plugin ===
-        const verticalLinePlugin = {
-            id: 'customHoverLine',
-            afterDraw(chart) {
-                if (chart.tooltip?._active?.length) {
-                    const ctx = chart.ctx;
-                    const active = chart.tooltip._active[0];
-                    const x = active.element.x;
-                    const topY = chart.chartArea.top;
-                    const bottomY = chart.chartArea.bottom;
-
-                    ctx.save();
-                    ctx.beginPath();
-                    ctx.moveTo(x, topY);
-                    ctx.lineTo(x, bottomY);
-                    ctx.lineWidth = 1;
-                    ctx.strokeStyle = 'rgba(0,0,0,0.1)';
-                    ctx.setLineDash([4, 4]);
-                    ctx.stroke();
-                    ctx.restore();
-                }
-            }
-        };
-
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: interpolatedLabels,
-                datasets: [
-                    {
-                        label: 'Revenue',
-                        data: interpolatedRevenue,
-                        fill: true,
-                        backgroundColor: 'rgba(255, 152, 0, 0.1)',
-                        borderColor: '#DBA362',
-                        borderWidth: 2,
-                        tension: 0,
-                        pointRadius: 0,
-                        pointHoverRadius: 6,
-                        pointBackgroundColor: '#DBA362',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: '#DBA362'
-                    },
-                    {
-                        label: 'Profit',
-                        data: interpolatedProfit,
-                        fill: true,
-                        backgroundColor: 'rgba(100, 181, 246, 0.1)',
-                        borderColor: '#B6D3FA',
-                        borderWidth: 2,
-                        tension: 0,
-                        pointRadius: 0,
-                        pointHoverRadius: 6,
-                        pointBackgroundColor: '#B6D3FA',
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: '#B6D3FA'
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                interaction: {
-                    mode: 'nearest',
-                    intersect: false
-                },
-                layout: {
-                    padding: {
-                        bottom: -4
-                    }
-                },
-                animation: {
-                    duration: 1000,
-                    easing: 'easeInOutQuart'
-                },
-                plugins: {
-                    tooltip: {
-                        backgroundColor: '#fff',
-                        borderColor: '#ddd',
-                        borderWidth: 1,
-                        cornerRadius: 10,
-                        padding: 12,
-                        titleFont: {
-                            size: 13,
-                            weight: 'bold'
-                        },
-                        bodyFont: {
-                            size: 14,
-                            weight: '600'
-                        },
-                        titleColor: '#777',
-                        bodyColor: '#111',
-                        callbacks: {
-                            title: function (context) {
-                                const pointIndex = context[0].dataIndex;
-                                const monthIndex = Math.floor(pointIndex / stepsPerSegment);
-                                return `Month: ${labels[monthIndex] || "Unknown"}`;
-                            },
-                            label: function (context) {
-                                const label = context.dataset.label;
-                                const value = Number(context.raw).toLocaleString();
-                                return `${label}: ${value} ৳`;
-                            }
-                        },
-                        displayColors: true
-                    },
-                    legend: {
-                        display: true,
-                        position: 'bottom',
-                        labels: {
-                            usePointStyle: true,
-                            pointStyle: 'circle',
-                            boxWidth: 10,
-                            padding: 20,
-                            font: {
-                                size: 13,
-                                weight: '500'
-                            },
-                            color: '#333'
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        grid: { display: false },
-                        ticks: {
-                            color: '#666',
-                            font: { size: 12 }
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        grid: {
-                            color: '#f0f0f0'
-                        },
-                        ticks: {
-                            color: '#444',
-                            font: { size: 12 },
-                            callback: (value) => value.toLocaleString()
-                        }
-                    }
-                }
-            },
-            plugins: [verticalLinePlugin]
-        });
-    });
-</script>
 
 
 <script>

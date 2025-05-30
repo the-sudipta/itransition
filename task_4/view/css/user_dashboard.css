@@ -1,0 +1,144 @@
+:root {
+    --bg-page:     #121212;
+    --bg-card:     #1E1E1E;
+    --brand-gold:  #D4AF37;
+    --text-light:  #F8F9FA;
+    --text-dark:   #000000;
+}
+
+body {
+    background-color: var(--bg-page);
+    color: var(--text-light);
+    margin: 0;
+    padding: 2rem 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.card {
+    background-color: var(--bg-card);
+    border-radius: 0.75rem;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    overflow: hidden;
+}
+
+.card-header {
+    background-color: var(--bg-card);
+    border-bottom: 2px solid var(--brand-gold);
+    padding: 1rem 1.5rem;
+}
+
+/* 1) Big, bold header */
+.card-header h4 {
+    font-size: 2rem;       /* increase from ~1.25rem to 2rem */
+    font-weight: 700;      /* heavier weight */
+}
+
+
+/* Toolbar buttons */
+.btn-outline-gold {
+    color: var(--brand-gold);
+    border-color: var(--brand-gold);
+    transition: background-color 0.2s ease, color 0.2s ease;
+    font-size: 1.1rem;      /* larger text/icon container */
+    padding: 0.5rem 0.75rem;
+}
+
+.btn-outline-gold i {
+    font-size: 1.4rem;      /* bigger icon */
+    vertical-align: middle;
+}
+
+.btn-outline-gold:hover,
+.btn-outline-gold:focus {
+    background-color: var(--brand-gold) !important;
+    color: var(--text-dark) !important;
+}
+
+.table-responsive {
+    overflow-x: auto;
+    margin: 0;
+}
+
+.table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    margin: 0;
+}
+
+thead th {
+    background-color: var(--brand-gold);
+    color: var(--text-dark) !important;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 0.75rem 1rem;
+    border-right: 1px solid rgba(255,255,255,0.2);
+}
+
+thead th:last-child {
+    border-right: none;
+}
+
+tbody tr {
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    transition: background-color 0.15s ease;
+}
+
+tbody tr:hover {
+    background-color: rgba(212,175,55,0.1);
+}
+
+td, th {
+    vertical-align: middle;
+    padding: 0.75rem 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Larger checkboxes */
+.row-checkbox,
+#selectAll {
+    width: 1.5rem;
+    height: 1.5rem;
+    cursor: pointer;
+}
+
+/* Status text styling */
+.status-text {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+/* Force green/red on the status text */
+.status-active {
+    color: #28a745 !important;   /* bright bootstrap green */
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.status-blocked {
+    color: #dc3545 !important;   /* bright bootstrap red */
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+/* Scrollbar styling */
+.table-responsive::-webkit-scrollbar {
+    height: 8px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background-color: rgba(212,175,55,0.6);
+    border-radius: 4px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+    background-color: var(--bg-card);
+}

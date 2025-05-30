@@ -11,16 +11,16 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/itransition/utility_functions.php';
 // Frontend Paths
 $login_page = $routes['login'];
 $admin_dashboard_page = $routes['admin_dashboard'];
-$salesman_dashboard_page = $routes['salesman_dashboard'];
+$user_dashboard_page = $routes['user_dashboard'];
 
 
 // Backend Paths
 $logout_controller = $backend_routes["logout_controller"];
 
 // Image Path
-$logo_svg          = $image_routes['logo_svg'];
-$return_icon = $image_routes['return_btn'];
-$return_icon_green = $image_routes['return_btn_green'];
+$logo_svg          = '';
+$return_icon = '';
+$return_icon_green = '';
 
 // JS Path
 $database_error_script = $js_routes['database_error_script'];
@@ -33,16 +33,18 @@ $jquery_min_script = $js_routes['jquery_min_script'];
 
 $database_error    = "";
 $logout_controller = $backend_routes["logout_controller"];
-$logo_svg          = $image_routes['logo_svg'];
+$logo_svg          = '';
 
 
 
 $route = '';
 $error_message = '';
 $error_type = 'warning_message';
-
-
-if($_SESSION["user_id"] < 0){
+$user_id = -1;
+if(isset($_SESSION["user_id"])){
+    $user_id = $_SESSION["user_id"];
+}
+if($user_id < 0){
     $route = $login_page;
     $error_message = "Direct URL access is not allowed. Use the proper interface";
     navigate($route, $error_message, $error_type);
@@ -54,17 +56,21 @@ if($_SESSION["user_id"] < 0){
         if(strtolower($_SESSION["user_role"]) === "admin"){
             $route = $admin_dashboard_page;
             $error_message = "Call your Software Engineer Immediately";
-        }else{
-            $route = $salesman_dashboard_page;
+        }elseif(strtolower($_SESSION["user_role"]) === "user"){
+            $route = $user_dashboard_page;
             $error_message = "Call your Software Engineer Immediately";
         }
     }else{
         if(strtolower($_SESSION["user_role"]) === "admin"){
             $route = $admin_dashboard_page;
             $error_message = "Direct URL access is not allowed. Use the proper interface";
-        }else{
-            $route = $salesman_dashboard_page;
+        }elseif(strtolower($_SESSION["user_role"]) === "user"){
+            $route = $user_dashboard_page;
             $error_message = "Direct URL access is not allowed. Use the proper interface";
+        }else{
+            // Signup Issue
+            $route = $login_page;
+            $error_message = "Database issue. Call your Software Engineer immediately";
         }
         navigate($route, $error_message, $error_type);
     }

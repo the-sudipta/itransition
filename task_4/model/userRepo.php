@@ -15,7 +15,7 @@ $database_error_page = $routes["database_error"];
 function findAllUsers()
 {
     $conn = db_conn();
-    $selectQuery = 'SELECT * FROM `user`';
+    $selectQuery = 'SELECT * FROM `users`';
 
     try {
         $result = $conn->query($selectQuery);
@@ -51,12 +51,11 @@ function findAllUsers()
     }
 }
 
-
 function findUserByEmailAndPassword($email, $password) {
     $conn = db_conn();
 
     // Use prepared statement to prevent SQL injection
-    $selectQuery = 'SELECT * FROM `user` WHERE `email` = ?';
+    $selectQuery = 'SELECT * FROM `users` WHERE `email` = ?';
 
     try {
         $stmt = $conn->prepare($selectQuery);
@@ -99,11 +98,10 @@ function findUserByEmailAndPassword($email, $password) {
     }
 }
 
-
 function findUserByUserID($id)
 {
     $conn = db_conn();
-    $selectQuery = 'SELECT * FROM `user` WHERE `id` = ?';
+    $selectQuery = 'SELECT * FROM `users` WHERE `id` = ?';
 
     try {
         $stmt = $conn->prepare($selectQuery);
@@ -148,7 +146,7 @@ function findUserByUserID($id)
 function findUserByEmail($email)
 {
     $conn = db_conn();
-    $selectQuery = 'SELECT * FROM `user` WHERE `email` = ?';
+    $selectQuery = 'SELECT * FROM `users` WHERE `email` = ?';
 
     try {
         $stmt = $conn->prepare($selectQuery);
@@ -191,7 +189,6 @@ function findUserByEmail($email)
     }
 }
 
-
 function updateUser($email, $password, $role, $status, $id)
 {
     $conn = db_conn();
@@ -199,7 +196,7 @@ function updateUser($email, $password, $role, $status, $id)
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
     // Construct the SQL query
-    $updateQuery = "UPDATE `user` SET 
+    $updateQuery = "UPDATE `users` SET 
                     email = ?,
                     password = ?,
                     role = ?,
@@ -250,7 +247,7 @@ function updateUserStatus($status, $id)
     $conn = db_conn();
 
     // Construct the SQL query
-    $updateQuery = "UPDATE `user` SET 
+    $updateQuery = "UPDATE `users` SET 
                     status =?
                     WHERE id = ?";
 
@@ -294,12 +291,11 @@ function updateUserStatus($status, $id)
     }
 }
 
-
 function deleteUser($id) {
     $conn = db_conn();
 
     // Construct the SQL query
-    $updateQuery = "DELETE FROM `user`
+    $updateQuery = "DELETE FROM `users`
                     WHERE id = ?";
 
     try {
@@ -338,7 +334,6 @@ function deleteUser($id) {
     }
 }
 
-
 function createUser($email, $password, $role, $status) {
     $conn = db_conn();
 
@@ -346,7 +341,7 @@ function createUser($email, $password, $role, $status) {
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
     // Construct the SQL query
-    $insertQuery = "INSERT INTO `user` (email, password, role, status) VALUES (?, ?, ?, ?)";
+    $insertQuery = "INSERT INTO `users` (email, password, role, status) VALUES (?, ?, ?, ?)";
 
     try {
         $newUserId = -1;
@@ -390,7 +385,7 @@ function updateUserWithoutPassword($email, $role, $status, $id)
 
 
     // Construct the SQL query
-    $updateQuery = "UPDATE `user` SET 
+    $updateQuery = "UPDATE `users` SET 
                     email = ?,
                     role = ?,
                     status =?
@@ -440,7 +435,7 @@ function updateUserEmail($email, $id)
     $conn = db_conn();
 
     // Construct the SQL query
-    $updateQuery = "UPDATE `user` SET 
+    $updateQuery = "UPDATE `users` SET 
                     email = ?
                     WHERE id = ?";
 
@@ -490,7 +485,7 @@ function updateUserPassword($password, $id)
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
     // Construct the SQL query
-    $updateQuery = "UPDATE `user` SET 
+    $updateQuery = "UPDATE `users` SET 
                     password = ?
                     WHERE id = ?";
 

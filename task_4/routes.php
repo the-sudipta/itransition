@@ -10,6 +10,11 @@ $routes = [
     'invoice' => '/itransition/view/invoice.php',
     'data_provider' => '/itransition/view/Data_Provider.php',
 
+    'user_signup' => '/itransition/view/Login.php',
+    'admin_dashboard' => '/itransition/view/admin/admin_dashboard.php',
+    'user_dashboard' => '/itransition/view/user/user_dashboard.php',
+
+
 ];
 // Backend routes
 $backend_routes = [
@@ -17,6 +22,9 @@ $backend_routes = [
     'login_controller' => '/itransition/controller/LoginController.php',
     'logout_controller' => '/itransition/controller/LogoutController.php',
     'backend_utility_functions' => '/itransition/controller/backend_utility_functions.php',
+
+
+    'signup_controller' => '/itransition/controller/user/UserSignupController.php',
 
 
 
@@ -38,6 +46,7 @@ $css_routes = [
     'flatpickr_min_style' => '/itransition/view/css/flatpickr_min_style.css',
 
     'login_css' => '/itransition/view/css/login.css',
+    'user_dashboard_css' => '/itransition/view/css/user_dashboard.css',
 
 
 

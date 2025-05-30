@@ -11,7 +11,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/itransition/utility_functions.php';
 // Frontend Paths
 $login_page = $routes['login'];
 $admin_dashboard_page = $routes['admin_dashboard'];
-$salesman_dashboard_page = $routes['salesman_dashboard'];
+$user_dashboard_page = $routes['user_dashboard'];
 $forbidden_error_page = $routes['forbidden_error'];
 
 
@@ -33,15 +33,18 @@ $jquery_min_script = $js_routes['jquery_min_script'];
 $route = '';
 $error_message = '';
 $error_type = 'message';
-
+$user_role = '';
+if(isset($_SESSION["user_role"])){
+    $user_role = $_SESSION["user_role"];
+}
 
 if($_SESSION["user_id"] > 0){
 
-    if(strtolower($_SESSION["user_role"]) === "admin"){
+    if(strtolower($user_role) === "admin"){
         $route = $admin_dashboard_page;
         $error_message = "Sorry the page does not exist";
-    }else{
-        $route = $salesman_dashboard_page;
+    }elseif(strtolower($user_role) === "user"){
+        $route = $user_dashboard_page;
         $error_message = "Sorry the page does not exist";
     }
 
