@@ -75,3 +75,5 @@ SQL
 }
 
 clearAllData();
+echo generateSuccessText("Whole Database Deleted?", "Whole Database has been Deleted Successfully");
+

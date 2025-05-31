@@ -67,6 +67,35 @@ CREATE TABLE `user_details` (
   DEFAULT CHARSET=utf8mb4
   COLLATE=utf8mb4_general_ci;
 ```
+### Truncate Database
+```sql
+-- 1) Start a transaction
+START TRANSACTION;
+
+-- 2) Drop child→parent foreign keys
+ALTER TABLE `logs` DROP FOREIGN KEY `logs_ibfk_1`;
+ALTER TABLE `user_details` DROP FOREIGN KEY `user_details_ibfk_1`;
+
+-- 3) Truncate tables in child→parent order
+TRUNCATE TABLE `user_details`;
+TRUNCATE TABLE `logs`;
+TRUNCATE TABLE `users`;
+
+-- 4) Re‐create the foreign keys exactly as defined originally
+ALTER TABLE `logs`
+  ADD CONSTRAINT `logs_ibfk_1`
+    FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+    ON DELETE CASCADE;
+
+ALTER TABLE `user_details`
+  ADD CONSTRAINT `user_details_ibfk_1`
+    FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+    ON DELETE CASCADE;
+
+-- 5) Commit the transaction
+COMMIT;
+
+```
 
 > **Note:** Run these statements in **phpMyAdmin** or via the MySQL CLI bundled with XAMPP.
 
