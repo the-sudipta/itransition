@@ -1,8 +1,9 @@
 <?php
 // db_helpers.php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/itransition/model/db_connect.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/itransition/utility_functions.php'; // show_error_page()
+$PROJECT_ROOT = getenv('PROJECT_ROOT_URL');
+require_once $_SERVER['DOCUMENT_ROOT'] . $PROJECT_ROOT. '/model/db_connect.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . $PROJECT_ROOT. '/utility_functions.php'; // show_error_page()
 
 /**
  * Drops FKs, truncates all tables in the correct order, then re-creates FKs.

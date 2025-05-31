@@ -2,7 +2,8 @@
 ob_start();
 
 try {
-    require_once dirname(__DIR__) . '/utility_functions.php';
+    $PROJECT_ROOT = getenv('PROJECT_ROOT_URL');
+    require_once $_SERVER['DOCUMENT_ROOT'] . $PROJECT_ROOT. '/utility_functions.php';
     global $routes;
     require '../routes.php';
     $root_page = $routes['INDEX'];

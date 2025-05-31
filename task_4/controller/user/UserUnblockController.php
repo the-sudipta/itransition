@@ -3,15 +3,16 @@ ob_start();
 
 try {
 
+    $PROJECT_ROOT = getenv('PROJECT_ROOT_URL');
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }
 
     global $routes, $backend_routes;
-    require_once $_SERVER['DOCUMENT_ROOT'] . '/itransition/model/userRepo.php';
-    require_once $_SERVER['DOCUMENT_ROOT'] . '/itransition/model/logsRepo.php';
-    require_once $_SERVER['DOCUMENT_ROOT'] . '/itransition/utility_functions.php';
-    require_once $_SERVER['DOCUMENT_ROOT'] . '/itransition/routes.php';
+    require_once $_SERVER['DOCUMENT_ROOT'] . $PROJECT_ROOT. '/model/userRepo.php';
+    require_once $_SERVER['DOCUMENT_ROOT'] . $PROJECT_ROOT. $PROJECT_ROOT. '/model/logsRepo.php';
+    require_once $_SERVER['DOCUMENT_ROOT'] . $PROJECT_ROOT. '/utility_functions.php';
+    require_once $_SERVER['DOCUMENT_ROOT'] . $PROJECT_ROOT. '/routes.php';
 
     // Frontend Page Links
     $User_dashboard_page = $routes['user_dashboard'];

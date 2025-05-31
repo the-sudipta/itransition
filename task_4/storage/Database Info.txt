@@ -1,0 +1,5 @@
+dbname   : 4642087_itansition
+username : 4642087_itansition
+pass     : 0testPass@
+host     : fdb1028.awardspace.net
+port     : 3306

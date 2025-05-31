@@ -5,9 +5,9 @@ global $routes;
 
 
 
-
-require_once $_SERVER['DOCUMENT_ROOT'] . '/itransition/model/userRepo.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/itransition/utility_functions.php';
+$PROJECT_ROOT = getenv('PROJECT_ROOT_URL');
+require_once $_SERVER['DOCUMENT_ROOT'] . $PROJECT_ROOT. '/model/userRepo.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . $PROJECT_ROOT. '/utility_functions.php';
 
 @session_start();
 

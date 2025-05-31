@@ -1,8 +1,9 @@
 <?php
 
+$PROJECT_ROOT = getenv('PROJECT_ROOT_URL');
 global $routes, $backend_routes, $image_routes, $js_routes;
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Adil_Fashion_Inventory_Management_Software/routes.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/Adil_Fashion_Inventory_Management_Software/utility_functions.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . $PROJECT_ROOT. '/routes.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . $PROJECT_ROOT. '/utility_functions.php';
 
 
 @session_start();

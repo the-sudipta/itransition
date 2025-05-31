@@ -2,16 +2,17 @@
 ob_start();
 try{
 
+    $PROJECT_ROOT = getenv('PROJECT_ROOT_URL');
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }
     global $routes, $backend_routes, $image_routes, $css_routes, $js_routes;
-    require_once $_SERVER['DOCUMENT_ROOT'] . '/itransition/routes.php';
-    require_once $_SERVER['DOCUMENT_ROOT'] . '/itransition/utility_functions.php';
-    require_once $_SERVER['DOCUMENT_ROOT'] . '/itransition/view/Data_Provider.php';
-    require_once $_SERVER['DOCUMENT_ROOT'] . '/itransition/model/userRepo.php';
-    require_once $_SERVER['DOCUMENT_ROOT'] . '/itransition/model/logsRepo.php';
-    require_once $_SERVER['DOCUMENT_ROOT'] . '/itransition/model/user_detailsRepo.php';
+    require_once $_SERVER['DOCUMENT_ROOT'] . $PROJECT_ROOT. '/routes.php';
+    require_once $_SERVER['DOCUMENT_ROOT'] . $PROJECT_ROOT. '/utility_functions.php';
+    require_once $_SERVER['DOCUMENT_ROOT'] . $PROJECT_ROOT. '/view/Data_Provider.php';
+    require_once $_SERVER['DOCUMENT_ROOT'] . $PROJECT_ROOT. '/model/userRepo.php';
+    require_once $_SERVER['DOCUMENT_ROOT'] . $PROJECT_ROOT. '/model/logsRepo.php';
+    require_once $_SERVER['DOCUMENT_ROOT'] . $PROJECT_ROOT. '/model/user_detailsRepo.php';
 
     // Backend Routes
     $logoutController_file     = $backend_routes['logout_controller'];

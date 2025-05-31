@@ -1,26 +1,38 @@
 <?php
+ob_start();
+try{
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/itransition/routes.php';
-global $routes, $backend_routes, $image_routes, $css_routes, $js_routes;
+    $PROJECT_ROOT = getenv('PROJECT_ROOT_URL');
+    require_once $_SERVER['DOCUMENT_ROOT'] . $PROJECT_ROOT. '/routes.php';
+    global $routes, $backend_routes, $image_routes, $css_routes, $js_routes;
+    
+    $loginController_file = $backend_routes['login_controller'];
+    $signupController_file = $backend_routes['signup_controller'];
+    
+    
+    // CSS Path
+    $alert_box_css = $css_routes['alert_box_css'];
+    $login_css = $css_routes['login_css'];
+    
+    // JS Path
+    $alert_box_script = $js_routes['alert_box_script'];
+    $utility_functions_script = $js_routes['utility_functions_script'];
+    $login_js = $js_routes['login_js'];
+    
+    // Alert Message from Backend
+    $info    = isset($_GET['message'])          ? htmlspecialchars($_GET['message'])          : '';
+    $success = isset($_GET['success_message'])  ? htmlspecialchars($_GET['success_message'])  : '';
+    $warning = isset($_GET['warning_message'])  ? htmlspecialchars($_GET['warning_message'])  : '';
+    $error   = isset($_GET['error_message'])    ? htmlspecialchars($_GET['error_message'])    : '';
 
-$loginController_file = $backend_routes['login_controller'];
-$signupController_file = $backend_routes['signup_controller'];
+} catch (Throwable $e){
+//    Redirect to 500 Internal Server Error Page
+    $error_location = " View -> Admin Dashboard Page";
+    $error_message = $e->getMessage();
+    show_error_page($error_location, $error_message, "internal_server_error");
+}
+ob_end_flush();
 
-
-// CSS Path
-$alert_box_css = $css_routes['alert_box_css'];
-$login_css = $css_routes['login_css'];
-
-// JS Path
-$alert_box_script = $js_routes['alert_box_script'];
-$utility_functions_script = $js_routes['utility_functions_script'];
-$login_js = $js_routes['login_js'];
-
-// Alert Message from Backend
-$info    = isset($_GET['message'])          ? htmlspecialchars($_GET['message'])          : '';
-$success = isset($_GET['success_message'])  ? htmlspecialchars($_GET['success_message'])  : '';
-$warning = isset($_GET['warning_message'])  ? htmlspecialchars($_GET['warning_message'])  : '';
-$error   = isset($_GET['error_message'])    ? htmlspecialchars($_GET['error_message'])    : '';
 
 ?>
 

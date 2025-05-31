@@ -1,12 +1,10 @@
 <?php
 
-//require_once __DIR__ . '/../model/db_connect.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/itransition/model/db_connect.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/itransition/utility_functions.php'; // Responsible for show_error_page() Function
-//require_once dirname(__DIR__) . '/utility_functions.php'; // Responsible for show_error_page() Function
-require_once $_SERVER['DOCUMENT_ROOT'] . '/itransition/routes.php'; // Responsible for show_error_page() Function
+$PROJECT_ROOT = getenv('PROJECT_ROOT_URL');
+require_once $_SERVER['DOCUMENT_ROOT'] . $PROJECT_ROOT. '/model/db_connect.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . $PROJECT_ROOT. '/utility_functions.php'; // Responsible for show_error_page() Function
+require_once $_SERVER['DOCUMENT_ROOT'] . $PROJECT_ROOT. '/routes.php'; // Responsible for show_error_page() Function
 
-//require __DIR__ . '/../routes.php';
 global $routes;
 
 $database_error_page = $routes["database_error"];

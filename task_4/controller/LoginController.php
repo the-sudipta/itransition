@@ -2,14 +2,15 @@
 ob_start();
 try{
 
+    $PROJECT_ROOT = getenv('PROJECT_ROOT_URL');
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }
-    require_once $_SERVER['DOCUMENT_ROOT'] . '/itransition/utility_functions.php'; // Responsible for show_error_page() Function
+    require_once $_SERVER['DOCUMENT_ROOT'] . $PROJECT_ROOT. '/utility_functions.php'; // Responsible for show_error_page() Function
     setCustomErrorHandler();
-    require_once $_SERVER['DOCUMENT_ROOT'] . '/itransition/model/userRepo.php';
-    require_once $_SERVER['DOCUMENT_ROOT'] . '/itransition/model/logsRepo.php';
-    require_once $_SERVER['DOCUMENT_ROOT'] . '/itransition/routes.php';
+    require_once $_SERVER['DOCUMENT_ROOT'] . $PROJECT_ROOT. '/model/userRepo.php';
+    require_once $_SERVER['DOCUMENT_ROOT'] . $PROJECT_ROOT. '/model/logsRepo.php';
+    require_once $_SERVER['DOCUMENT_ROOT'] . $PROJECT_ROOT. '/routes.php';
     global $routes;
 
 
