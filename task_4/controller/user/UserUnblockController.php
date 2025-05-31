@@ -10,7 +10,7 @@ try {
 
     global $routes, $backend_routes;
     require_once $_SERVER['DOCUMENT_ROOT'] . $PROJECT_ROOT. '/model/userRepo.php';
-    require_once $_SERVER['DOCUMENT_ROOT'] . $PROJECT_ROOT. $PROJECT_ROOT. '/model/logsRepo.php';
+    require_once $_SERVER['DOCUMENT_ROOT'] . $PROJECT_ROOT. '/model/logsRepo.php';
     require_once $_SERVER['DOCUMENT_ROOT'] . $PROJECT_ROOT. '/utility_functions.php';
     require_once $_SERVER['DOCUMENT_ROOT'] . $PROJECT_ROOT. '/routes.php';
 
