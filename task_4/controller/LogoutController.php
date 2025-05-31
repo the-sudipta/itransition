@@ -2,7 +2,7 @@
 ob_start();
 
 try {
-    require_once dirname(__DIR__) . '/utility_functions.php'; // Make sure this file exists
+    require_once dirname(__DIR__) . '/utility_functions.php';
     global $routes;
     require '../routes.php';
     $root_page = $routes['INDEX'];

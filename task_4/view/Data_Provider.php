@@ -107,3 +107,32 @@ function formatDT($dtStr): array {
     return [$date, $time];
 }
 
+
+/**
+ * Sort an array of users by their “lastLogin” timestamp (descending).
+ *
+ * @param array $users  Array of user records, each must have an ['id'] key.
+ * @return array        A new array, sorted so that the most‐recent lastLogin comes first.
+ */
+function sortUsersByLastLogin(array $users): array
+{
+    usort($users, function($a, $b) {
+        // Fetch each user’s lastLogin via your stats function:
+        $aStats = getUserLogStats($a['id']);
+        $bStats = getUserLogStats($b['id']);
+
+        // If no login exists, treat it as '0000-00-00 00:00:00'
+        $aLast = $aStats['lastLogin'] ?? '0000-00-00 00:00:00';
+        $bLast = $bStats['lastLogin'] ?? '0000-00-00 00:00:00';
+
+        // Convert to UNIX timestamps
+        $tA = strtotime($aLast);
+        $tB = strtotime($bLast);
+
+        // Descending order: return negative if $b’s time is newer than $a’s
+        return $tB <=> $tA;
+    });
+
+    return $users;
+}
+

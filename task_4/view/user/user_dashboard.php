@@ -175,6 +175,12 @@ ob_end_flush();
         <!-- TABLE -->
         <div class="card-body p-0">
             <div class="table-responsive">
+                <?php
+                $users = findAllUsers();
+                // Use usort() to sort by lastLogin DESC
+                $users = sortUsersByLastLogin($users);
+
+                ?>
                 <table class="table table-hover table-borderless align-middle mb-0 text-light">
                     <thead>
                     <tr>
@@ -265,7 +271,6 @@ ob_end_flush();
 
 <!-- Bootstrap JS (for dropdowns, etc.) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.4.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="<?php echo $userActions_js; ?>"></script>
 <script>
     // SELECT / DESELECT ALL CHECKBOXES
     const selectAll   = document.getElementById('selectAll');

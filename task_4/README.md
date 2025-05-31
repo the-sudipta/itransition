@@ -130,7 +130,7 @@ You can deploy to any PHP‑compatible host:
 
 ## 📤 Submission Requirements
 
-Email to `p.lebedev@itransition.com` with:
+Email to the company with:
 
 1. **Full Name**
 2. **GitHub Repo URL**

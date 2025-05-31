@@ -108,10 +108,9 @@ try{
                     echo generateErrorText("Log Error", "Log can not be inserted");
                     exit;
                 }
-
             } else {
-                echo generateErrorText("Data Not Found Error", "Returning to Login page because Username Password did not match");
-                $errorMessage = urldecode("Username and Password did not match");
+                echo generateErrorText("Data Not Found Error", "Returning to Login page because Email Password did not match");
+                $errorMessage = urldecode("Email and Password did not match");
                 navigate($Login_page, $errorMessage);
                 exit;
             }
