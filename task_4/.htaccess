@@ -13,3 +13,5 @@ ErrorDocument 404 /itransition/view/error/_404_not_found_error.php
 <IfModule mod_php.c>
   php_value date.timezone "Asia/Dhaka"
 </IfModule>
+
+SetEnv PROJECT_ROOT_URL "/itransition"

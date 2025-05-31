@@ -70,9 +70,9 @@ try {
             if ($id <= 0) {
                 continue;
             }else{
+                $log_inserted_id = createLog("delete user : ".$id, $current_date_time, $user_id);
                 deleteUser($id);
                 // Add Log
-                $log_inserted_id = createLog("delete user : ".$id, $current_date_time, $user_id);
                 // Deleting Session
                 if($id === $user_id){
                     $_SESSION['user_id'] = -1;
