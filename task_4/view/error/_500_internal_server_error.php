@@ -47,7 +47,6 @@ if(isset($_SESSION["user_role"])){
     $user_role = $_SESSION["user_role"];
 }
 
-$user_id=1;
 if($user_id < 0){
     $route = $login_page;
     $error_message = "Direct URL access is not allowed. Use the proper interface";

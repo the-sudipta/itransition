@@ -53,7 +53,7 @@ function findAllUser_Details()
 function findUser_DetailsByID($id)
 {
     $conn = db_conn();
-    $selectQuery = 'SELECT * FROM `User_Details` WHERE `id` = ?';
+    $selectQuery = 'SELECT * FROM `user_details` WHERE `id` = ?';
 
     try {
         $stmt = $conn->prepare($selectQuery);
@@ -98,7 +98,7 @@ function findUser_DetailsByID($id)
 function findUser_DetailsByUserID($user_id)
 {
     $conn = db_conn();
-    $selectQuery = 'SELECT * FROM `User_Details` WHERE `user_id` = ?';
+    $selectQuery = 'SELECT * FROM `user_details` WHERE `user_id` = ?';
 
     try {
         $stmt = $conn->prepare($selectQuery);
