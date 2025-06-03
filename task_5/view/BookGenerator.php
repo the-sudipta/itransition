@@ -43,7 +43,7 @@ ob_end_flush();
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Bookstore Testing App (Infinite Scroll)</title>
+    <title>Book Generator App</title>
     <link rel="stylesheet" href="<?php echo $book_generator_css; ?>">
 </head>
 <body>
