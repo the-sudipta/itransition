@@ -4,21 +4,35 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5418ab89-98f0-4bc9-8c09-5a3bf78e6700" name="Changes" comment="" />
+    <list default="true" id="2f6b110d-5699-4278-a84c-1c9918909ab1" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ComposerSettings">
+  <component name="ComposerSettings" synchronizationState="SYNCHRONIZE">
+    <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
     <execution />
   </component>
-  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP" />
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="tsconfig.json" />
+      </list>
+    </option>
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP">
+    <include_path>
+      <path value="$PROJECT_DIR$/vendor/psr/container" />
+      <path value="$PROJECT_DIR$/vendor/composer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/deprecation-contracts" />
+      <path value="$PROJECT_DIR$/vendor/fakerphp/faker" />
+    </include_path>
+  </component>
   <component name="ProjectColorInfo">{
-  &quot;customColor&quot;: &quot;&quot;,
-  &quot;associatedIndex&quot;: 5
+  &quot;associatedIndex&quot;: 8
 }</component>
-  <component name="ProjectId" id="2xy7nCtGFtOFAeR9lJ69xz60Z2z" />
+  <component name="ProjectId" id="2y0rWJkZ8IESdU74nD0OzLWj8GB" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -27,6 +41,7 @@
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/Yaarian/Download_Software_Installation_Folder/XAMPP/htdocs/itransition_task_5/lib/faker&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -35,6 +50,11 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\Yaarian\Download_Software_Installation_Folder\XAMPP\htdocs\itransition_task_5\lib\faker" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -46,20 +66,22 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="5418ab89-98f0-4bc9-8c09-5a3bf78e6700" name="Changes" comment="" />
-      <created>1748898627701</created>
+      <changelist id="2f6b110d-5699-4278-a84c-1c9918909ab1" name="Changes" comment="" />
+      <created>1748982367147</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1748898627701</updated>
-      <workItem from="1748898628353" duration="2107000" />
-      <workItem from="1748903373183" duration="1408000" />
-      <workItem from="1748904808134" duration="2773000" />
-      <workItem from="1748907616537" duration="247000" />
-      <workItem from="1748907881281" duration="733000" />
-      <workItem from="1748948678469" duration="2547000" />
-      <workItem from="1748953852131" duration="3033000" />
-      <workItem from="1748956926220" duration="1402000" />
-      <workItem from="1748958394899" duration="2316000" />
+      <updated>1748982367147</updated>
+      <workItem from="1748982369668" duration="8959000" />
+      <workItem from="1748993506748" duration="173000" />
+      <workItem from="1748993692645" duration="1465000" />
+      <workItem from="1748995183204" duration="856000" />
+      <workItem from="1748996350853" duration="665000" />
+      <workItem from="1748997030840" duration="661000" />
+      <workItem from="1748997707990" duration="3007000" />
+      <workItem from="1749000756456" duration="369000" />
+      <workItem from="1749001141411" duration="148000" />
+      <workItem from="1749001314492" duration="93000" />
+      <workItem from="1749001936792" duration="235000" />
     </task>
     <servers />
   </component>

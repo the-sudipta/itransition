@@ -1,0 +1,14 @@
+{
+    "name": "yourname/itransition_task_5",
+    "description": "Task 5: Book Generator using FakerPHP",
+    "require": {
+        "php": ">=7.4",
+        "fakerphp/faker": "^1.24",
+      "ext-json": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "": "view/"
+        }
+    }
+}

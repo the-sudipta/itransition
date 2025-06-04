@@ -1,17 +1,8 @@
-# Enable mod_rewrite
-RewriteEngine On
-# Allow root path (project base) to load index.php
-RewriteCond %{REQUEST_URI} ^/itransition/?$
-RewriteRule ^.*$ - [L]
-# Redirect any other direct folder access to 404
-RewriteCond %{REQUEST_FILENAME} -d
-RewriteRule ^.*$ /itransition/view/error/_404_not_found_error.php [L]
-# Prevent directory listing
-Options -Indexes
-ErrorDocument 404 /itransition/view/error/_404_not_found_error.php
-# Set the timezone as Dhaka
-<IfModule mod_php.c>
-  php_value date.timezone "Asia/Dhaka"
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # Redirect non‐existing files/folders to index.php
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^.*$ index.php [L,QSA]
 </IfModule>
-
-SetEnv PROJECT_ROOT_URL "/itransition"
+SetEnv PROJECT_ROOT_URL "/itransition_task_5"
