@@ -1,20 +1,91 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Collaborative Presentation - Home{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <style>
+        body {
+            background: linear-gradient(135deg, #6f42c1, #007bff);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .landing-container {
+            background-color: rgba(0, 0, 50, 0.7);
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        .landing-logo {
+            max-width: 150px;
+            margin-bottom: 20px;
+        }
+        .landing-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+        .landing-description {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: #eee;
+        }
+        .landing-button {
+            font-size: 1.2rem;
+            padding: 15px 30px;
+            border-radius: 50px;
+            margin: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .landing-button-primary {
+            background-color: #00ffea;
+            color: #000;
+        }
+        .landing-button-primary:hover {
+            background-color: #00b3b3;
+            color: #fff;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+        }
+        .landing-button-secondary {
+            background-color: #fff;
+            color: #000;
+        }
+        .landing-button-secondary:hover {
+            background-color: #ccc;
+            color: #000;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+        }
+    </style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <div class="landing-container">
+        {# Logo Image (place your logo file at public/images/logo.png) #}
+        <img
+            src="{{ asset('images/collabio_logo_white.svg') }}"
+            alt="App Logo"
+            class="landing-logo"
+        >
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>G:/SUDIPTA/Programming/itransition/task_6/collabio/src/Controller/HomeController.php</code></li>
-        <li>Your template at <code>G:/SUDIPTA/Programming/itransition/task_6/collabio/templates/home/index.html.twig</code></li>
-    </ul>
-</div>
+        <div class="landing-title">Collaborative Presentation</div>
+        <div class="landing-description">
+            Create or join a collaborative session to build amazing presentations together.
+        </div>
+        <div>
+            <a href="{{ path('app_home_create_session') }}" class="landing-button landing-button-primary">
+                🚀 Create Session
+            </a>
+            <a href="{{ path('app_home_join_session') }}" class="landing-button landing-button-secondary">
+                👥 Join Session
+            </a>
+        </div>
+    </div>
 {% endblock %}

@@ -15,4 +15,26 @@ final class HomeController extends AbstractController
             'controller_name' => 'HomeController',
         ]);
     }
+
+    #[Route('/create', name: 'app_home_create_session')]
+    public function createSession(): Response
+    {
+        return $this->render('home/create_session.html.twig', [
+            'controller_name' => 'HomeController',
+        ]);
+    }
+
+    #[Route('/join', name: 'app_home_join_session')]
+    public function joinSession(): Response
+    {
+        return $this->render('home/join_session.html.twig', [
+            'controller_name' => 'HomeController',
+        ]);
+    }
+
+//    Now i will need CollaborationController for further  uses
+
+
+
+
 }
