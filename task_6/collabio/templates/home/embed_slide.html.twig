@@ -1,0 +1,213 @@
+{# templates/home/embed_slide.html.twig #}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Collabio Session ― {{ creatorName ?? 'Untitled' }}</title>
+
+    <style>
+        /* ============================================================================
+           BASIC RESET + LAYOUT
+           ============================================================================ */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+
+        #wrapper {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            position: relative; /* so overlays can be positioned absolutely */
+        }
+
+        /* ============================================================================
+           SIDEBAR (left 250px)
+           ============================================================================ */
+        #sidebar {
+            width: 250px;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+        #sidebar h2 {
+            margin-top: 0;
+            font-size: 1.2rem;
+        }
+        #sidebar p, #sidebar ul {
+            margin: 0.5rem 0;
+            font-size: 1rem;
+        }
+        #sidebar ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        #sidebar li {
+            margin-left: 1rem;
+        }
+        #sidebar button {
+            margin-top: 20px;
+            padding: 8px 12px;
+            background: #e74c3c;
+            border: none;
+            color: white;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        #sidebar button:hover {
+            background: #c0392b;
+        }
+
+        /* ============================================================================
+           SLIDES AREA (right portion)
+           ============================================================================ */
+        #slides-area {
+            position: relative; /* so overlays can be absolutely placed */
+            flex: 1;
+            background: #000;   /* “loading” background color while iframe loads */
+            overflow: hidden;
+        }
+
+        /* ----------------------------------------------------------------------------
+           The <iframe> itself spans 100% of #slides-area
+           ---------------------------------------------------------------------------- */
+        #slides-frame {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* ============================================================================
+           SOLID OVERLAYS TO HIDE GOOGLE SLIDES’ OWN TOP BAR / RIGHT UI / BOTTOM BAR
+           ============================================================================ */
+        {% set OVERLAY_HEIGHT_TOP = 72 %}
+        #toolbar-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: {{ OVERLAY_HEIGHT_TOP }}px;
+            background-color: #2c3e50;   /* same as sidebar’s background */
+            z-index: 10;
+            /* Prevent clicks from “falling through” into the hidden toolbar */
+            pointer-events: auto;
+        }
+
+        {% set OVERLAY_WIDTH_RIGHT = 140 %}
+        #right-overlay {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: {{ OVERLAY_WIDTH_RIGHT }}px;
+            height: 100%;
+            background-color: #2c3e50;
+            z-index: 10;
+            pointer-events: auto;
+        }
+
+        {% set OVERLAY_HEIGHT_BOTTOM = 86 %}
+        #bottom-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: {{ OVERLAY_HEIGHT_BOTTOM }}px;
+            background-color: #2c3e50;
+            z-index: 10;
+            pointer-events: auto;
+        }
+
+        /* ============================================================================
+           “You are: {nickname or creator}” Banner (in front of top overlay)
+           ============================================================================ */
+        #name-banner {
+            position: absolute;
+            top: 8px;
+            right: 16px;
+            background-color: rgba(44, 62, 80, 0.95);
+            color: #ecf0f1;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 0.9rem;
+            z-index: 20;
+            pointer-events: none; /* doesn’t intercept clicks */
+        }
+    </style>
+</head>
+<body>
+
+<div id="wrapper">
+    <!-- ============== LEFT SIDEBAR ============== -->
+    <div id="sidebar">
+        <h2>Participants</h2>
+
+        {# Show the Creator’s name if available #}
+        {% if creatorName is defined and creatorName %}
+            <p><strong>Creator:</strong> {{ creatorName }}</p>
+        {% endif %}
+
+        {# Show a bullet‐list of all collaborators (if you passed an array) #}
+        {% if collaborators is defined and collaborators|length > 0 %}
+            <p><strong>Collaborators:</strong></p>
+            <ul>
+                {% for c in collaborators %}
+                    <li>{{ c }}</li>
+                {% endfor %}
+            </ul>
+        {% elseif nickname is defined and nickname %}
+            {# If you only have one collaborator #}
+            <p><strong>Collaborator:</strong> {{ nickname }}</p>
+        {% endif %}
+
+        <button id="leaveBtn">✖ Leave Session</button>
+    </div>
+
+    <!-- ============== RIGHT SLIDES AREA ============== -->
+    <div id="slides-area">
+        {# Overlay hiding the top toolbar of Google Slides #}
+        <div id="toolbar-overlay"></div>
+
+        {# Overlay hiding the right‐hand UI (comments, + buttons, etc.) #}
+        <div id="right-overlay"></div>
+
+        {# Overlay hiding the bottom bar (speaker notes, slide thumbnails) #}
+        <div id="bottom-overlay"></div>
+
+        {# “You are: {nickname OR creatorName}” banner, appearing on top #}
+        <div id="name-banner">
+            {% set displayName = (
+                (nickname is defined and nickname)
+                ? nickname
+                : (creatorName is defined and creatorName)
+                ? creatorName
+                : '(no nickname)'
+                ) %}
+            You are: {{ displayName }}
+        </div>
+
+        {# The actual Google Slides <iframe> #}
+        <iframe
+            id="slides-frame"
+            src="{{ editUrl }}"
+            allowfullscreen>
+        </iframe>
+    </div>
+</div>
+
+<script>
+    // “Leave Session” just redirects back to your landing page
+    document.getElementById('leaveBtn').addEventListener('click', function() {
+        window.location.href = "{{ path('app_home_index') }}";
+    });
+</script>
+</body>
+</html>

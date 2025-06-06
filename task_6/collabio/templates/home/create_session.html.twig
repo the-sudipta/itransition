@@ -1,7 +1,7 @@
-{# templates/name_entry.html.twig #}
+{# templates/create_session.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Collaborative Presentation - Create{% endblock %}
+{% block title %}Collaborative Presentation – Create Session{% endblock %}
 
 {% block body %}
     <style>
@@ -66,25 +66,25 @@
     </style>
 
     <div class="form-container">
-        {# Logo (place your logo file at public/images/logo.png) #}
+        {# Logo (place your logo file at public/images/collabio_logo_white.svg) #}
         <img src="{{ asset('images/collabio_logo_white.svg') }}" alt="App Logo" class="form-logo">
 
-        <div class="form-title">Welcome to Collaborative Presentation</div>
+        <div class="form-title">Create a New Session</div>
 
-        <form>
+        <form method="post" action="{{ path('app_home_create_session') }}">
             <div class="mb-4 text-start">
-                <label for="nameInput" class="form-label">Name</label>
+                <label for="creatorName" class="form-label">Your Name (Creator)</label>
                 <input
                     type="text"
-                    id="nameInput"
-                    name="name"
+                    id="creatorName"
+                    name="nickname"
                     class="form-control form-control-lg"
                     placeholder="Enter your name"
                     required
                 >
             </div>
             <button type="submit" class="btn btn-submit">
-                Submit
+                🚀 Create Session
             </button>
         </form>
     </div>

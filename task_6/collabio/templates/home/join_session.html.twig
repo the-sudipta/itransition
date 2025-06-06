@@ -1,7 +1,7 @@
 {# templates/join_session.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Collaborative Presentation - Join{% endblock %}
+{% block title %}Collaborative Presentation – Join Session{% endblock %}
 
 {% block body %}
     <style>
@@ -66,36 +66,39 @@
     </style>
 
     <div class="form-container">
-        {# Logo (place your logo file at public/images/logo.png) #}
+        {# Logo (place your logo file at public/images/collabio_logo_white.svg) #}
         <img src="{{ asset('images/collabio_logo_white.svg') }}" alt="App Logo" class="form-logo">
 
         <div class="form-title">Join an Existing Session</div>
 
-        <form>
+        <form
+            method="post"
+            action="{{ path('app_home_join_session') }}"
+        >
             <div class="mb-4 text-start">
-                <label for="nameInput" class="form-label">Name</label>
+                <label for="collaboratorName" class="form-label">Your Name (Collaborator)</label>
                 <input
                     type="text"
-                    id="nameInput"
-                    name="name"
+                    id="collaboratorName"
+                    name="nickname"
                     class="form-control form-control-lg"
                     placeholder="Enter your name"
                     required
                 >
             </div>
             <div class="mb-4 text-start">
-                <label for="sessionIdInput" class="form-label">Session ID</label>
+                <label for="presentationId" class="form-label">Session ID</label>
                 <input
                     type="text"
-                    id="sessionIdInput"
-                    name="session_id"
+                    id="presentationId"
+                    name="presentationId"
                     class="form-control form-control-lg"
-                    placeholder="Enter session ID"
+                    placeholder="Paste Session ID"
                     required
                 >
             </div>
             <button type="submit" class="btn btn-submit">
-                Join Session
+                🔗 Join Session
             </button>
         </form>
     </div>
