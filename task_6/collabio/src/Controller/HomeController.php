@@ -263,7 +263,7 @@ final class HomeController extends AbstractController
         return $this->render('home/embed_slide.html.twig', [
             'presentationId' => $presentationId,
             'creatorName'    => $creator,
-            'collabName'     => $collaborator,
+            'nickname'     => $collaborator,
             'editUrl'        => $editUrl,
         ]);
     }
