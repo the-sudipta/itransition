@@ -2,6 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Session;
+use App\Entity\User;
+use App\Repository\SessionRepository;
+use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Google_Client;
 use Google_Service_Drive;
 use Google_Service_Drive_Permission;
@@ -34,14 +39,14 @@ final class HomeController extends AbstractController
 //    }
 
     #[Route('/create', name: 'app_home_create_session')]
-    public function createSession(Request $request): Response
+    public function createSession(Request $request, EntityManagerInterface $entityManager): Response
     {
 
         if($request->isMethod('POST')){
-            // 1) Retrieve the creator's nickname from the POST request
+            // Retrieve the creator's nickname from the POST request
             $creatorName = trim($request->request->get('nickname', 'Creator'));
 
-            // 2) Initialize Google_Client and authenticate with the service account JSON
+            // Initialize Google_Client and authenticate with the service account JSON
             $client = new Google_Client();
             $client->setAuthConfig(
                 $this->getParameter('kernel.project_dir') . '/config/google/service-account.json'
@@ -49,7 +54,7 @@ final class HomeController extends AbstractController
             $client->addScope(Google_Service_Slides::PRESENTATIONS);
             $client->addScope(Google_Service_Drive::DRIVE);
 
-            // 3) Use the Slides API to create a new blank presentation
+            // Use the Slides API to create a new blank presentation
             $slidesService = new Google_Service_Slides($client);
             $presentation = new \Google_Service_Slides_Presentation([
                 'title' => "Collabio Session by {$creatorName}"
@@ -57,10 +62,10 @@ final class HomeController extends AbstractController
             $presentation = $slidesService->presentations->create($presentation);
             $presentationId = $presentation->getPresentationId();
 
-            // 4) Build the “edit” URL for Google Slides
+            // Build the “edit” URL for Google Slides
             $editUrl = "https://docs.google.com/presentation/d/{$presentationId}/edit";
 
-            // 5) Use the Drive API to grant “anyone with link can edit”
+            // Use the Drive API to grant “anyone with link can edit”
             $driveService = new Google_Service_Drive($client);
             $permission = new Google_Service_Drive_Permission();
             $permission->setType('anyone');
@@ -68,8 +73,27 @@ final class HomeController extends AbstractController
             $permission->setAllowFileDiscovery(false);  // link-only
             $driveService->permissions->create($presentationId, $permission);
 
-            // 6) Redirect the creator into the Slides editor immediately
-//            return new RedirectResponse($editUrl);
+            // Redirect the creator into the Slides editor immediately
+            // return new RedirectResponse($editUrl);
+
+            // Create Session and User
+            // Session
+            $newSession = new Session;
+            $newSession->setSessionId($presentationId);
+            $newSession->setCreatorNickname($creatorName);
+            $newSession->setStatus('active');
+            $newSession->setCreatedAt(new \DateTime());$newSession->setCreatedAt(new \DateTime());
+            $entityManager->persist($newSession);
+            // User
+            $creator = new User;
+            $creator->setNickname($creatorName);
+            $creator->setRole('creator');
+            $creator->setJoinedAt(new \DateTime());
+            $creator->setSession($newSession);
+            $entityManager->persist($creator);
+
+            $entityManager->flush();
+
             return $this->redirectToRoute('app_embed_slide', [
                 'presentationId' => $presentationId,
                 'creator'        => $creatorName,
@@ -90,33 +114,67 @@ final class HomeController extends AbstractController
 //        ]);
 //    }
 
-    #[Route('/join', name: 'app_home_join_session')]
+
     /**
      * @Route("/join", name="app_home_join_session", methods={"GET","POST"})
      */
-    public function joinSession(Request $request): Response
+    #[Route('/join', name: 'app_home_join_session')]
+    public function joinSession(Request $request, SessionRepository $sessionRepo, EntityManagerInterface $entityManager): Response
     {
         if (! $request->isMethod('POST')) {
             // Simple GET → show the join form
             return $this->render('home/join_session.html.twig');
         }
 
-        // 1) Read “nickname” and the user‐supplied “sessionId” (which might be a full URL)
-        $collabName       = trim($request->request->get('nickname', 'Collaborator'));
+        // Read “nickname” and the user‐supplied “sessionId” (which might be a full URL)
+        $collabName        = trim($request->request->get('nickname', 'Collaborator'));
         $presentationInput = trim($request->request->get('presentationId', ''));
 
         if (! $presentationInput) {
             return $this->redirectToRoute('app_home_index');
         }
 
-        // 2) Normalize the input into a raw presentation ID (ABCDEFGHIJKL)
+        // Normalize the input into a raw presentation ID (ABCDEFGHIJKL)
         $presentationId = $this->normalizeToPresentationId($presentationInput);
 
-        // 3) OPTIONAL: Insert a static “Joined by {collabName}” label onto slide #1
+        // find session if exists
+        $session = $sessionRepo->findOneBy(['sessionId' => $presentationId]);
+        if($session === null){
+            $this->addFlash('error', 'No session found');
+            return $this->redirectToRoute('app_home_index');
+        }
+        // is session active?
+        if($session->getStatus() !== 'active'){
+            $this->addFlash('error', 'Session closed');
+            return $this->redirectToRoute('app_home_index');
+        }
+
+        // Check if the name is already in the session or not
+        $allUsersOfTheSession = $session->getUsers();
+        // If exists, then return to homepage. Do not create his session
+        foreach ($allUsersOfTheSession as $singleUser) {
+            if ($singleUser->getNickname() === $collabName) {
+                $this->addFlash('error', 'A user with that nickname already joined this session.');
+                return $this->redirectToRoute('app_home_index');
+            }
+        }
+
+
+        // Create User
+        $collaborator = new User;
+        $collaborator->setNickname($collabName);
+        $collaborator->setRole('editor');
+        $collaborator->setJoinedAt(new \DateTime());
+        $collaborator->setSession($session);
+
+        $entityManager->persist($collaborator);
+        $entityManager->flush();
+
+        // OPTIONAL: Insert a static “Joined by {collabName}” label onto slide #1
         //    (same as before)
         $this->stampJoinedLabel($presentationId, $collabName);
 
-        // 4) Redirect the user into /embed/{presentationId}?nickname={collabName}
+        // Redirect the user into /embed/{presentationId}?nickname={collabName}
         return $this->redirectToRoute('app_embed_slide', [
             'presentationId' => $presentationId,
             'nickname'       => $collabName,
@@ -267,6 +325,89 @@ final class HomeController extends AbstractController
             'editUrl'        => $editUrl,
         ]);
     }
+
+
+    #[Route('/leave/{session_id}/{nickname}/', name: 'app_home_leave')]
+    public function leave(Request $request, $session_id, $nickname, EntityManagerInterface $entityManager, SessionRepository $sessionRepo, UserRepository $userRepo): Response
+    {
+
+        //FIND THE SESSION
+        $session = $sessionRepo->findOneBy(['sessionId' => $session_id]);
+        if ($session !== null) {
+            $user = $userRepo->findOneBy(['nickname' => $nickname]);
+            if($user !== null) {
+                // if the role is not creator, just delete the user
+                if($user->getRole() !== 'creator'){
+                    $entityManager->remove($user);
+                    $entityManager->flush();
+                }else{
+                    // That means he is creator. First change the session status to close
+                    // We will not use persist because the data is in the database
+
+                    $session->setStatus('closed');
+                    $entityManager->remove($user);
+                    $entityManager->flush();
+                }
+                $this->addFlash('success', 'Left the collaboration');
+                return $this->redirectToRoute('app_home_index');
+            }else{
+                // 500 error page redirection with message
+                // The session still exists (not found = false, found = true).
+                // Redirect to your 500‐error page, passing location='leave' and an error message:
+                $errorMessage = sprintf(
+                    "Session found for session_id '%s'. But unable to process leave request for user '%s'.",
+                    $session_id,
+                    $nickname
+                );
+                return $this->redirectToRoute('app_internal_server_error', [
+                    'location' => 'app_home_leave',
+                    'message'  => $errorMessage,
+                ]);
+            }
+        }else{
+            // 500 error page redirection with message
+            // The session still exists (not found = false, found = true).
+            // Redirect to your 500‐error page, passing location='leave' and an error message:
+            $errorMessage = sprintf(
+                "Session not found for session_id '%s'. Unable to process leave request for user '%s'.",
+                $session_id,
+                $nickname
+            );
+            return $this->redirectToRoute('app_internal_server_error', [
+                'location' => 'app_home_leave',
+                'message'  => $errorMessage,
+            ]);
+        }
+    }
+
+
+    #[Route('/error/internal/{location}/{message}/', name: 'app_internal_server_error')]
+    public function internalServerError($location,$message): Response
+    {
+
+        // 1) Locate the log file for the current environment
+        $logDir  = $this->getParameter('kernel.logs_dir');         // usually “/path/to/project/var/log”
+        $env     = $this->getParameter('kernel.environment');      // “dev” or “prod” or “test”
+        $logFile = $logDir . '/' . $env . '.log';
+
+        // 2) Read the last 20 lines (or fewer if the file is shorter)
+        $lastLines = [];
+        if (file_exists($logFile) && is_readable($logFile)) {
+            $allLines = file($logFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            $lastLines = array_slice($allLines, -20);
+        }
+
+        // 3) Pass those lines into Twig as “realLogs”
+        return $this->render('error/500.html.twig', [
+            'realLogs' => $lastLines,
+            'location' => $location,
+            'message' => $message
+        ]);
+
+    }
+
+
+
 
 
 

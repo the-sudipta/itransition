@@ -1,29 +1,57 @@
+{# templates/base.html.twig #}
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Welcome!{% endblock %}</title>
     <link rel="icon" href="{{ asset('images/collabio_logo_WHITE.svg') }}">
-{#    <link rel="icon" href="<?php echo $logo_svg; ?>" type="image/svg+xml">#}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-    {% block stylesheets %}
-    {% endblock %}
 
-    {% block javascripts %}
-    {% endblock %}
+    {# Bootstrap 5 CSS #}
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-…"
+        crossorigin="anonymous"
+    >
+
+    {% block stylesheets %}{% endblock %}
 </head>
 <body>
-{#    Flush Messages or Alert Messages    #}
-{% for label, messages in app.flashes %}
-    {% set alertClass = (label == 'error' ? 'danger' : label) %}
-    {% for message in messages %}
-        <div class="alert alert-{{ alertClass }} alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
+
+{# =============================================== #}
+{# Flash messages (positioned in the bottom‐right) #}
+{# =============================================== #}
+<div class="position-fixed bottom-0 end-0 ps-3 pb-3" style="z-index:1080;">
+    {% for label, messages in app.flashes %}
+        {% set alertClass = (label == 'error' ? 'danger' : label) %}
+        {% for message in messages %}
+            <div
+                class="alert alert-{{ alertClass }} alert-dismissible fade show"
+                role="alert"
+            >
+                {{ message }}
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close"
+                ></button>
+            </div>
+        {% endfor %}
     {% endfor %}
-{% endfor %}
+</div>
+
 {% block body %}{% endblock %}
+
+{# ====================================== #}
+{# Bootstrap 5 JavaScript Bundle (required so the “×” actually works) #}
+{# ====================================== #}
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-…"
+    crossorigin="anonymous"
+></script>
+
+{% block javascripts %}{% endblock %}
 </body>
 </html>

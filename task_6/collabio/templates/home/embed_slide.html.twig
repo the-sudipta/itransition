@@ -184,7 +184,8 @@
 
         {# “You are: {nickname OR creatorName}” banner, appearing on top #}
         <div id="name-banner">
-            {% set displayName = (
+            {%
+                set displayName = (
                 (nickname is defined and nickname)
                 ? nickname
                 : (creatorName is defined and creatorName)
@@ -206,7 +207,7 @@
 <script>
     // “Leave Session” just redirects back to your landing page
     document.getElementById('leaveBtn').addEventListener('click', function() {
-        window.location.href = "{{ path('app_home_index') }}";
+        window.location.href = "{{ path('app_home_leave', {'session_id': presentationId, 'nickname': nickname|default(creatorName|default('')) }) }}";
     });
 </script>
 </body>
