@@ -1,0 +1,5 @@
+# Ignore the entire google credentials folder
+/task_6/collabio/config/google/
+
+# Ignore the google_apiclient.yaml file
+/task_6/collabio/config/packages/google_apiclient.yaml
