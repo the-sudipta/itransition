@@ -52,7 +52,7 @@ Once you have the output array and have verified the results:
 
 ## Repository Link
 
-[View the solution code on GitHub](https://github.com/yourusername/optional-task-2)
+[View the solution code on GitHub](https://github.com/the-sudipta/itransition/blob/main/task_optional_2/optional_task_2.ipynb)
 
 ---
 
