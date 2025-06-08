@@ -40,35 +40,35 @@ Language A → outputs → Language B code → which outputs → Language A code
 
 ## 📜 Rules
 
-| ✅ Must Do | ❌ Must Not Do |
-|-----------|----------------|
-| Use only **two languages** | ❌ Don’t create or write extra helper files |
-| Keep the solution in **one single file** | ❌ Don’t use I/O to read your own source |
-| Use **manual string crafting** | ❌ Don’t access source via reflection or meta-programming |
-| Ensure the cycle works 100% | ❌ No file access, no external inputs |
+| ✅ Must Do                        | ❌ Must Not Do                                      |
+|----------------------------------|-----------------------------------------------------|
+| Use only **two languages**       | ❌ Don’t create or write extra helper files         |
+| Keep the solution in **one single file** | ❌ Don’t use I/O to read your own source      |
+| Use **manual string crafting**   | ❌ Don’t access source via reflection or meta-programming |
+| Ensure the cycle works 100%      | ❌ No file access, no external inputs               |
 | Self-delete after transformation | ❌ Don’t leave both `.php` and `.py` present at the same time |
 
-> ⚠️ Both conversions must only involve a single file at any time (e.g., `task_optional_1.php` ↔ `task_optional_1.py`).  
+> ⚠️ Both conversions must only involve a single file at any time (e.g., `cross_quine.php` ↔ `cross_quine.py`).  
 > No secondary temp files, result files, or intermediates are allowed.
 
 ---
 
-## 🚀 How to Run (PHP → Python → PHP)
+## 🚀 How to Run (Python → PHP → Python)
 
-Suppose you write code in `PHP` (A) that outputs code in `Python` (B).  
-Your original file is: `task_optional_1.php`
+Suppose you run code in `Python` (A) that emits code in `PHP` (B).  
+Your original file is: `cross_quine.py`
 
-To execute and verify the mirror cycle, run the following commands:
+To execute and verify the cycle, run the following commands:
 
 ```bash
+python task_optional_1.py > task_optional_1.php
 php task_optional_1.php
-python task_optional_1.py
 ```
 
-Each step should:
-- Convert to the next language
-- Delete the current file
-- Leave only **one file** in the folder at a time
+Each step:
+- Generates the next-language file in-memory (no file-reads)
+- Prints out the original source
+- Leaves only **one file** in the folder at a time
 
 ---
 
@@ -76,12 +76,12 @@ Each step should:
 
 1. Upload the **source code file** (only one file).
 2. Record a **video or screenshots** showing:
-   - Running language A file and generating B
-   - Running language B file and getting back A
+   - Running the Python file to generate the PHP file
+   - Running the PHP file to get back the Python source
    - Final `diff` or comparison of input vs. output (should be identical)
 
-3. Submit the video/screenshots + code to:  
-   📧 `p.lebedev@itransition.com`
+3. Submit the video/screenshots + code to:
+   📧 the company
 
 ---
 
@@ -91,7 +91,7 @@ Each step should:
 - You **cannot access** your source via reflection, `__file__`, etc.
 - You **must not** use any API that gives access to the script body
 - You **must not** produce multiple files — just **one at a time**
-- You **can** use tricks like escaping quotes, managing newlines, etc.
+- You **can** use tricks like escaping quotes and managing newlines
 
 ---
 
@@ -107,7 +107,7 @@ Each step should:
 ## 🗓️ Deadline
 
 > No strict deadline — submit only if you feel ready  
-This task is **entirely optional** and for **extra points** or fun.
+> This task is **entirely optional** and for **extra points** or fun.
 
 ---
 
