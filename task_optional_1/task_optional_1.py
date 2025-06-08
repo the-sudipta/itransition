@@ -1,24 +1,23 @@
 #!/usr/bin/env python3
 import base64
 
-# Step 1: this Python template *itself* is encoded in Base64 and stored in `b64`
-python_template = """#!/usr/bin/env python3
+# 1) Our Python self‐source, as a literal string:
+code = '''#!/usr/bin/env python3
 import base64
 
-# Base64-encoded Python code (this script itself):
-b64 = {b64!r}
+# 1) Our Python self-source, as a literal string:
+code = {code!r}
 
-# When run under PHP, the decoded Python will be echoed back:
-php = "<?php\\n$py = '%s';\\nprint(base64_decode($py));\\n?>" % b64
+# 2) Base64 encode our entire source:
+b64 = base64.b64encode(code.encode("utf-8")).decode("ascii")
 
-print(php)
-"""
+# 3) Emit the PHP stub (no closing tag):
+print(f"<?php echo base64_decode('{b64}');")
+'''
 
-# Compute the Base64 of the *final* Python code (i.e. the template with its own b64 embedded)
-b64 = base64.b64encode(python_template.format(b64="").encode()).decode()
-# Now regenerate the Python source with the correct b64 inserted:
-python_code = python_template.format(b64=b64)
+# 2) Fill in the placeholder so `code` really contains its own text:
+full_py = code.format(code=code)
 
-# Finally, emit the PHP quine:
-#   - You can redirect this output into a .php file.
-print(python_code)
+# 3) Base64-encode that and emit the one‐and‐only PHP file:
+b64 = base64.b64encode(full_py.encode("utf-8")).decode("ascii")
+print(f"<?php echo base64_decode('{b64}');")
