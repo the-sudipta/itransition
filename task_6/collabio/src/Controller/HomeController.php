@@ -63,7 +63,7 @@ final class HomeController extends AbstractController
             $presentationId = $presentation->getPresentationId();
 
             // Build the “edit” URL for Google Slides
-            $editUrl = "https://docs.google.com/presentation/d/{$presentationId}/edit";
+            $editUrl = "https://docs.google.com/presentation/d/{$presentationId}/embed?rm=minimal";
 
             // Use the Drive API to grant “anyone with link can edit”
             $driveService = new Google_Service_Drive($client);
@@ -316,7 +316,7 @@ final class HomeController extends AbstractController
         $creator      = $request->query->get('creator', '');
         $collaborator = $request->query->get('nickname', '');
 
-        $editUrl = "https://docs.google.com/presentation/d/{$presentationId}/edit";
+        $editUrl = "https://docs.google.com/presentation/d/{$presentationId}/embed?rm=minimal";
 
         return $this->render('home/embed_slide.html.twig', [
             'presentationId' => $presentationId,
