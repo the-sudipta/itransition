@@ -16,6 +16,10 @@ class TemplateTag
     #[ORM\Column(length: 255)]
     private ?string $tag = null;
 
+    #[ORM\ManyToOne(inversedBy: 'templateTags')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Template $template = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -29,6 +33,18 @@ class TemplateTag
     public function setTag(string $tag): static
     {
         $this->tag = $tag;
+
+        return $this;
+    }
+
+    public function getTemplate(): ?Template
+    {
+        return $this->template;
+    }
+
+    public function setTemplate(?Template $template): static
+    {
+        $this->template = $template;
 
         return $this;
     }
