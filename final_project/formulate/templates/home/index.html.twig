@@ -58,6 +58,9 @@
             box-shadow: 0 8px 16px rgba(0,0,0,0.15);
         }
         .card-img-top {
+            width: 100%;              /* full card width */
+            height: 200px;            /* fixed height */
+            object-fit: cover;        /* crop & center */
             border-top-left-radius: .75rem;
             border-top-right-radius: .75rem;
         }
@@ -123,9 +126,11 @@
             {% for form in forms %}
                 <div class="col-lg-4 col-md-6 mb-4 form-card" data-title="{{ form.title|lower }}">
                     <div class="card h-100 shadow-sm">
-                        {% if form.imageUrl %}
-                            <img src="{{ form.imageUrl }}" class="card-img-top" alt="{{ form.title }}">
-                        {% endif %}
+                        <img
+                            src="{{ form.imageUrl ?: asset('images/default_form.png') }}"
+                            onerror="this.onerror=null;this.src='{{ asset('images/default_form.png') }}';"
+                            class="card-img-top"
+                            alt="{{ form.title }}">
                         <div class="card-body bg-white">
                             <h5 class="card-title mb-3" style="color:#212121;">{{ form.title }}</h5>
                             <p class="card-text" style="color:#424242;">
