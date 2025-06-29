@@ -1,7 +1,7 @@
-{# templates/exception/database_error.html.twig #}
+{# templates/exception/500.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Formulate • Database Error{% endblock %}
+{% block title %}Formulate • 500 Internal Server Error{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -25,18 +25,17 @@
             height: 100vh;
         }
 
-        .db-error-wrap {
+        .error-wrap {
             width: 90%;
             max-width: 600px;
             padding: 2rem;
             text-align: center;
-            transform: scale(0.8);
+            transform: scale(0.78);
             transform-origin: center center;
-            display: block;
             margin: 0 auto;
         }
 
-        .db-error-video {
+        .error-video {
             width: 690px;
             max-width: 100%;
             border-radius: .5rem;
@@ -44,27 +43,29 @@
             display: block;
         }
 
-        .db-error-title {
+        .error-title {
             font-size: 2.25rem;
             color: var(--text-dark);
             margin: 1rem 0 .5rem;
         }
 
-        .db-error-text {
+        .error-text {
             color: var(--text-muted);
             margin-bottom: 2rem;
             line-height: 1.5;
         }
 
-        .db-error-details {
+        .error-details {
             text-align: left;
             margin-bottom: 2rem;
         }
-        .db-error-details h3 {
+
+        .error-details h3 {
             margin: 1rem 0 .5rem;
             font-size: 1.125rem;
             color: var(--text-dark);
         }
+
         .error-box {
             background: var(--box-bg);
             border: 1px solid var(--box-border);
@@ -72,11 +73,16 @@
             padding: 1rem;
             font-family: Menlo, Consolas, monospace;
             font-size: .875rem;
-            max-height: 150px;
 
-            /* NEW: force horizontal overflow */
-            white-space: pre;
-            overflow-x: auto;
+            /* remove fixed height & scrollbars */
+            max-height: none;
+            overflow: visible;
+
+            /* wrap long lines completely */
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            word-break: break-all;
+
             color: var(--text-dark);
         }
 
@@ -92,49 +98,49 @@
         .btn-back:hover {
             background: #d85034;
         }
-
-        .db-error-details h3 + .meta {
-            font-size: .875rem;
-            color: var(--text-muted);
-            margin-bottom: 0.5rem;
-        }
     </style>
 {% endblock %}
 
-
 {% block body %}
-    <div class="db-error-wrap">
+    <div class="error-wrap">
+        {# 500 animation video #}
         <video
-            class="db-error-video"
+            class="error-video"
             autoplay
             loop
             muted
             playsinline
         >
-            <source src="{{ asset('videos/Database Error.mp4') }}" type="video/mp4">
+            <source src="{{ asset('videos/Internal Server Error 500.mp4') }}" type="video/mp4">
             Your browser does not support the video tag.
         </video>
 
-        <h1 class="db-error-title">Oops! Database Unavailable</h1>
-        <p class="db-error-text">
-            We’re having trouble reaching our database right now.<br>
-            Our engineers have been alerted. Please try again shortly.
+        <h1 class="error-title">500 • Internal Server Error</h1>
+        <p class="error-text">
+            Oops! Something went wrong on our end.<br>
+            Our engineers have been notified and are working on a fix.
         </p>
 
-        <div class="db-error-details">
-            <h3>Current Error</h3>
-            <div class="meta">
-                <strong>File:</strong> {{ errorFile }}<br>
-                <strong>Line:</strong> {{ errorLine }}
+        <div class="error-details">
+            <h3>Threw From File:</h3>
+            <div class="error-box">
+                {{ errorFile }}
+                {% if errorLine is defined %}
+                    <br><small>Line {{ errorLine }}</small>
+                {% endif %}
             </div>
+
+            <h3>Error Message:</h3>
             <div class="error-box">{{ errorMessage }}</div>
 
-            {% if previousMessage %}
-                <h3>Previous Error</h3>
-                <div class="meta">
-                    <strong>Line:</strong> {{ previousLine }}
+            {% if previousMessage is defined and previousMessage %}
+                <h3>Previous Error:</h3>
+                <div class="error-box">
+                    {{ previousMessage }}
+                    {% if previousLine is defined %}
+                        <br><small>Line {{ previousLine }}</small>
+                    {% endif %}
                 </div>
-                <div class="error-box">{{ previousMessage }}</div>
             {% endif %}
         </div>
 

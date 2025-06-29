@@ -72,6 +72,16 @@ final class HomeController extends AbstractController
         ]);
     }
 
+    #[Route('/test', name: 'app_home_test')]
+    public function test(): Response
+    {
+        $n = 1 / 0; // <-- throws before we ever hit "return"
+        return $this->render('home/register.html.twig');
+
+    }
+
+
+
 
 
 }

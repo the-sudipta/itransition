@@ -1,0 +1,104 @@
+{# templates/exception/404_page_not_found.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Formulate • 404 Not Found{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        :root {
+            --bg-page:     #CCCCCC;
+            --accent-main: #F2613F;
+            --text-dark:   #212121;
+            --text-muted:  #424242;
+        }
+
+        /* Full-screen flex centering */
+        body {
+            margin: 0;
+            background: var(--bg-page);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        .nf-wrap {
+            text-align: center;
+            width: 90%;
+            max-width: 600px;
+            padding: 2rem;
+            box-sizing: border-box;
+            transform: scale(0.85);
+            transform-origin: center;
+        }
+
+        /* Your repair-work animation video */
+        .nf-video {
+            width: 100%;
+            max-width: 400px;
+            display: block;
+            margin: 0 auto 1.5rem;
+        }
+
+        .nf-title {
+            font-size: 2.5rem;
+            color: var(--text-dark);
+            margin: 1rem 0 .5rem;
+        }
+
+        .nf-text {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            line-height: 1.4;
+            font-size: 1.1rem;
+        }
+
+        .nf-path {
+            background: #fff;
+            border: 1px solid #E0E0E0;
+            border-radius: .25rem;
+            padding: .5rem 1rem;
+            font-family: Menlo, Consolas, monospace;
+            color: var(--text-dark);
+            display: inline-block;
+            word-break: break-all;
+            margin-bottom: 2rem;
+        }
+
+        .btn-home {
+            background: var(--accent-main);
+            color: #fff;
+            border: none;
+            padding: .75rem 1.5rem;
+            border-radius: .25rem;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: background .2s;
+        }
+        .btn-home:hover {
+            background: #d85034;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="nf-wrap">
+        {# Replace with your downloaded MP4 in public/videos/ #}
+        <video class="nf-video" autoplay loop muted playsinline>
+            <source src="{{ asset('videos/404 repair work.mp4') }}" type="video/mp4">
+            Your browser doesn’t support HTML5 video.
+        </video>
+
+        <h1 class="nf-title">404 • Page Not Found</h1>
+        <p class="nf-text">
+            Yikes! We couldn’t locate the page you asked for:<br>
+            <span class="nf-path">{{ pathInfo }}</span>
+        </p>
+
+        <a href="{{ path('app_home_index') }}" class="btn-home">
+            <i class="bi bi-house-door-fill me-1"></i> Back to Home
+        </a>
+    </div>
+{% endblock %}

@@ -1,5 +1,4 @@
 <?php
-// src/EventSubscriber/ExceptionSubscriber.php
 namespace App\Exception;
 
 use Doctrine\DBAL\Exception as DBALException;
@@ -16,19 +15,25 @@ class Exception implements EventSubscriberInterface
 
     public static function getSubscribedEvents(): array
     {
-        // Listen for all uncaught exceptions
         return [
-            KernelEvents::EXCEPTION => ['onKernelException', 10],
+            KernelEvents::EXCEPTION => ['onKernelException', /*priority*/ 10],
         ];
     }
 
     public function onKernelException(ExceptionEvent $event): void
     {
+        $request = $event->getRequest();
         $throwable = $event->getThrowable();
 
-        // 1) Database errors → templates/Exception/database_error.html.twig
+        // 1) Database errors → custom DB page
         if ($throwable instanceof DBALException) {
-            $html = $this->twig->render('exception/database_error.html.twig');
+            $html = $this->twig->render('exception/database_error.html.twig', [
+                'errorFile'       => $throwable->getFile(),
+                'errorLine'       => $throwable->getLine(),
+                'errorMessage'    => $throwable->getMessage(),
+                'previousMessage' => $throwable->getPrevious()?->getMessage(),
+                'previousLine'    => $throwable->getPrevious()?->getLine(),
+            ]);
             $event->setResponse(new Response($html, Response::HTTP_INTERNAL_SERVER_ERROR));
             return;
         }
@@ -36,14 +41,41 @@ class Exception implements EventSubscriberInterface
         // 2) HTTP errors (404, 403, etc.)
         if ($throwable instanceof HttpExceptionInterface) {
             $statusCode = $throwable->getStatusCode();
-            $template   = sprintf('exception/%s_page_not_found.html.twig', $statusCode);
+
+            // —––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+            // HANDLE 404:
+            // —––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+            if ($statusCode === Response::HTTP_NOT_FOUND) {
+                $html = $this->twig->render('exception/404.html.twig', [
+                    'statusCode' => $statusCode,
+                    'pathInfo'   => $request->getPathInfo(),
+                ]);
+
+                $event->setResponse(new Response($html, $statusCode));
+                return; // stop here for 404
+            }
+
+            $template   = sprintf('exception/%d.html.twig', $statusCode);
 
             if ($this->twig->getLoader()->exists($template)) {
-                $html = $this->twig->render($template);
+                $html = $this->twig->render($template, [
+                    'statusCode'   => $statusCode,
+                    'errorFile'    => $throwable->getFile(),
+                    'errorMessage' => $throwable->getMessage(),
+                ]);
                 $event->setResponse(new Response($html, $statusCode));
+                return;
             }
         }
 
-        // otherwise, let the default TwigBundle handler run
+        // 3) EVERYTHING ELSE → custom 500 page
+        $html = $this->twig->render('exception/500.html.twig', [
+            'errorFile'       => $throwable->getFile(),
+            'errorLine'       => $throwable->getLine(),
+            'errorMessage'    => $throwable->getMessage(),
+            'previousMessage' => $throwable->getPrevious()?->getMessage(),
+            'previousLine'    => $throwable->getPrevious()?->getLine(),
+        ]);
+        $event->setResponse(new Response($html, Response::HTTP_INTERNAL_SERVER_ERROR));
     }
 }
