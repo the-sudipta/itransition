@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 final class HomeController extends AbstractController
 {
@@ -70,6 +71,35 @@ final class HomeController extends AbstractController
         return $this->render('home/register.html.twig', [
             'registrationForm' => $form,
         ]);
+    }
+
+    #[Route(path: '/auth/login', name: 'app_login')]
+    public function login(AuthenticationUtils $authenticationUtils): Response
+    {
+
+
+        // If the user already has ROLE_USER, send them straight to registration:
+        if ($this->isGranted('ROLE_USER')) {
+//            return $this->redirectToRoute('app_register');
+        }
+
+
+        // get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
+
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+
+        return $this->render('home/login.html.twig', [
+            'last_username' => $lastUsername,
+            'error' => $error,
+        ]);
+    }
+
+    #[Route(path: '/logout', name: 'app_logout')]
+    public function logout(): void
+    {
+        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 
     #[Route('/test', name: 'app_home_test')]

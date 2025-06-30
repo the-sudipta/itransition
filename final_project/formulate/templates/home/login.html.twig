@@ -1,0 +1,175 @@
+{# templates/home/login.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Formulate • Log in{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        :root {
+            --bg-page:    #CCCCCC;
+            --brand-char: #212121;
+            --brand-blue: #447DA0;
+            --brand-green:#27AE60;
+            --divider:    #E0E0E0;
+        }
+        body {
+            margin: 0; font-family:"Segoe UI",sans-serif;
+            background: var(--bg-page);
+            display:flex; align-items:center; justify-content:center;
+            min-height:100vh;
+        }
+        .login-container {
+            display:flex; width:90%; max-width:1000px;
+            background:#fff; border-radius:.75rem;
+            overflow:hidden; box-shadow:0 12px 32px rgba(0,0,0,0.1);
+            animation:fadeIn .6s ease-out;
+        }
+        .login-illustration {
+            flex:1; background:linear-gradient(135deg,#f0f4f8,#d9e2ec);
+            position:relative; display:flex; align-items:center; justify-content:center;
+        }
+        .login-illustration::before {
+            content:""; position:absolute; width:200px;height:200px;
+            opacity:.1; border-radius:50%; animation:float 5s infinite ease-in-out;
+        }
+        .login-lottie { width:280px; z-index:1; }
+
+        .login-form {
+            flex:1; padding:3rem 2.5rem;
+        }
+        .login-form h1 {
+            color:var(--brand-char); font-size:1.75rem; margin-bottom:1.5rem;
+        }
+        .form-control.is-invalid {
+            border-color: #dc3545;
+        }
+        .invalid-feedback {
+            color: #dc3545;
+            display: block;
+            margin-top: .25rem;
+            font-size: .875em;
+        }
+        .btn-submit {
+            background:var(--brand-blue); color:#fff; border-radius:.5rem;
+            padding:.75rem; width:100%; font-weight:500;
+            transition:background .2s;
+        }
+        .btn-submit:hover { background:var(--brand-green); }
+        @keyframes fadeIn {
+            from {opacity:0; transform:translateY(20px);}
+            to   {opacity:1; transform:translateY(0);}
+        }
+        @keyframes float {
+            0%,100% {transform:translateY(0) translateX(0);}
+            50%     {transform:translateY(-20px) translateX(10px);}
+        }
+
+        .login-form .small-link.green {
+            color: var(--brand-green) !important;
+            text-decoration: none !important;
+            cursor: pointer;
+        }
+        .login-form .small-link.green:hover {
+            text-decoration: none;
+            opacity: 0.8;
+        }
+
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="login-container">
+        <div class="login-illustration">
+            <img src="{{ asset('images/formulate_logo_icon.png') }}" class="login-lottie" alt="Illustration">
+        </div>
+
+        <div class="login-form">
+            <h1>Welcome Back</h1>
+            {% if error %}
+                <div class="alert alert-danger">
+                    {{ error.messageKey|trans(error.messageData, 'security') }}
+                </div>
+            {% endif %}
+
+            <form id="loginForm" method="post">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Email</label>
+                    <input
+                        id="username" name="_username" type="email"
+                        class="form-control"
+                        value="{{ last_username }}"
+                        autocomplete="email"
+                        autofocus
+                    >
+                    <div class="invalid-feedback" id="emailError"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input
+                        id="password" name="_password" type="password"
+                        class="form-control"
+                        autocomplete="current-password"
+                    >
+                    <div class="invalid-feedback" id="passwordError"></div>
+                </div>
+
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                <button class="btn btn-submit mb-3" type="submit">
+                    <i class="bi bi-box-arrow-in-right me-1"></i> Sign In
+                </button>
+            </form>
+
+            <p class="text-center">
+                Don’t have an account?
+                <a href="{{ path('app_register') }}"
+                   class="small-link green">
+                    Sign up here
+                </a>
+            </p>
+
+        </div>
+    </div>
+
+    {# Inline JS validation #}
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            let valid = true;
+
+            // grab fields & error containers
+            const emailInput = document.getElementById('username');
+            const passInput  = document.getElementById('password');
+            const emailErr   = document.getElementById('emailError');
+            const passErr    = document.getElementById('passwordError');
+
+            // clear old errors
+            emailErr.textContent = '';
+            passErr.textContent  = '';
+            emailInput.classList.remove('is-invalid');
+            passInput.classList.remove('is-invalid');
+
+            // Email regex
+            const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (! emailRe.test(emailInput.value.trim())) {
+                valid = false;
+                emailInput.classList.add('is-invalid');
+                emailErr.textContent = 'Please enter a valid email address.';
+            }
+
+            // Password rules: min8, uppercase, lowercase, digit, special
+            const pwd = passInput.value;
+            const pwdRe = /(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_])/;
+            if (! pwdRe.test(pwd)) {
+                valid = false;
+                passInput.classList.add('is-invalid');
+                passErr.textContent = 'Password must be at least 8 chars, include uppercase, lowercase, number & special char.';
+            }
+
+            if (! valid) {
+                e.preventDefault(); // stop actual submit
+            }
+        });
+    </script>
+{% endblock %}

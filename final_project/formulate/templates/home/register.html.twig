@@ -1,17 +1,190 @@
-{% block title %}Register{% endblock %}
+{# templates/home/register.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Formulate • Sign Up{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        :root {
+            --bg-page:     #f0f4f8;
+            --brand-char:  #212121;
+            --brand-blue:  #447DA0;
+            --brand-green: #27AE60;
+            --divider:     #E0E0E0;
+            --error-red:   #C9302C;
+        }
+        body {
+            margin: 0;
+            font-family: "Segoe UI", sans-serif;
+            background: var(--bg-page);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .register-container {
+            display: flex;
+            width: 90%;
+            max-width: 1000px;
+            background: #fff;
+            border-radius: .75rem;
+            overflow: hidden;
+            box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+            animation: fadeIn 0.6s ease-out;
+        }
+        .register-illustration {
+            flex: 1;
+            background: linear-gradient(135deg, #e8eff5, #d9e2ec);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .register-illustration::before {
+            content: "";
+            position: absolute;
+            width: 180px; height: 180px;
+            background: var(--brand-blue);
+            opacity: .08;
+            border-radius: 50%;
+            animation: float 5s infinite ease-in-out;
+        }
+        .register-video {
+            width: 300px;
+            max-width: 80%;
+            border-radius: .5rem;
+            z-index: 1;
+        }
+        .register-form {
+            flex: 1;
+            padding: 3rem 2.5rem;
+        }
+        .register-form .logo {
+            height: 48px;
+            margin-bottom: 1.5rem;
+        }
+        .register-form h1 {
+            color: var(--brand-char);
+            font-size: 1.75rem;
+            margin-bottom: .5rem;
+        }
+        .register-form p.lead {
+            color: var(--divider);
+            margin-bottom: 2rem;
+        }
+        .register-form .form-control {
+            border: 1px solid var(--divider);
+            border-radius: .5rem;
+            padding: .75rem 1rem;
+            box-shadow: none;
+            transition: border-color .2s;
+        }
+        .register-form .form-control:focus {
+            border-color: var(--brand-blue);
+            box-shadow: 0 0 0 .2rem rgba(68,125,160, .25);
+        }
+        .register-form .btn-submit {
+            background: var(--brand-blue);
+            color: #fff;
+            border-radius: .5rem;
+            padding: .75rem;
+            width: 100%;
+            font-weight: 500;
+            transition: background .2s;
+        }
+        .register-form .btn-submit:hover {
+            background: var(--brand-green);
+        }
+        .register-form label.form-label {
+            font-weight: 500;
+            margin-bottom: .25rem;
+        }
+        .register-form .error-text {
+            color: var(--error-red);
+            font-size: .875rem;
+            margin-top: .25rem;
+        }
+        .register-form .form-text {
+            font-size: .875rem;
+            color: var(--divider);
+            margin-bottom: 1.5rem;
+        }
+        .register-form .small-link {
+            font-size: .9rem;
+            color: var(--brand-blue);
+            text-decoration: none;
+        }
+        .register-form .small-link:hover {
+            text-decoration: underline;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes float {
+            0%,100% { transform: translateY(0) translateX(0); }
+            50%     { transform: translateY(-20px) translateX(10px); }
+        }
+    </style>
+{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
+    <div class="register-container">
+        <div class="register-illustration">
+            <video
+                class="register-video"
+                autoplay
+                loop
+                muted
+                playsinline
+            >
+                <source src="{{ asset('videos/Sign Up.mp4') }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
 
-    {{ form_errors(registrationForm) }}
+        <div class="register-form">
+            <img src="{{ asset('images/formulate_logo_icon.png') }}" alt="Formulate" class="logo">
+            <h1>Create Your Account</h1>
+            <p class="lead">Start building beautiful forms in seconds.</p>
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+            {{ form_start(registrationForm, { attr: { novalidate: 'novalidate' } }) }}
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+            {# Email #}
+            <div class="mb-3">
+                <label for="{{ registrationForm.email.vars.id }}" class="form-label">Email</label>
+                {{ form_widget(registrationForm.email, { attr: { class: 'form-control', placeholder: 'you@example.com' } }) }}
+                {{ form_errors(registrationForm.email) }}
+            </div>
+
+            {# Plain password #}
+            <div class="mb-3">
+                <label for="{{ registrationForm.plainPassword.vars.id }}" class="form-label">Password</label>
+                {{ form_widget(registrationForm.plainPassword, { attr: { class: 'form-control', placeholder: 'Choose a password' } }) }}
+                {{ form_errors(registrationForm.plainPassword) }}
+            </div>
+
+            {# Terms checkbox #}
+            <div class="mb-4">
+                <div class="form-check">
+                    {{ form_widget(registrationForm.agreeTerms, { attr: { class: 'form-check-input me-2' } }) }}
+                    {{ form_label(registrationForm.agreeTerms, '<span class="text-secondary">I agree to the <a href="#" class="text-decoration-none small-link">Terms & Conditions</a></span>', { label_html: true, attr: { class: 'form-check-label' } }) }}
+                </div>
+                {{ form_errors(registrationForm.agreeTerms) }}
+            </div>
+
+            <button type="submit" class="btn btn-submit mb-3">
+                <i class="bi bi-pencil-square me-1"></i> Sign Up
+            </button>
+
+            {{ form_end(registrationForm) }}
+
+            <p class="text-center">
+                Already have an account?
+                <a href="{{ path('app_login') }}" class="small-link">Sign in here</a>
+            </p>
+        </div>
+    </div>
 {% endblock %}
