@@ -111,6 +111,15 @@
             color: var(--brand-green) !important;
         }
     </style>
+    <style>
+        .modal-body .comment-box {
+            background-color: var(--card-bg);
+            border: 1px solid var(--divider-gray);
+            border-radius: .5rem;
+            padding: .75rem 1rem;
+            margin-bottom: .75rem;
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
@@ -135,14 +144,16 @@
                             <p class="card-text">
                                 {{ form.description|striptags|length > 100
                                 ? form.description|striptags|slice(0,100) ~ '…'
-                                : form.description|striptags }}
+                                : form.description|striptags
+                                }}
                             </p>
                         </div>
-                        <div class="card-footer bg-white border-top">
+                        <div class="card-footer bg-white border-top d-flex align-items-center">
+                            {# Like button/form #}
                             <form
                                 method="post"
                                 action="{{ path('app_user_toggle_like', {id: form.id}) }}"
-                                class="d-inline"
+                                class="d-inline me-3"
                             >
                                 <input
                                     type="hidden"
@@ -156,29 +167,124 @@
                                 >
                                     <i class="bi
                                         {{ form.id in liked_ids
-                                        ? 'bi-hand-thumbs-up-fill text-success'
-                                        : 'bi-hand-thumbs-up'
-                                        }}">
-                                    </i>
+                                    ? 'bi-hand-thumbs-up-fill text-success'
+                                    : 'bi-hand-thumbs-up'
+                                    }}
+                                    "></i>
                                     <span class="ms-1">{{ form.likesCount }}</span>
                                 </button>
                             </form>
 
-                            <small>
-                                <i class="bi bi-chat-dots-fill"></i>
-                                {{ form.commentsCount }}
+                            {# Comment trigger #}
+                            <small class="ms-3">
+                                <a
+                                    href="#commentsModal{{ form.id }}"
+                                    data-bs-toggle="modal"
+                                    class="text-decoration-none text-reset"
+                                >
+                                    <i class="bi bi-chat-dots-fill"></i>
+                                    {{ form.commentsCount }}
+                                </a>
                             </small>
                         </div>
                     </div>
                 </div>
+
+                {# — Modal for this exact form — #}
+                <div
+                    class="modal fade"
+                    id="commentsModal{{ form.id }}"
+                    tabindex="-1"
+                    aria-labelledby="commentsModalLabel{{ form.id }}"
+                    aria-hidden="true"
+                >
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5
+                                    class="modal-title"
+                                    id="commentsModalLabel{{ form.id }}"
+                                >
+                                    Comments for “{{ form.title }}”
+                                </h5>
+                                <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"
+                                ></button>
+                            </div>
+
+                            <div class="modal-body">
+                                {% set coms = comments_by[form.id] %}
+                                {% if coms %}
+                                    <ul class="list-unstyled">
+                                        {% for c in coms %}
+                                            <li class="mb-2 comment-box">
+                                                <strong>{{ c.user.email }}</strong>
+                                                <small class="text-muted">
+                                                    — {{ c.createdAt|date('Y-m-d H:i') }}
+                                                </small>
+                                                <div>{{ c.content }}</div>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    <p class="text-muted">No comments yet.</p>
+                                {% endif %}
+                            </div>
+
+                            <div class="modal-footer flex-column">
+                                <form
+                                    method="post"
+                                    action="{{ path('app_user_add_comment', {id: form.id}) }}"
+                                    class="w-100 position-relative d-flex align-items-center"
+                                >
+                                    <input
+                                        type="hidden"
+                                        name="_token"
+                                        value="{{ csrf_token('add_comment' ~ form.id) }}"
+                                    />
+
+                                    {# character counter #}
+                                    <small
+                                        id="counter{{ form.id }}"
+                                        class="position-absolute top-0 start-0 text-muted ps-2 pt-1"
+                                    >0/200</small>
+
+                                    <textarea
+                                        name="comment_text"
+                                        class="form-control ps-5"
+                                        rows="2"
+                                        maxlength="200"
+                                        placeholder="Write your comment…"
+                                        oninput="
+                                            const max = 200;
+                                            if (this.value.length > max) this.value = this.value.slice(0, max);
+                                            document.getElementById('counter{{ form.id }}').textContent =
+                                            this.value.length + '/' + max;
+                                        "
+                                    ></textarea>
+
+                                    <button
+                                        type="submit"
+                                        class="btn btn-primary ms-2"
+                                    >Send</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             {% else %}
                 <div class="col-12 text-center text-secondary">
-                    You haven’t created any forms yet.
+                    Nobody created any forms yet.
                 </div>
             {% endfor %}
         </div>
     </div>
 {% endblock %}
+
 
 {% block javascripts %}
     <script>
@@ -188,6 +294,17 @@
             document.querySelectorAll('.form-card').forEach(card => {
                 card.style.display = card.dataset.title.includes(q) ? '' : 'none';
             });
+        });
+    </script>
+
+    <script>
+        // Auto-open the modal after POST
+        document.addEventListener('DOMContentLoaded', () => {
+            {% for id in open_modal %}
+            new bootstrap.Modal(
+                document.getElementById('commentsModal' + {{ id }})
+            ).show();
+            {% endfor %}
         });
     </script>
 {% endblock %}

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Dto\TemplateCardDto;
+use App\Entity\Comment;
 use App\Entity\Like;
 use App\Repository\CommentRepository;
 use App\Repository\LikeRepository;
@@ -18,7 +19,7 @@ use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
 final class UserController extends AbstractController
 {
     #[Route('/user', name: 'app_user_index')]
-    public function index(TemplateRepository $templateRepo, LikeRepository $likeRepo, CommentRepository  $commentRepo): Response
+    public function index(TemplateRepository $templateRepo, LikeRepository $likeRepo, CommentRepository  $commentRepo, Request $request,): Response
     {
         // if no user, redirect immediately
         if (!$this->getUser()) {
@@ -51,10 +52,24 @@ final class UserController extends AbstractController
         $likes = $likeRepo->findBy(['user' => $this->getUser()]);
         $likedIds = array_map(fn($l) => $l->getTemplate()->getId(), $likes);
 
-        // 5) render user dashboard, passing 'forms' for Twig loop
+        // just after you load $templates…
+        $allComments = [];
+        foreach ($templates as $tpl) {
+            $allComments[$tpl->getId()] = $commentRepo
+                ->findBy(['template' => $tpl], ['createdAt' => 'ASC']);
+        }
+        // read our flash‐bag for which modal to open
+        $openModal = $request
+            ->getSession()
+            ->getFlashBag()
+            ->get('open_comment_modal', []);
+
+        // 6) render user dashboard, passing 'forms' for Twig loop
         return $this->render('user/index.html.twig', [
             'forms' => $cards,
             'liked_ids' => $likedIds,
+            'comments_by' => $allComments,
+            'open_modal'  => $openModal,
         ]);
     }
 
@@ -95,4 +110,39 @@ final class UserController extends AbstractController
         // back to dashboard
         return $this->redirectToRoute('app_user_index');
     }
+
+    #[Route('/user/template/{id}/add-comment', name:'app_user_add_comment', methods:['POST'])]
+    public function addComment(
+        int $id,
+        Request $request,
+        TemplateRepository $tplRepo,
+        EntityManagerInterface $em
+    ): RedirectResponse {
+        // CSRF check
+        if ( ! $this->isCsrfTokenValid('add_comment'.$id, $request->request->get('_token')) ) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $template = $tplRepo->find($id);
+        $user     = $this->getUser();
+        $text     = trim($request->request->get('comment_text', ''));
+
+        if ( $text !== '' ) {
+            $comment = new Comment();
+            $comment
+                ->setTemplate($template)
+                ->setUser($user)
+                ->setContent($text)
+                ->setCreatedAt(new \DateTime());
+            $em->persist($comment);
+            $em->flush();
+        }
+
+        // tell index() to re-open this modal
+        $this->addFlash('open_comment_modal', $id);
+
+        return $this->redirectToRoute('app_user_index');
+    }
+
+
 }
