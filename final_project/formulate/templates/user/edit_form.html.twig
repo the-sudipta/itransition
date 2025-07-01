@@ -1,0 +1,258 @@
+{% extends 'user_layout.html.twig' %}
+
+{% block title %}Forms{% endblock %}
+{% block breadcrumb %}<a href="{{ path('app_user_forms') }}"
+                         style="cursor: pointer; color: inherit; text-decoration: none;"
+                         onmouseover="this.style.textDecoration = 'underline'; this.style.color = '#38BDF8';"
+                         onmouseout="this.style.textDecoration = 'none'; this.style.color = 'inherit';"
+    >Forms
+    </a> / Edit Form
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .image-input { border:2px dashed #ccc; padding:1rem; text-align:center; cursor:pointer }
+        .image-input img { max-width:100%; max-height:200px; display:block; margin:auto }
+
+        .question, .option, .tag-item {
+            border:1px solid #ddd;
+            padding:1rem;
+            padding-top: 1.6rem;
+            margin-bottom:.5rem;
+            background:#f9f9f9;
+            position:relative;
+        }
+        .question { cursor:grab }
+        .option { cursor:grab; margin-left:1rem }
+        .tag-item { display:inline-flex; align-items:center; margin-right:.25rem; flex-shrink:0 }
+
+        .btn-remove {
+            position:absolute;
+            top:.25rem;
+            right:.5rem;
+            background:transparent;
+            border:none;
+            font-size:1.2rem;
+            line-height:1;
+            color:#666;
+            cursor:pointer;
+        }
+        .btn-remove:hover { color:#000 }
+
+        .controls a { cursor:pointer; color:#38BDF8; text-decoration:none }
+        .controls a:hover { text-decoration:underline }
+
+        #tagsList { display:flex; flex-wrap:wrap; gap:.25rem }
+        #tagsList .tag-item input { width:auto; min-width:120px }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+        <form
+                action="{{ path('app_user_form_edit',{id:template.id}) }}"
+                method="post"
+                enctype="multipart/form-data"
+        >
+            <input type="hidden" name="_token" value="{{ csrf_token }}">
+
+            {# Image preview #}
+            <div class="mb-4">
+                <label class="image-input" for="imageInput">
+                    <img id="imagePreview"
+                         src="{{ asset(template.image) }}">
+                </label>
+                <input type="file" id="imageInput" name="image" accept="image/*" style="display:none;">
+            </div>
+
+            {# Title, Description, Type #}
+            <div class="mb-3">
+                <label>Title</label>
+                <input type="text" name="title" class="form-control" required value="{{ template.title }}">
+            </div>
+            <div class="mb-3">
+                <label>Description</label>
+                <textarea name="description" class="form-control" rows="3">{{ template.description }}</textarea>
+            </div>
+            <div class="mb-3">
+                <label>Type</label>
+                <select name="type" class="form-select" required>
+                    <option value="">Select…</option>
+                    {% for v,label in {'survey':'Survey','quiz':'Quiz','poll':'Poll'} %}
+                        <option value="{{ v }}" {{ template.topic==v ? 'selected':'' }}>
+                            {{ label }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-check mb-4">
+                <input type="checkbox" class="form-check-input" id="publicCheck"
+                       name="is_public" {{ template.isPublic ? 'checked':'' }}>
+                <label class="form-check-label" for="publicCheck">Make Public</label>
+            </div>
+
+            {# Tags #}
+            <div class="mb-4">
+                <label>Tags</label>
+                <div id="tagsList">
+                    {% for i,tag in template.templateTags %}
+                        <div class="tag-item">
+                            <button type="button" class="btn-remove removeTag">&times;</button>
+                            <input type="text" name="tags[{{ i }}]" class="form-control"
+                                   placeholder="Tag name" value="{{ tag.tag }}" required>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="controls"><a id="addTag">+ Add Tag</a></div>
+            </div>
+
+            {# Questions #}
+            <div id="questionsContainer" class="mb-4">
+                <h5>Questions</h5>
+                <div class="controls mb-2"><a id="addQuestion">+ Add Question</a></div>
+                <div id="questionsList">
+                    {% for qi, question in template.questions %}
+                        <div class="question" data-index="{{ qi }}">
+                            <button type="button" class="btn-remove removeQuestion">&times;</button>
+                            <div class="mb-2">
+                                <label>Question</label>
+                                <input type="text" name="questions[{{ qi }}][text]" class="form-control" required
+                                       value="{{ question.title }}">
+                            </div>
+                            <div class="mb-2">
+                                <label>Type</label>
+                                <select name="questions[{{ qi }}][type]" class="form-select question-type"
+                                        data-q="{{ qi }}" required>
+                                    <option value="">Choose…</option>
+                                    <option value="radio" {{ question.type=='radio'?'selected':'' }}>Multiple Choice</option>
+                                    <option value="checkbox" {{ question.type=='checkbox'?'selected':'' }}>Multiple Select</option>
+                                    <option value="text" {{ question.type=='text'?'selected':'' }}>Text</option>
+                                </select>
+                            </div>
+                            <div class="options-list" data-q="{{ qi }}">
+                                {% for oi, opt in question.options %}
+                                    <div class="option">
+                                        <button type="button" class="btn-remove removeOption">&times;</button>
+                                        <input type="text"
+                                               name="questions[{{ qi }}][options][{{ oi }}]"
+                                               class="form-control"
+                                               placeholder="Option text"
+                                               required
+                                               value="{{ opt.text }}">
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="controls"><a class="addOption" data-q="{{ qi }}">+ Add Option</a></div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let qIndex = {{ template.questions|length }}, tIndex = {{ template.templateTags|length }};
+            const imageInput    = document.getElementById('imageInput');
+            const imagePreview  = document.getElementById('imagePreview');
+            const tagsList      = document.getElementById('tagsList');
+            const questionsList = document.getElementById('questionsList');
+
+            // image preview
+            imageInput.addEventListener('change', e => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = ev => imagePreview.src = ev.target.result;
+                reader.readAsDataURL(file);
+            });
+
+            // tags: add & remove
+            document.getElementById('addTag').onclick = () => {
+                const idx = tIndex++;
+                const div = document.createElement('div');
+                div.className = 'tag-item';
+                div.innerHTML = `
+          <button type="button" class="btn-remove removeTag">&times;</button>
+          <input type="text" name="tags[${idx}]" class="form-control" placeholder="Tag name" required>
+        `;
+                tagsList.appendChild(div);
+            };
+            tagsList.addEventListener('click', e => {
+                if (e.target.classList.contains('removeTag')) {
+                    e.target.closest('.tag-item').remove();
+                }
+            });
+
+            // questions & options: add & remove
+            document.getElementById('addQuestion').onclick = () => {
+                const qi = qIndex++;
+                const div = document.createElement('div');
+                div.className = 'question';
+                div.dataset.index = qi;
+                div.innerHTML = `
+          <button type="button" class="btn-remove removeQuestion">&times;</button>
+          <div class="mb-2">
+            <label>Question</label>
+            <input type="text" name="questions[${qi}][text]" class="form-control" required>
+          </div>
+          <div class="mb-2">
+            <label>Type</label>
+            <select name="questions[${qi}][type]" class="form-select question-type" data-q="${qi}" required>
+              <option value="">Choose…</option>
+              <option value="radio">Multiple Choice</option>
+              <option value="checkbox">Multiple Select</option>
+              <option value="text">Text</option>
+            </select>
+          </div>
+          <div class="options-list" data-q="${qi}"></div>
+          <div class="controls"><a class="addOption" data-q="${qi}">+ Add Option</a></div>
+        `;
+                questionsList.appendChild(div);
+            };
+
+            questionsList.addEventListener('click', e => {
+                if (e.target.classList.contains('removeQuestion')) {
+                    e.target.closest('.question').remove();
+                }
+                if (e.target.classList.contains('removeOption')) {
+                    e.target.closest('.option').remove();
+                }
+                if (e.target.matches('.addOption')) {
+                    const qi = e.target.dataset.q;
+                    const type = questionsList.querySelector(`select[data-q="${qi}"]`).value;
+                    if (!type || type==='text') return;
+                    const opts = questionsList.querySelector(`.options-list[data-q="${qi}"]`);
+                    const oi = opts.children.length;
+                    const div = document.createElement('div');
+                    div.className = 'option';
+                    div.innerHTML = `
+            <button type="button" class="btn-remove removeOption">&times;</button>
+            <input type="text" name="questions[${qi}][options][${oi}]" class="form-control" placeholder="Option text" required>
+          `;
+                    opts.appendChild(div);
+                }
+            });
+
+            questionsList.addEventListener('change', e => {
+                if (e.target.classList.contains('question-type')) {
+                    const qi = e.target.dataset.q;
+                    questionsList.querySelector(`.options-list[data-q="${qi}"]`).innerHTML = '';
+                }
+            });
+
+            // sortable
+            new Sortable(questionsList, { animation:150, handle:'.question' });
+            document.querySelectorAll('.options-list').forEach(el => {
+                new Sortable(el, { group:'opts', animation:150, handle:'.option' });
+            });
+        });
+    </script>
+{% endblock %}

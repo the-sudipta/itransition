@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 final class UserController extends AbstractController
@@ -326,6 +327,97 @@ final class UserController extends AbstractController
         }
 
         return $this->render('user/create_form.html.twig');
+    }
+
+    #[Route('/user/forms/{id}/edit', name: 'app_user_form_edit', methods: ['GET','POST'])]
+    public function editForm(
+        int $id,
+        Request $request,
+        EntityManagerInterface $em,
+        SluggerInterface $slugger,
+        CsrfTokenManagerInterface $csrfManager
+    ): Response {
+        // 1) Load existing Template
+        $template = $em->getRepository(Template::class)->find($id);
+        if (!$template || $template->getUser() !== $this->getUser()) {
+            throw $this->createNotFoundException('Form not found');
+        }
+
+        // 2) Handle POST (update)
+        if ($request->isMethod('POST')) {
+            // CSRF
+            $token = $request->request->get('_token');
+            if (!$this->isCsrfTokenValid('edit_form_'.$id, $token)) {
+                throw $this->createAccessDeniedException('Invalid CSRF token');
+            }
+
+            // Image upload (optional replace)
+            $uploadDir = $this->getParameter('kernel.project_dir').'/public/uploads/forms';
+            if ($file = $request->files->get('image')) {
+                $safeName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                $ext      = $file->guessExtension();
+                $newName  = $slugger->slug($safeName).'_'.uniqid().'.'.$ext;
+                $file->move($uploadDir, $newName);
+                $template->setImage('uploads/forms/'.$newName);
+            }
+
+            // Scalars & version/timestamps
+            $template
+                ->setTitle($request->request->get('title'))
+                ->setDescription($request->request->get('description', ''))
+                ->setIsPublic($request->request->has('is_public'))
+                ->setTopic($request->request->get('type'))
+                ->setVersion($template->getVersion() + 1)
+                ->setLastUpdatedAt(new \DateTime())
+            ;
+
+            // Tags: remove old, add new
+            foreach ($template->getTemplateTags() as $oldTag) {
+                $em->remove($oldTag);
+            }
+            $template->getTemplateTags()->clear();
+            foreach ($request->request->all('tags', []) as $name) {
+                $tag = new TemplateTag();
+                $tag->setTag($name)->setTemplate($template);
+                $em->persist($tag);
+            }
+
+            // Questions & Options: remove old, add new
+            foreach ($template->getQuestions() as $oldQ) {
+                $em->remove($oldQ);
+            }
+            $template->getQuestions()->clear();
+            foreach ($request->request->all('questions', []) as $pos => $qData) {
+                $q = new Question();
+                $q->setTitle($qData['text'])
+                    ->setType($qData['type'])
+                    ->setDescription("N/A")
+                    ->setShowInResults(0)
+                    ->setPosition((int)$pos)
+                    ->setTemplate($template);
+                $em->persist($q);
+
+                if (in_array($qData['type'], ['radio','checkbox'], true)) {
+                    foreach ($qData['options'] ?? [] as $oPos => $optText) {
+                        $opt = new Option();
+                        $opt->setText($optText)
+                            ->setPosition((int)$oPos)
+                            ->setQuestion($q);
+                        $em->persist($opt);
+                    }
+                }
+            }
+
+            $em->flush();
+            $this->addFlash('success', 'Form updated successfully.');
+            return $this->redirectToRoute('app_user_forms');
+        }
+
+        // 3) Render Edit form (GET)
+        return $this->render('user/edit_form.html.twig', [
+            'template' => $template,
+            'csrf_token' => $csrfManager->getToken('edit_form_'.$id)->getValue(),
+        ]);
     }
 
 
