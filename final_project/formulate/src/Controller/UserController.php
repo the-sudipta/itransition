@@ -3,12 +3,17 @@
 namespace App\Controller;
 
 use App\Dto\TemplateCardDto;
+use App\Entity\Like;
 use App\Repository\CommentRepository;
 use App\Repository\LikeRepository;
 use App\Repository\TemplateRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
 
 final class UserController extends AbstractController
 {
@@ -42,9 +47,52 @@ final class UserController extends AbstractController
             );
         }
 
-        // 4) render user dashboard, passing 'forms' for Twig loop
+        // 4) Get all the likes of the user and then map them template-wise
+        $likes = $likeRepo->findBy(['user' => $this->getUser()]);
+        $likedIds = array_map(fn($l) => $l->getTemplate()->getId(), $likes);
+
+        // 5) render user dashboard, passing 'forms' for Twig loop
         return $this->render('user/index.html.twig', [
             'forms' => $cards,
+            'liked_ids' => $likedIds,
         ]);
+    }
+
+    #[Route('/user/template/{id}/toggle-like', name: 'app_user_toggle_like', methods: ['POST'])]
+    public function toggleLike(
+        int $id,
+        Request $request,
+        TemplateRepository $templateRepo,
+        LikeRepository $likeRepo,
+        EntityManagerInterface $em
+    ): RedirectResponse {
+        // CSRF check
+        $submittedToken = $request->request->get('_token');
+        if (! $this->isCsrfTokenValid('toggle_like'.$id, $submittedToken)) {
+            throw new InvalidCsrfTokenException();
+        }
+
+        $user     = $this->getUser();
+        $template = $templateRepo->find($id);
+
+        // find existing like
+        $existing = $likeRepo->findOneBy([
+            'template' => $template,
+            'user'     => $user,
+        ]);
+
+        if ($existing) {
+            $em->remove($existing);
+        } else {
+            $like = new Like();
+            $like->setTemplate($template)
+                ->setUser($user);
+            $em->persist($like);
+        }
+
+        $em->flush();
+
+        // back to dashboard
+        return $this->redirectToRoute('app_user_index');
     }
 }

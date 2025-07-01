@@ -76,6 +76,41 @@
         .card-footer .bi-hand-thumbs-up-fill { color: var(--brand-green) !important; }
         .card-footer .bi-chat-dots-fill      { color: var(--brand-blue)  !important; }
     </style>
+    <style>
+        /* —————————————————————————
+           Tweak the Like button styling
+           ————————————————————————— */
+        .card-footer .btn-link {
+            /* remove link appearance */
+            text-decoration: none !important;
+            color: var(--brand-char) !important;
+            background: none;
+            border: none;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .card-footer .btn-link:focus,
+        .card-footer .btn-link:hover {
+            /* gentle color feedback on hover/focus */
+            color: var(--brand-green) !important;
+            text-decoration: none !important;
+            box-shadow: none !important;
+        }
+
+        /* space between thumb and number */
+        .card-footer .btn-link .like-count {
+            margin-left: .25rem;
+            font-size: .9rem;
+        }
+
+        /* make sure the filled thumb is green */
+        .card-footer .btn-link .bi-hand-thumbs-up-fill {
+            color: var(--brand-green) !important;
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
@@ -104,10 +139,31 @@
                             </p>
                         </div>
                         <div class="card-footer bg-white border-top">
-                            <small>
-                                <i class="bi bi-hand-thumbs-up-fill"></i>
-                                {{ form.likesCount }}
-                            </small>
+                            <form
+                                method="post"
+                                action="{{ path('app_user_toggle_like', {id: form.id}) }}"
+                                class="d-inline"
+                            >
+                                <input
+                                    type="hidden"
+                                    name="_token"
+                                    value="{{ csrf_token('toggle_like' ~ form.id) }}"
+                                />
+                                <button
+                                    type="submit"
+                                    class="btn btn-link p-0 m-0"
+                                    title="{{ form.id in liked_ids ? 'Unlike' : 'Like' }}"
+                                >
+                                    <i class="bi
+                                        {{ form.id in liked_ids
+                                        ? 'bi-hand-thumbs-up-fill text-success'
+                                        : 'bi-hand-thumbs-up'
+                                        }}">
+                                    </i>
+                                    <span class="ms-1">{{ form.likesCount }}</span>
+                                </button>
+                            </form>
+
                             <small>
                                 <i class="bi bi-chat-dots-fill"></i>
                                 {{ form.commentsCount }}
