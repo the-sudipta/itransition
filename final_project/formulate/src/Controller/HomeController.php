@@ -80,7 +80,7 @@ final class HomeController extends AbstractController
 
         // If the user already has ROLE_USER, send them straight to registration:
         if ($this->isGranted('ROLE_USER')) {
-//            return $this->redirectToRoute('app_register');
+            return $this->redirectToRoute('app_user_index');
         }
 
 
