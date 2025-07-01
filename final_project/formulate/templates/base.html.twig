@@ -27,6 +27,30 @@
 </head>
 <body style="background-color: #FFFFFF;">
 
+
+{# =============================================== #}
+{# Flash messages (positioned in the bottom‐right) #}
+{# =============================================== #}
+<div class="position-fixed bottom-0 end-0 ps-3 pb-3" style="z-index:1080;">
+    {% for label, messages in app.flashes %}
+        {% set alertClass = (label == 'error' ? 'danger' : label) %}
+        {% for message in messages %}
+            <div
+                class="alert alert-{{ alertClass }} alert-dismissible fade show"
+                role="alert"
+            >
+                {{ message }}
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close"
+                ></button>
+            </div>
+        {% endfor %}
+    {% endfor %}
+</div>
+
 {% block body %}{% endblock %}
 
 {# Boot­strap JS bundle #}

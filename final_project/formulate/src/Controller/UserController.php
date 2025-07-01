@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Dto\TemplateCardDto;
 use App\Entity\Comment;
 use App\Entity\Like;
+use App\Entity\Template;
 use App\Repository\CommentRepository;
 use App\Repository\LikeRepository;
 use App\Repository\TemplateRepository;
@@ -142,6 +143,107 @@ final class UserController extends AbstractController
         $this->addFlash('open_comment_modal', $id);
 
         return $this->redirectToRoute('app_user_index');
+    }
+
+
+    #[Route('/user/form', name: 'app_user_forms')]
+    public function forms(
+        TemplateRepository $templateRepo,
+        LikeRepository $likeRepo,
+        CommentRepository $commentRepo,
+        Request $request
+    ): Response
+    {
+        $user = $this->getUser();
+        if (! $user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        // 1. Only templates *owned* by this user, sorted newest first
+        $templates = $templateRepo->findBy(
+            ['user' => $this->getUser()],
+            ['createdAt' => 'DESC']
+        );
+
+        // 2. Build a plain array for Twig, including all needed bits
+        $forms = [];
+        foreach ($templates as $tpl) {
+            $forms[] = [
+                'id'            => $tpl->getId(),
+                'title'         => $tpl->getTitle(),
+                'description'   => $tpl->getDescription(),
+                'createdAt'     => $tpl->getCreatedAt(),
+                'isPublic'      => $tpl->isPublic(),
+                'likesCount'    => $likeRepo->count(['template' => $tpl]),
+                'commentsCount' => $commentRepo->count(['template' => $tpl]),
+            ];
+        }
+
+        // 3. Likes & comments for modal logic stay the same…
+        $likes    = $likeRepo->findBy(['user' => $user]);
+        $likedIds = array_map(fn($l) => $l->getTemplate()->getId(), $likes);
+
+        $allComments = [];
+        foreach ($templates as $tpl) {
+            $allComments[$tpl->getId()] = $commentRepo
+                ->findBy(['template' => $tpl], ['createdAt' => 'ASC']);
+        }
+
+        $openModal = $request
+            ->getSession()
+            ->getFlashBag()
+            ->get('open_comment_modal', []);
+
+//        dd($forms);
+
+        // 4. Render with our new “forms” array
+        return $this->render('user/show_all_forms.html.twig', [
+            'forms'       => $forms,
+            'liked_ids'   => $likedIds,
+            'comments_by' => $allComments,
+            'open_modal'  => $openModal,
+        ]);
+    }
+
+
+    #[Route('/user/forms/delete', name: 'app_user_forms_delete', methods: ['POST'])]
+    public function deleteForm(Request $request, EntityManagerInterface $em): Response
+    {
+        $ids = array_filter(explode(',', $request->request->get('ids', '')));
+        if ($ids) {
+            $repo = $em->getRepository(Template::class);
+            foreach ($ids as $id) {
+                if ($tpl = $repo->find($id)) {
+                    $em->remove($tpl);
+                }
+            }
+            $em->flush();
+            $this->addFlash('success', count($ids).' form(s) deleted.');
+        } else {
+            $this->addFlash('warning', 'No forms selected.');
+        }
+
+        return $this->redirectToRoute('app_user_forms');
+    }
+
+
+    #[Route('/user/forms/toggle-visibility', name: 'app_user_forms_toggle', methods: ['POST'])]
+    public function toggleVisibility(Request $request, EntityManagerInterface $em)
+    {
+        $ids = array_filter(explode(',', $request->request->get('ids', '')));
+        if ($ids) {
+            $repo = $em->getRepository(Template::class);
+            foreach ($ids as $id) {
+                if ($tpl = $repo->find($id)) {
+                    $tpl->setIsPublic(!$tpl->isPublic());
+                }
+            }
+            $em->flush();
+            $this->addFlash('success', 'Visibility toggled for '.count($ids).' form(s).');
+        } else {
+            $this->addFlash('warning', 'No forms selected.');
+        }
+        return $this->redirectToRoute('app_user_forms');
     }
 
 
