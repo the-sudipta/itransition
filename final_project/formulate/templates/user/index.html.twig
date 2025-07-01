@@ -285,6 +285,13 @@
     </div>
 {% endblock %}
 
+{% block quickButton %}
+    <button class="fab"
+            title="New Form"
+            onclick="location.href='{{ path('app_home_test') }}'">
+        <i class="bi bi-plus"></i>
+    </button>
+{% endblock %}
 
 {% block javascripts %}
     <script>

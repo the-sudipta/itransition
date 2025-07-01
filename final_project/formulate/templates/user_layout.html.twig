@@ -247,11 +247,10 @@
 </div>
 
 {# ─── QUICK “+” BUTTON ──────────────────────────────────────── #}
-<button class="fab"
-        title="New Form"
-        onclick="location.href='{{ path('app_home_test') }}'">
-    <i class="bi bi-plus"></i>
-</button>
+
+{% block quickButton %}
+
+{% endblock %}
 
 {# Boot­strap JS bundle #}
 <script

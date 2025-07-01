@@ -1,0 +1,198 @@
+{% extends 'user_layout.html.twig' %}
+
+{% block title %}Forms{% endblock %}
+{% block breadcrumb %}<a href="{{ path('app_user_forms') }}"
+                         style="cursor: pointer; color: inherit; text-decoration: none;"
+                         onmouseover="this.style.textDecoration = 'underline'; this.style.color = '#38BDF8';"
+                         onmouseout="this.style.textDecoration = 'none'; this.style.color = 'inherit';"
+                         >Forms
+                      </a> / Create Form
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .image-input { border: 2px dashed #ccc; padding:1rem; text-align:center; cursor:pointer; }
+        .image-input img { max-width:100%; max-height:200px; display:block; margin:auto; }
+        .question, .option { border:1px solid #ddd; padding:1rem; margin-bottom:.5rem; background:#f9f9f9; }
+        .question { cursor:grab; }
+        .option { cursor:grab; margin-left:1rem; }
+        .controls a { cursor:pointer; color:#38BDF8; text-decoration:none; }
+        .controls a:hover { text-decoration:underline; }
+    </style>
+
+    <style>
+        /* make tags list horizontal */
+        #tagsList {
+            display: flex;
+            gap: .125rem;
+            flex-wrap: wrap; /* wrap to new line if too many */
+        }
+        #tagsList .tag-item {
+            display: inline-flex;
+            align-items: center;
+        }
+        #tagsList .tag-item input {
+            width: auto;
+            min-width: 150px;
+        }
+    </style>
+
+{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+        <form method="post" enctype="multipart/form-data">
+            <input type="hidden"
+                   name="_token"
+                   value="{{ csrf_token('create_form') }}"
+            >
+            <div class="mb-4">
+                <label class="image-input" for="imageInput">
+                    <span id="imagePrompt">Click or drop image here</span>
+                    <img id="imagePreview" src="{{ asset('images/default_form.png') }}" alt="" style="display:none;">
+                </label>
+                <input type="file" id="imageInput" name="image" accept="image/*" style="display:none;">
+            </div>
+
+            <div class="mb-3">
+                <label>Title</label>
+                <input type="text" name="title" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label>Description</label>
+                <textarea name="description" class="form-control" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+                <label>Type</label>
+                <select name="type" class="form-select" required>
+                    <option value="">Select type…</option>
+                    <option value="survey">Survey</option>
+                    <option value="quiz">Quiz</option>
+                    <option value="poll">Poll</option>
+                </select>
+            </div>
+
+            <div id="tagsContainer" class="mb-4">
+                <label>Tags</label>
+                <div id="tagsList"></div>
+                <div class="controls">
+                    <a id="addTag">+ Add Tag</a>
+                </div>
+            </div>
+
+            <div class="form-check mb-4">
+                <input class="form-check-input" type="checkbox" name="is_public" id="publicCheck" value="1">
+                <label class="form-check-label" for="publicCheck">Make Public</label>
+            </div>
+
+            <div id="questionsContainer" class="mb-4">
+                <h5>Questions</h5>
+                <div class="controls mb-2">
+                    <a id="addQuestion">+ Add Question</a>
+                </div>
+                <div id="questionsList"></div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save Form</button>
+        </form>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <script>
+        (() => {
+            let qIndex = 0;
+            const questionsList = document.getElementById('questionsList');
+
+            document.getElementById('imageInput').addEventListener('change', e => {
+                const file = e.target.files[0], img = document.getElementById('imagePreview');
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = ev => {
+                    img.src = ev.target.result;
+                    img.style.display = 'block';
+                    document.getElementById('imagePrompt').style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            });
+
+            document.getElementById('addQuestion').onclick = () => {
+                const qDiv = document.createElement('div');
+                qDiv.className = 'question';
+                qDiv.dataset.index = qIndex;
+                qDiv.innerHTML = `
+        <div class="mb-2">
+          <label>Question</label>
+          <input type="text" name="questions[${qIndex}][text]" class="form-control" required>
+        </div>
+        <div class="mb-2">
+          <label>Type</label>
+          <select name="questions[${qIndex}][type]" class="form-select question-type" data-q="${qIndex}" required>
+            <option value="">Choose...</option>
+            <option value="radio">Multiple Choice</option>
+            <option value="checkbox">Multiple Select</option>
+            <option value="text">Text</option>
+          </select>
+        </div>
+        <div class="options-list" data-q="${qIndex}"></div>
+        <div class="controls">
+          <a class="addOption" data-q="${qIndex}">+ Add Option</a>
+        </div>`;
+                questionsList.appendChild(qDiv);
+                qIndex++;
+            };
+
+            questionsList.addEventListener('change', e => {
+                if (!e.target.classList.contains('question-type')) return;
+                const idx = e.target.dataset.q;
+                const optList = questionsList.querySelector(`.options-list[data-q="${idx}"]`);
+                optList.innerHTML = '';
+            });
+
+            questionsList.addEventListener('click', e => {
+                if (!e.target.classList.contains('addOption')) return;
+                const idx = e.target.dataset.q;
+                const type = questionsList.querySelector(`select[data-q="${idx}"]`).value;
+                if (!type || type==='text') return;
+                const opts = questionsList.querySelector(`.options-list[data-q="${idx}"]`);
+                const oIndex = opts.children.length;
+                const oDiv = document.createElement('div');
+                oDiv.className = 'option mb-2';
+                oDiv.innerHTML = `
+        <input type="text" name="questions[${idx}][options][${oIndex}]" class="form-control d-inline-block w-75" placeholder="Option text" required>
+      `;
+                opts.appendChild(oDiv);
+            });
+
+            // Tags logic
+            let tIndex = 0;
+            const tagsList = document.getElementById('tagsList');
+            document.getElementById('addTag').onclick = () => {
+                const div = document.createElement('div');
+                div.className = 'mb-2';
+                div.innerHTML = `
+      <input type="text"
+             name="tags[${tIndex}]"
+             class="form-control d-inline-block w-50"
+             placeholder="Tag name"
+             required>
+    `;
+                tagsList.appendChild(div);
+                tIndex++;
+            };
+
+            new Sortable(questionsList, { animation:150, handle:'.question' });
+            new Sortable(document.body, { // delegate: options lists
+                group: 'options',
+                animation:150,
+                draggable: '.option',
+                onMove: evt => evt.to.parentNode.dataset.q!==undefined
+            });
+
+        })();
+    </script>
+{% endblock %}

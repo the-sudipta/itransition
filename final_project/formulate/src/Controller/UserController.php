@@ -5,7 +5,10 @@ namespace App\Controller;
 use App\Dto\TemplateCardDto;
 use App\Entity\Comment;
 use App\Entity\Like;
+use App\Entity\Option;
+use App\Entity\Question;
 use App\Entity\Template;
+use App\Entity\TemplateTag;
 use App\Repository\CommentRepository;
 use App\Repository\LikeRepository;
 use App\Repository\TemplateRepository;
@@ -16,6 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 final class UserController extends AbstractController
 {
@@ -244,6 +248,84 @@ final class UserController extends AbstractController
             $this->addFlash('warning', 'No forms selected.');
         }
         return $this->redirectToRoute('app_user_forms');
+    }
+
+
+    #[Route('/user/forms/create', name: 'app_user_form_create')]
+    public function createForms(Request $request, EntityManagerInterface $em, SluggerInterface $slugger): Response
+    {
+        // Verify token. Token is needed for =>
+        if ($request->isMethod('POST')) {
+
+            $submittedToken = $request->request->get('_token');
+            if (!$this->isCsrfTokenValid('create_form', $submittedToken)) {
+                throw $this->createAccessDeniedException('Invalid CSRF token');
+            }
+
+            // handle image
+            $uploadDir = $this->getParameter('kernel.project_dir').'/public/uploads/forms';
+            $imageFile = $request->files->get('image');
+            if ($imageFile) {
+                $safeName = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $fileName = $slugger->slug($safeName).'_'.uniqid().'.'.$imageFile->guessExtension();
+                $imageFile->move($uploadDir, $fileName);
+            } else {
+                $fileName = 'default_form.png';
+            }
+
+            // create template
+            $now      = new \DateTime();
+            $user     = $this->getUser();
+            $template = new Template();
+            $template->setTitle($request->request->get('title'));
+            $template->setDescription($request->request->get('description', ''));
+            $template->setIsPublic($request->request->has('is_public'));
+            $template->setImage('uploads/forms/'.$fileName);
+
+            $template->setTopic($request->request->get('type'));
+            foreach ($request->request->all('tags', []) as $tagName) {
+                $tag = new TemplateTag();
+                $tag->setTag($tagName);
+                $tag->setTemplate($template);
+                $em->persist($tag);
+            }
+
+            $template->setVersion(1);
+            $template->setCreatedAt($now);
+            $template->setLastUpdatedAt($now);
+            $template->setUser($user);
+
+            $em->persist($template);
+
+            // questions & options
+            $questions = $request->request->all('questions');
+            foreach ($questions as $pos => $q) {
+                $question = new Question();
+                $question->setTitle($q['text']);
+                $question->setDescription("N/A");
+                $question->setShowInResults(0);
+                $question->setType($q['type']);
+                $question->setPosition((int)$pos);
+                $question->setTemplate($template);
+                $em->persist($question);
+
+                if (in_array($q['type'], ['radio','checkbox']) && isset($q['options'])) {
+                    foreach ($q['options'] as $oPos => $optText) {
+                        $option = new Option();
+                        $option->setText($optText);
+                        $option->setPosition((int)$oPos);
+                        $option->setQuestion($question);
+                        $em->persist($option);
+                    }
+                }
+            }
+
+            $em->flush();
+            $this->addFlash('success', 'Form created successfully.');
+            return $this->redirectToRoute('app_user_forms');
+        }
+
+        return $this->render('user/create_form.html.twig');
     }
 
 

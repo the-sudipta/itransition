@@ -1,7 +1,7 @@
 {# templates/show_all_forms.html.twig #}
 {% extends 'user_layout.html.twig' %}
 
-{% block title %}All Forms{% endblock %}
+{% block title %}Forms{% endblock %}
 {% block breadcrumb %}Forms{% endblock %}
 
 {% block stylesheets %}
@@ -23,7 +23,7 @@
             <div class="table-header">
                 <input id="tableSearch" type="text" class="form-control w-50" placeholder="🔍 Search…" />
                 <div>
-                    <a href="{{ path('app_home_test') }}" class="btn btn-success">Create</a>
+                    <a href="{{ path('app_user_form_create') }}" class="btn btn-success">Create</a>
                     <button id="toggleBtn" class="btn btn-warning" disabled data-bs-toggle="modal" data-bs-target="#toggleModal">
                         Toggle Visibility
                     </button>
