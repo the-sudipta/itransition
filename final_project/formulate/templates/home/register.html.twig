@@ -35,7 +35,7 @@
         }
         .register-illustration {
             flex: 1;
-            background: linear-gradient(135deg, #e8eff5, #d9e2ec);
+            background: #FFFFFF;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -70,7 +70,7 @@
             margin-bottom: .5rem;
         }
         .register-form p.lead {
-            color: var(--divider);
+            color: var(--brand-char);
             margin-bottom: 2rem;
         }
         .register-form .form-control {
@@ -170,7 +170,7 @@
             <div class="mb-4">
                 <div class="form-check">
                     {{ form_widget(registrationForm.agreeTerms, { attr: { class: 'form-check-input me-2' } }) }}
-                    {{ form_label(registrationForm.agreeTerms, '<span class="text-secondary">I agree to the <a href="#" class="text-decoration-none small-link">Terms & Conditions</a></span>', { label_html: true, attr: { class: 'form-check-label' } }) }}
+                    {{ form_label(registrationForm.agreeTerms, '<span class="text-secondary">I agree to the <a href="https://crimson-dani-92.tiiny.site" target="_blank" class="text-decoration-none small-link">Terms & Conditions</a></span>', { label_html: true, attr: { class: 'form-check-label' } }) }}
                 </div>
                 {{ form_errors(registrationForm.agreeTerms) }}
             </div>

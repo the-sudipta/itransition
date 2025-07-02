@@ -1,9 +1,12 @@
-{# templates/user/create_form.html.twig #}
 {% extends 'user_layout.html.twig' %}
 
 {% block title %}Create Form{% endblock %}
-{% block breadcrumb %}
-    <a href="{{ path('app_user_forms') }}">Forms</a> / Create Form
+{% block breadcrumb %}<a href="{{ path('app_user_forms') }}"
+                         style="cursor: pointer; color: #1e9c4e; text-decoration: none;"
+                         onmouseover="this.style.textDecoration = 'underline'; this.style.color = '#38BDF8';"
+                         onmouseout="this.style.textDecoration = 'none'; this.style.color = '#1e9c4e';"
+    >Forms
+    </a> / Create Form
 {% endblock %}
 
 {% block stylesheets %}

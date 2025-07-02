@@ -47,6 +47,7 @@
             border-radius: .75rem;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             transition: transform .2s, box-shadow .2s;
+            cursor: pointer;
         }
         .form-card .card:hover {
             transform: translateY(-4px);
@@ -133,7 +134,11 @@
         <div class="row" id="formsContainer">
             {% for form in forms %}
                 <div class="col-lg-4 col-md-6 mb-4 form-card" data-title="{{ form.title|lower }}">
-                    <div class="card h-100 shadow-sm">
+                        <div
+                                class="card h-100 shadow-sm"
+                                style="cursor: pointer;"
+                                onclick="window.location.href='{{ path('app_user_form_submit',{id:form.id}) }}'"
+                            >
                         <img
                             src="{{ form.imageUrl ?: asset('images/default_form.png') }}"
                             onerror="this.onerror=null;this.src='{{ asset('images/default_form.png') }}';"

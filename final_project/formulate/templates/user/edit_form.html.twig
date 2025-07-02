@@ -2,9 +2,9 @@
 
 {% block title %}Forms{% endblock %}
 {% block breadcrumb %}<a href="{{ path('app_user_forms') }}"
-                         style="cursor: pointer; color: inherit; text-decoration: none;"
+                         style="cursor: pointer; color: #1e9c4e; text-decoration: none;"
                          onmouseover="this.style.textDecoration = 'underline'; this.style.color = '#38BDF8';"
-                         onmouseout="this.style.textDecoration = 'none'; this.style.color = 'inherit';"
+                         onmouseout="this.style.textDecoration = 'none'; this.style.color = '#1e9c4e';"
     >Forms
     </a> / Edit Form
 {% endblock %}
@@ -61,7 +61,8 @@
             <div class="mb-4">
                 <label class="image-input" for="imageInput">
                     <img id="imagePreview"
-                         src="{{ asset(template.image) }}">
+                         src="{{ asset(template.image) }}"
+                         onerror="this.onerror=null; this.src='{{ asset('images/default_form.png') }}';">
                 </label>
                 <input type="file" id="imageInput" name="image" accept="image/*" style="display:none;">
             </div>

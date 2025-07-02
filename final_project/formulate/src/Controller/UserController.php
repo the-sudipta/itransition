@@ -3,14 +3,19 @@
 namespace App\Controller;
 
 use App\Dto\TemplateCardDto;
+use App\Entity\Answer;
 use App\Entity\Comment;
+use App\Entity\FormSubmit;
 use App\Entity\Like;
 use App\Entity\Option;
 use App\Entity\Question;
 use App\Entity\Template;
 use App\Entity\TemplateTag;
 use App\Repository\CommentRepository;
+use App\Repository\FormSubmitRepository;
 use App\Repository\LikeRepository;
+use App\Repository\OptionRepository;
+use App\Repository\QuestionRepository;
 use App\Repository\TemplateRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -419,6 +424,108 @@ final class UserController extends AbstractController
             'csrf_token' => $csrfManager->getToken('edit_form_'.$id)->getValue(),
         ]);
     }
+
+    #[Route('/user/forms/{id}/submit', name: 'app_user_form_submit', methods: ['GET','POST'])]
+    public function submitForm(
+        int $id,
+        Request $request,
+        EntityManagerInterface $em,
+        FormSubmitRepository $fsRepo,
+        QuestionRepository $qRepo,
+        OptionRepository $optRepo,
+        CsrfTokenManagerInterface $csrfManager
+    ): Response {
+        // 1) load form
+        $template = $em->getRepository(Template::class)->find($id);
+        if (!$template || !$template->isPublic()) {
+            throw $this->createNotFoundException('Form not found or not public');
+        }
+
+        $user = $this->getUser();
+        // 2) one‐time submission check
+        if ($fsRepo->findOneBy(['template'=>$template, 'user'=>$user])) {
+            $this->addFlash('warning','You have already submitted this form.');
+            return $this->redirectToRoute('app_user_index');
+        }
+
+        // 3) handle POST
+        if ($request->isMethod('POST')) {
+            $submittedToken = $request->request->get('_token');
+            if (!$this->isCsrfTokenValid('submit_form_'.$id, $submittedToken)) {
+                throw $this->createAccessDeniedException('Invalid CSRF token');
+            }
+
+            $fs = new FormSubmit();
+            $fs->setTemplate($template)
+                ->setUser($user)
+                ->setCreatedAt(new \DateTime());
+            $em->persist($fs);
+
+            $answers = $request->request->all('answers', []);
+            foreach ($answers as $qId => $val) {
+                $question = $qRepo->find($qId);
+                if (!$question) {
+                    continue;
+                }
+
+                // TEXT answer
+                if ($question->getType() === 'text') {
+                    $ans = new Answer();
+                    $ans
+                        ->setFormSubmit($fs)
+                        ->setQuestion($question)
+                        ->setAnswerText(trim($val))
+                    ;
+                    $em->persist($ans);
+                }
+
+                // SINGLE-CHOICE (radio)
+                elseif ($question->getType() === 'radio') {
+                    $opt = $optRepo->find((int)$val);
+                    if ($opt) {
+                        $ans = new Answer();
+                        $ans
+                            ->setFormSubmit($fs)
+                            ->setQuestion($question)
+                            ->setChoosenOption($opt)
+                            ->setAnswerText($opt->getText())    // <-- set text from option!
+                        ;
+                        $em->persist($ans);
+                    }
+                }
+
+                // MULTI-SELECT (checkbox)
+                elseif ($question->getType() === 'checkbox' && is_array($val)) {
+                    foreach ($val as $optId) {
+                        $opt = $optRepo->find((int)$optId);
+                        if (!$opt) {
+                            continue;
+                        }
+                        $ans = new Answer();
+                        $ans
+                            ->setFormSubmit($fs)
+                            ->setQuestion($question)
+                            ->setChoosenOption($opt)
+                            ->setAnswerText($opt->getText())    // <-- set text here too!
+                        ;
+                        $em->persist($ans);
+                    }
+                }
+            }
+
+            $em->flush();
+            $this->addFlash('success','Thank you—your responses have been recorded!');
+            return $this->redirectToRoute('app_user_index');
+        }
+
+        // 4) render form
+        return $this->render('user/submit_form.html.twig', [
+            'template'   => $template,
+            'csrf_token' => $csrfManager->getToken('submit_form_'.$id)->getValue(),
+        ]);
+    }
+
+
 
 
 }
