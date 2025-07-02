@@ -226,9 +226,9 @@
                     <span>Responses</span>
                 </a>
             </li>
-            <li>
-                <a href="{{ path('app_home_test') }}"
-                   class="{% if current_route == 'app_user_profile' %}active{% endif %}">
+            <li class="nav-item">
+                <a href="{{ path('app_user_profile') }}"
+                   class="{% if current_route starts with 'app_user_profile' %}active{% endif %}">
                     <i class="bi bi-person-circle"></i>
                     <span>Profile</span>
                 </a>

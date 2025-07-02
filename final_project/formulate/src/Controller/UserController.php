@@ -11,6 +11,7 @@ use App\Entity\Option;
 use App\Entity\Question;
 use App\Entity\Template;
 use App\Entity\TemplateTag;
+use App\Form\ChangePasswordType;
 use App\Repository\CommentRepository;
 use App\Repository\FormSubmitRepository;
 use App\Repository\LikeRepository;
@@ -26,6 +27,8 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use App\Entity\User;
 
 final class UserController extends AbstractController
 {
@@ -604,6 +607,44 @@ final class UserController extends AbstractController
         return $this->render('user/user_response.html.twig', [
             'template' => $template,
             'submit'   => $fs,
+        ]);
+    }
+
+//    ####################### USER PROFILE ###############################
+
+    #[Route('/user/profile', name: 'app_user_profile', methods: ['GET','POST'])]
+    public function profile(
+        Request $request,
+        EntityManagerInterface $em,
+        UserPasswordHasherInterface $passwordHasher,
+        CsrfTokenManagerInterface $csrfManager
+    ): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        // build a simple form model for changing password
+        $form = $this->createForm(ChangePasswordType::class, null, [
+            'action' => $this->generateUrl('app_user_profile'),
+            'method' => 'POST',
+        ]);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            // CSRF is already checked by the form
+            $data         = $form->getData();
+            $newPassword = $form->get('newPassword')->getData();
+            $encoded     = $passwordHasher->hashPassword($user, $newPassword);
+            $user->setPassword($encoded);
+            $em->flush();
+
+            $this->addFlash('success', 'Your password has been updated.');
+            return $this->redirectToRoute('app_user_profile');
+        }
+
+        return $this->render('user/profile.html.twig', [
+            'email' => $user->getEmail(),
+            'form'  => $form->createView(),
         ]);
     }
 

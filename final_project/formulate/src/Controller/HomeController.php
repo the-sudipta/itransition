@@ -21,7 +21,10 @@ final class HomeController extends AbstractController
     #[Route('/', name: 'app_home_index')]
     public function index(TemplateRepository $templateRepo, LikeRepository $likeRepo, CommentRepository $commentRepo): Response
     {
-        $templates = $templateRepo->findBy(['isPublic' => true]);
+        $templates = $templateRepo->findBy(
+            ['isPublic' => true],
+            ['createdAt' => 'DESC']
+        );
 
         $cards = [];
         foreach ($templates as $tpl) {
