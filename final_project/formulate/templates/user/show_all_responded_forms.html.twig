@@ -1,0 +1,115 @@
+{% extends 'user_layout.html.twig' %}
+
+{% block title %}Create Form{% endblock %}
+{% block breadcrumb %}Responses{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+{#        <h2>Your Forms with Responses</h2>#}
+
+        {# Search bar #}
+        <div class="mb-3">
+            <input
+                type="text"
+                id="searchInput"
+                class="form-control"
+                placeholder="🔍 Search forms..."
+            >
+        </div>
+
+        <div class="table-responsive">
+            <table class="table" id="respFormsTable">
+                <thead>
+                <tr>
+                    <th>Title</th>
+                    <th># Responses</th>
+                    <th>Created At</th>
+                </tr>
+                </thead>
+                <tbody id="tableBody">
+                {% for f in forms %}
+                    <tr data-id="{{ f.id }}" style="cursor: pointer;">
+                        <td>{{ f.title }}</td>
+                        <td>{{ f.formSubmits|length }}</td>
+                        <td>{{ f.createdAt|date('Y-m-d H:i') }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {# Pagination controls #}
+        <nav class="d-flex justify-content-center">
+            <ul class="pagination" id="pagination"></ul>
+        </nav>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const rows           = Array.from(document.querySelectorAll('#tableBody tr'));
+            const searchInput    = document.getElementById('searchInput');
+            const paginationEl   = document.getElementById('pagination');
+            const rowsPerPage    = 5;
+            let currentPage      = 1;
+            let filteredRows     = rows;
+
+            function renderTable() {
+                const start = (currentPage - 1)*rowsPerPage;
+                const end   = start + rowsPerPage;
+                rows.forEach(r => r.style.display = 'none');
+                filteredRows.slice(start, end).forEach(r => r.style.display = '');
+            }
+
+            function renderPagination() {
+                const pageCount = Math.ceil(filteredRows.length / rowsPerPage) || 1;
+                paginationEl.innerHTML = '';
+                for (let i=1; i<=pageCount; i++) {
+                    const li = document.createElement('li');
+                    li.className = 'page-item' + (i===currentPage ? ' active' : '');
+                    li.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+                    li.onclick = e => {
+                        e.preventDefault();
+                        currentPage = i;
+                        renderTable();
+                        renderPagination();
+                    };
+                    paginationEl.appendChild(li);
+                }
+            }
+
+            function filterRows() {
+                const term = searchInput.value.trim().toLowerCase();
+                filteredRows = rows.filter(r => {
+                    // check every cell in the row for a match
+                    return Array.from(r.children).some(td =>
+                        td.textContent.trim().toLowerCase().includes(term)
+                    );
+                });
+                currentPage = 1;
+                renderTable();
+                renderPagination();
+            }
+
+            // initial render
+            renderTable();
+            renderPagination();
+
+            // on search
+            searchInput.addEventListener('input', filterRows);
+
+            // row click
+            document.querySelectorAll('#tableBody tr').forEach(r=>{
+                r.addEventListener('click', () => {
+                    window.location.href = `/user/forms/${r.dataset.id}/responses`;
+                });
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,194 @@
+{% extends 'user_layout.html.twig' %}
+
+{% block title %}Create Form{% endblock %}
+{% block breadcrumb %}<a href="{{ path('app_user_forms_responded') }}"
+                         style="cursor: pointer; color: #1e9c4e; text-decoration: none; margin-right: 4px;"
+                         onmouseover="this.style.textDecoration = 'underline'; this.style.color = '#38BDF8';"
+                         onmouseout="this.style.textDecoration = 'none'; this.style.color = '#1e9c4e';"
+    >Responses
+    </a> / All Responses
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+
+        <h2 class="mb-4">Responses for “{{ template.title }}”</h2>
+
+        {# header row: search + delete #}
+        <div class="d-flex align-items-center mb-3">
+            <div class="flex-fill d-flex justify-content-center">
+                <input
+                    type="text"
+                    id="searchInput"
+                    class="form-control w-50"
+                    placeholder="🔍 Search forms..."
+                >
+            </div>
+            <button
+                type="button"
+                id="deleteBtn"
+                class="btn btn-danger ml-3"
+                disabled
+            >Delete</button>
+        </div>
+
+        {# the table #}
+        <table class="table" id="respTable">
+            <thead>
+            <tr>
+                <th><input type="checkbox" id="selectAll"></th>
+                <th>User</th>
+                <th>Submitted At</th>
+            </tr>
+            </thead>
+            <tbody id="tableBody">
+            {% for s in submits %}
+                <tr data-id="{{ s.id }}" style="cursor: pointer;">
+                    <td><input type="checkbox" class="rowCheckbox" value="{{ s.id }}"></td>
+                    <td>{{ s.user.email }}</td>
+                    <td>{{ s.createdAt|date('Y-m-d H:i') }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        {# pagination controls #}
+        <nav class="d-flex justify-content-center">
+            <ul class="pagination" id="pagination"></ul>
+        </nav>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', ()=> {
+            const tableBody   = document.getElementById('tableBody');
+            const rows        = Array.from(tableBody.querySelectorAll('tr'));
+            const searchInput = document.getElementById('searchInput');
+            const deleteBtn   = document.getElementById('deleteBtn');
+            const selectAll   = document.getElementById('selectAll');
+            const pagination  = document.getElementById('pagination');
+
+            let filteredRows = rows.slice();
+            let currentPage  = 1;
+            const perPage    = 5;
+
+            // render rows for the current page
+            function renderTable() {
+                tableBody.innerHTML = '';
+                const start = (currentPage - 1) * perPage;
+                filteredRows
+                    .slice(start, start + perPage)
+                    .forEach(r => tableBody.appendChild(r));
+                bindRowEvents();
+                updateDeleteBtn();
+            }
+
+            // build pagination links
+            function renderPagination() {
+                pagination.innerHTML = '';
+                const totalPages = Math.ceil(filteredRows.length / perPage) || 1;
+                for (let i = 1; i <= totalPages; i++) {
+                    const li = document.createElement('li');
+                    li.className = 'page-item' + (i === currentPage ? ' active' : '');
+                    const a = document.createElement('a');
+                    a.className = 'page-link';
+                    a.textContent = i;
+                    a.href = '#';
+                    a.onclick = e => {
+                        e.preventDefault();
+                        currentPage = i;
+                        renderTable();
+                        renderPagination();
+                    };
+                    li.appendChild(a);
+                    pagination.appendChild(li);
+                }
+            }
+
+            // filter rows by search term
+            function filterRows() {
+                const term = searchInput.value.trim().toLowerCase();
+                filteredRows = rows.filter(r =>
+                    Array.from(r.children).some(td =>
+                        td.textContent.trim().toLowerCase().includes(term)
+                    )
+                );
+                currentPage = 1;
+                renderTable();
+                renderPagination();
+            }
+
+            // update delete button enabled state
+            function updateDeleteBtn() {
+                const anyChecked = !!tableBody.querySelector('.rowCheckbox:checked');
+                deleteBtn.disabled = !anyChecked;
+                // sync selectAll checkbox
+                selectAll.checked = filteredRows.length > 0 &&
+                    Array.from(tableBody.querySelectorAll('.rowCheckbox'))
+                        .every(cb => cb.checked);
+            }
+
+            // (re)bind click & change handlers on visible rows
+            function bindRowEvents() {
+                // row click to view single response
+                tableBody.querySelectorAll('tr[data-id]').forEach(r => {
+                    r.onclick = e => {
+                        if (e.target.type === 'checkbox') return;
+                        window.location.href =
+                            '{{ path("app_user_form_responses", {id: template.id}) }}'
+                            + '/' + r.dataset.id;
+                    };
+                });
+                // per-row checkbox
+                tableBody.querySelectorAll('.rowCheckbox')
+                    .forEach(cb => cb.onchange = updateDeleteBtn);
+            }
+
+            // select/deselect all on this page
+            selectAll.onchange = ()=> {
+                tableBody.querySelectorAll('.rowCheckbox')
+                    .forEach(cb => cb.checked = selectAll.checked);
+                updateDeleteBtn();
+            };
+
+            // delete handler: collect ids, post to delete endpoint
+            deleteBtn.onclick = ()=> {
+                const ids = Array.from(tableBody.querySelectorAll('.rowCheckbox:checked'))
+                    .map(cb => cb.value);
+                if (!ids.length || !confirm('Delete selected responses?')) return;
+                // send via POST form
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '{{ path("app_user_form_responses", {id: template.id}) }}';
+                // _method=DELETE if your route expects DELETE, otherwise POST
+                const methodInput = document.createElement('input');
+                methodInput.type = 'hidden';
+                methodInput.name = '_method';
+                methodInput.value = 'DELETE';
+                form.appendChild(methodInput);
+                ids.forEach(id => {
+                    const inp = document.createElement('input');
+                    inp.type = 'hidden';
+                    inp.name = 'ids[]';
+                    inp.value = id;
+                    form.appendChild(inp);
+                });
+                document.body.appendChild(form);
+                form.submit();
+            };
+
+            // wire up search
+            searchInput.addEventListener('input', filterRows);
+
+            // initial render
+            renderTable();
+            renderPagination();
+        });
+    </script>
+{% endblock %}

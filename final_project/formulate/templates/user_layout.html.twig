@@ -195,16 +195,33 @@
                     <span>Dashboard</span>
                 </a>
             </li>
-            <li>
-                <a href="{{ path('app_user_forms') }}"
-                   class="{% if current_route starts with 'app_user_forms' %}active{% endif %}">
+            <li class="nav-item">
+                <a
+                    href="{{ path('app_user_forms') }}"
+                    class="{% if
+                        (
+                        current_route starts with 'app_user_forms'       or
+                        current_route starts with 'app_user_form_create' or
+                        current_route starts with 'app_user_form_edit'
+                        )
+                        and not (current_route starts with 'app_user_forms_responded')
+                        and not (current_route starts with 'app_user_form_responses')
+                        and current_route != 'app_user_single_response'
+                    %}active{% endif %}"
+                >
                     <i class="bi bi-journal-text"></i>
                     <span>Forms</span>
                 </a>
             </li>
-            <li>
-                <a href="{{ path('app_home_test') }}"
-                   class="{% if current_route starts with 'app_user_responses' %}active{% endif %}">
+            <li class="nav-item">
+                <a
+                    href="{{ path('app_user_forms_responded') }}"
+                    class="{%
+                        if (current_route starts with 'app_user_forms_responded')
+                        or (current_route starts with 'app_user_form_responses')
+                        or current_route == 'app_user_single_response'
+                    %}active{% endif %}"
+                >
                     <i class="bi bi-chat-dots"></i>
                     <span>Responses</span>
                 </a>

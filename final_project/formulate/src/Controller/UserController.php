@@ -526,6 +526,88 @@ final class UserController extends AbstractController
     }
 
 
+//    ##################### Response Tab ######################
+
+    // Shows all forms that received responses (created by the logged-in user)
+    #[Route('/user/forms/responded', name: 'app_user_forms_responded', methods: ['GET'])]
+    public function respondedForms(TemplateRepository $templates): Response
+    {
+        // fetch all templates you own that have >=1 submission
+        $forms = $templates->createQueryBuilder('t')
+            ->join('t.formSubmits','fs')
+            ->andWhere('t.user = :me')
+            ->setParameter('me', $this->getUser())
+            ->groupBy('t.id')
+            ->orderBy('t.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+
+        return $this->render('user/show_all_responded_forms.html.twig', [
+            'forms' => $forms,
+        ]);
+    }
+
+    // Shows all responses submitted for a specific form (selected by the creator)
+    #[Route('/user/forms/{id}/responses', name: 'app_user_form_responses', methods: ['GET','POST'])]
+    public function responses(
+        int $id,
+        Request $request,
+        TemplateRepository $templates,
+        FormSubmitRepository $fsRepo,
+        EntityManagerInterface $em
+    ): Response {
+        $template = $templates->find($id);
+        if(!$template || $template->getUser() !== $this->getUser()) {
+            throw $this->createNotFoundException();
+        }
+
+        // Handle bulk-delete of submissions
+        if ($request->isMethod('POST')) {
+            $ids = $request->request->all('ids', []);
+            foreach ($ids as $sid) {
+                if($fs = $fsRepo->find($sid)) {
+                    $em->remove($fs);
+                }
+            }
+            $em->flush();
+            $this->addFlash('success','Deleted '.count($ids).' response(s).');
+            return $this->redirectToRoute('app_user_form_responses',['id'=>$id]);
+        }
+
+        // GET: list all submits for this form
+        $submits = $fsRepo->findBy(['template'=>$template]);
+        return $this->render('user/show_all_responses.html.twig', [
+            'template' => $template,
+            'submits'  => $submits,
+        ]);
+    }
+
+    // Shows a single specific response to a form
+    #[Route('/user/forms/{formId}/responses/{responseId}', name: 'app_user_single_response', methods: ['GET'])]
+    public function singleResponse(
+        int $formId,
+        int $responseId,
+        TemplateRepository $templates,
+        FormSubmitRepository $fsRepo
+    ): Response {
+        $template = $templates->find($formId);
+        $fs       = $fsRepo->find($responseId);
+        if (
+            !$template
+            || $template->getUser() !== $this->getUser()
+            || !$fs
+            || $fs->getTemplate()->getId()!==$formId
+        ) {
+            throw $this->createNotFoundException();
+        }
+
+        return $this->render('user/user_response.html.twig', [
+            'template' => $template,
+            'submit'   => $fs,
+        ]);
+    }
+
+
 
 
 }

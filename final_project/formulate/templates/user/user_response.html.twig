@@ -1,0 +1,56 @@
+{% extends 'user_layout.html.twig' %}
+
+{% block title %}Create Form{% endblock %}
+{% block breadcrumb %}
+    <a href="{{ path('app_user_forms_responded') }}"
+        style="cursor: pointer; color: #1e9c4e; text-decoration: none;"
+        onmouseover="this.style.textDecoration = 'underline'; this.style.color = '#38BDF8';"
+        onmouseout="this.style.textDecoration = 'none'; this.style.color = '#1e9c4e';"
+    > Responses </a> /
+    <a href="{{ path('app_user_form_responses', {id:template.id}) }}"
+       style="cursor: pointer; color: #1e9c4e; text-decoration: none;"
+       onmouseover="this.style.textDecoration = 'underline'; this.style.color = '#38BDF8';"
+       onmouseout="this.style.textDecoration = 'none'; this.style.color = '#1e9c4e';"
+    > All Responses </a> / Response
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+        <div class="card mb-4">
+            <img src="{{ asset(template.image) }}" class="card-img-top" style="height:250px;object-fit:cover;" onerror="this.onerror=null; this.src='{{ asset('images/default_form.png') }}';"
+                 alt="Form image">
+            <div class="card-body">
+                <h3>{{ template.title }}</h3>
+                <p>{{ template.description }}</p>
+                <p>{% for tag in template.templateTags %}
+                        <span class="badge bg-secondary">{{ tag.tag }}</span>
+                    {% endfor %}
+                </p>
+            </div>
+        </div>
+
+        <div class="mb-5">
+            <h4>Response by {{ submit.user.email }} at {{ submit.createdAt|date('Y-m-d H:i') }}</h4>
+            {% for answer in submit.answers %}
+                <div class="mb-4">
+                    <label class="fw-bold">{{ loop.index }}. {{ answer.question.title }}</label>
+                    {% if answer.question.type=='text' %}
+                        <textarea class="form-control" rows="3" disabled>{{ answer.answerText }}</textarea>
+                    {% elseif answer.question.type=='radio' %}
+                        <input type="text" class="form-control" disabled value="{{ answer.answerText }}">
+                    {% else %}
+                        <input type="text" class="form-control" disabled value="{{ answer.answerText }}">
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
