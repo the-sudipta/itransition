@@ -169,6 +169,8 @@
                                     type="submit"
                                     class="btn btn-link p-0 m-0"
                                     title="{{ form.id in liked_ids ? 'Unlike' : 'Like' }}"
+                                    onclick="event.stopPropagation()"
+
                                 >
                                     <i class="bi
                                         {{ form.id in liked_ids
@@ -186,6 +188,7 @@
                                     href="#commentsModal{{ form.id }}"
                                     data-bs-toggle="modal"
                                     class="text-decoration-none text-reset"
+                                    onclick="event.stopPropagation()"
                                 >
                                     <i class="bi bi-chat-dots-fill"></i>
                                     {{ form.commentsCount }}

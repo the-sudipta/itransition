@@ -247,7 +247,7 @@
 <div class="main">
     <header class="topbar">
         <div>
-            <h1>{% block page_title %}Welcome, {{ app.user.email }}{% endblock %}</h1>
+            <h1>{% block page_title %}Welcome, {{ app.user.email|split('@')[0] }}{% endblock %}</h1>
             <div class="breadcrumb">{% block breadcrumb %}Home / …{% endblock %}</div>
         </div>
         <div>
