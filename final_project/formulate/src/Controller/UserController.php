@@ -26,6 +26,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use App\Entity\User;
@@ -33,10 +34,12 @@ use App\Entity\User;
 final class UserController extends AbstractController
 {
     #[Route('/user', name: 'app_user_index')]
+    #[IsGranted("ROLE_USER", statusCode: 403, message: 'Access denied.')]
     public function index(TemplateRepository $templateRepo, LikeRepository $likeRepo, CommentRepository  $commentRepo, Request $request,): Response
     {
         // if no user, redirect immediately
         if (!$this->getUser()) {
+            $this->addFlash('warning', 'Please log in to continue.');
             return $this->redirectToRoute('app_login');
         }
 
@@ -88,6 +91,7 @@ final class UserController extends AbstractController
     }
 
     #[Route('/user/template/{id}/toggle-like', name: 'app_user_toggle_like', methods: ['POST'])]
+    #[IsGranted("ROLE_USER", statusCode: 403, message: 'Access denied.')]
     public function toggleLike(
         int $id,
         Request $request,
@@ -99,6 +103,11 @@ final class UserController extends AbstractController
         $submittedToken = $request->request->get('_token');
         if (! $this->isCsrfTokenValid('toggle_like'.$id, $submittedToken)) {
             throw new InvalidCsrfTokenException();
+        }
+
+        if (!$this->getUser()) {
+            $this->addFlash('warning', 'Please log in to continue.');
+            return $this->redirectToRoute('app_login');
         }
 
         $user     = $this->getUser();
@@ -126,6 +135,7 @@ final class UserController extends AbstractController
     }
 
     #[Route('/user/template/{id}/add-comment', name:'app_user_add_comment', methods:['POST'])]
+    #[IsGranted("ROLE_USER", statusCode: 403, message: 'Access denied.')]
     public function addComment(
         int $id,
         Request $request,
@@ -135,6 +145,14 @@ final class UserController extends AbstractController
         // CSRF check
         if ( ! $this->isCsrfTokenValid('add_comment'.$id, $request->request->get('_token')) ) {
             throw $this->createAccessDeniedException();
+        }
+
+//        if ($this->getUser()) {
+//            throw $this->createAccessDeniedException('You must be logged in to perform this action.');
+//        }
+        if (!$this->getUser()) {
+            $this->addFlash('warning', 'Please log in to continue.');
+            return $this->redirectToRoute('app_login');
         }
 
         $template = $tplRepo->find($id);
@@ -160,6 +178,7 @@ final class UserController extends AbstractController
 
 
     #[Route('/user/form', name: 'app_user_forms')]
+    #[IsGranted("ROLE_USER", statusCode: 403, message: 'Access denied.')]
     public function forms(
         TemplateRepository $templateRepo,
         LikeRepository $likeRepo,
@@ -167,10 +186,13 @@ final class UserController extends AbstractController
         Request $request
     ): Response
     {
-        $user = $this->getUser();
-        if (! $user) {
+
+        if (!$this->getUser()) {
+            $this->addFlash('warning', 'Please log in to continue.');
             return $this->redirectToRoute('app_login');
         }
+
+        $user = $this->getUser();
 
         // 1. Only templates *owned* by this user, sorted newest first
         $templates = $templateRepo->findBy(
@@ -220,8 +242,15 @@ final class UserController extends AbstractController
 
 
     #[Route('/user/forms/delete', name: 'app_user_forms_delete', methods: ['POST'])]
+    #[IsGranted("ROLE_USER", statusCode: 403, message: 'Access denied.')]
     public function deleteForm(Request $request, EntityManagerInterface $em): Response
     {
+
+        if (!$this->getUser()) {
+            $this->addFlash('warning', 'Please log in to continue.');
+            return $this->redirectToRoute('app_login');
+        }
+
         $ids = array_filter(explode(',', $request->request->get('ids', '')));
         if ($ids) {
             $repo = $em->getRepository(Template::class);
@@ -241,8 +270,15 @@ final class UserController extends AbstractController
 
 
     #[Route('/user/forms/toggle-visibility', name: 'app_user_forms_toggle', methods: ['POST'])]
+    #[IsGranted("ROLE_USER", statusCode: 403, message: 'Access denied.')]
     public function toggleVisibility(Request $request, EntityManagerInterface $em)
     {
+
+        if (!$this->getUser()) {
+            $this->addFlash('warning', 'Please log in to continue.');
+            return $this->redirectToRoute('app_login');
+        }
+
         $ids = array_filter(explode(',', $request->request->get('ids', '')));
         if ($ids) {
             $repo = $em->getRepository(Template::class);
@@ -261,8 +297,15 @@ final class UserController extends AbstractController
 
 
     #[Route('/user/forms/create', name: 'app_user_form_create')]
+    #[IsGranted("ROLE_USER", statusCode: 403, message: 'Access denied.')]
     public function createForms(Request $request, EntityManagerInterface $em, SluggerInterface $slugger): Response
     {
+
+        if (!$this->getUser()) {
+            $this->addFlash('warning', 'Please log in to continue.');
+            return $this->redirectToRoute('app_login');
+        }
+
         // Verify token. Token is needed for =>
         if ($request->isMethod('POST')) {
 
@@ -338,6 +381,7 @@ final class UserController extends AbstractController
     }
 
     #[Route('/user/forms/{id}/edit', name: 'app_user_form_edit', methods: ['GET','POST'])]
+    #[IsGranted("ROLE_USER", statusCode: 403, message: 'Access denied.')]
     public function editForm(
         int $id,
         Request $request,
@@ -345,6 +389,13 @@ final class UserController extends AbstractController
         SluggerInterface $slugger,
         CsrfTokenManagerInterface $csrfManager
     ): Response {
+
+
+        if (!$this->getUser()) {
+            $this->addFlash('warning', 'Please log in to continue.');
+            return $this->redirectToRoute('app_login');
+        }
+
         // 1) Load existing Template
         $template = $em->getRepository(Template::class)->find($id);
         if (!$template || $template->getUser() !== $this->getUser()) {
@@ -429,6 +480,7 @@ final class UserController extends AbstractController
     }
 
     #[Route('/user/forms/{id}/submit', name: 'app_user_form_submit', methods: ['GET','POST'])]
+    #[IsGranted("ROLE_USER", statusCode: 403, message: 'Access denied.')]
     public function submitForm(
         int $id,
         Request $request,
@@ -438,6 +490,12 @@ final class UserController extends AbstractController
         OptionRepository $optRepo,
         CsrfTokenManagerInterface $csrfManager
     ): Response {
+
+        if (!$this->getUser()) {
+            $this->addFlash('warning', 'Please log in to continue.');
+            return $this->redirectToRoute('app_login');
+        }
+
         // 1) load form
         $template = $em->getRepository(Template::class)->find($id);
         if (!$template || !$template->isPublic()) {
@@ -533,8 +591,15 @@ final class UserController extends AbstractController
 
     // Shows all forms that received responses (created by the logged-in user)
     #[Route('/user/forms/responded', name: 'app_user_forms_responded', methods: ['GET'])]
+    #[IsGranted("ROLE_USER", statusCode: 403, message: 'Access denied.')]
     public function respondedForms(TemplateRepository $templates): Response
     {
+
+        if (!$this->getUser()) {
+            $this->addFlash('warning', 'Please log in to continue.');
+            return $this->redirectToRoute('app_login');
+        }
+
         // fetch all templates you own that have >=1 submission
         $forms = $templates->createQueryBuilder('t')
             ->join('t.formSubmits','fs')
@@ -552,6 +617,7 @@ final class UserController extends AbstractController
 
     // Shows all responses submitted for a specific form (selected by the creator)
     #[Route('/user/forms/{id}/responses', name: 'app_user_form_responses', methods: ['GET','POST'])]
+    #[IsGranted("ROLE_USER", statusCode: 403, message: 'Access denied.')]
     public function responses(
         int $id,
         Request $request,
@@ -559,6 +625,12 @@ final class UserController extends AbstractController
         FormSubmitRepository $fsRepo,
         EntityManagerInterface $em
     ): Response {
+
+        if (!$this->getUser()) {
+            $this->addFlash('warning', 'Please log in to continue.');
+            return $this->redirectToRoute('app_login');
+        }
+
         $template = $templates->find($id);
         if(!$template || $template->getUser() !== $this->getUser()) {
             throw $this->createNotFoundException();
@@ -587,20 +659,22 @@ final class UserController extends AbstractController
 
     // Shows a single specific response to a form
     #[Route('/user/forms/{formId}/responses/{responseId}', name: 'app_user_single_response', methods: ['GET'])]
+    #[IsGranted("ROLE_USER", statusCode: 403, message: 'Access denied.')]
     public function singleResponse(
         int $formId,
         int $responseId,
         TemplateRepository $templates,
         FormSubmitRepository $fsRepo
     ): Response {
+
+        if (!$this->getUser()) {
+            $this->addFlash('warning', 'Please log in to continue.');
+            return $this->redirectToRoute('app_login');
+        }
+
         $template = $templates->find($formId);
         $fs       = $fsRepo->find($responseId);
-        if (
-            !$template
-            || $template->getUser() !== $this->getUser()
-            || !$fs
-            || $fs->getTemplate()->getId()!==$formId
-        ) {
+        if ( !$template || $template->getUser() !== $this->getUser() || !$fs || $fs->getTemplate()->getId()!==$formId ) {
             throw $this->createNotFoundException();
         }
 
@@ -613,14 +687,19 @@ final class UserController extends AbstractController
 //    ####################### USER PROFILE ###############################
 
     #[Route('/user/profile', name: 'app_user_profile', methods: ['GET','POST'])]
+    #[IsGranted("ROLE_USER", statusCode: 403, message: 'Access denied.')]
     public function profile(
         Request $request,
         EntityManagerInterface $em,
         UserPasswordHasherInterface $passwordHasher,
-        CsrfTokenManagerInterface $csrfManager
     ): Response
     {
-        /** @var User $user */
+
+        if (!$this->getUser()) {
+            $this->addFlash('warning', 'Please log in to continue.');
+            return $this->redirectToRoute('app_login');
+        }
+
         $user = $this->getUser();
 
         // build a simple form model for changing password

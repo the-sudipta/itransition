@@ -15,14 +15,17 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class AdminController extends AbstractController
 {
 
     #[Route('/admin', name:'admin_dashboard', methods:['GET'])]
+    #[IsGranted("ROLE_ADMIN", statusCode: 403, message: 'Access denied.')]
     public function dashboard(): Response
     {
         if (!$this->getUser()) {
+            $this->addFlash('warning', 'Please log in to continue.');
             return $this->redirectToRoute('app_login');
         }
         return $this->render('admin/dashboard.html.twig');
@@ -30,8 +33,15 @@ final class AdminController extends AbstractController
 
     // ###########################  ADMIN USERS  ###################################################
     #[Route('/admin/users', name: 'admin_users', methods: ['GET'])]
+    #[IsGranted("ROLE_ADMIN", statusCode: 403, message: 'Access denied.')]
     public function listUsers(UserRepository $userRepo): Response
     {
+
+        if (!$this->getUser()) {
+            $this->addFlash('warning', 'Please log in to continue.');
+            return $this->redirectToRoute('app_login');
+        }
+
         $users = $userRepo->findAll();
         return $this->render('admin/users.html.twig', [
             'users' => $users,
@@ -39,11 +49,18 @@ final class AdminController extends AbstractController
     }
 
     #[Route('/admin/users/create', name: 'admin_user_create', methods: ['GET','POST'])]
+    #[IsGranted("ROLE_ADMIN", statusCode: 403, message: 'Access denied.')]
     public function createUser(
         Request $request,
         EntityManagerInterface $em,
         UserPasswordHasherInterface $hasher
     ): Response {
+
+        if (!$this->getUser()) {
+            $this->addFlash('warning', 'Please log in to continue.');
+            return $this->redirectToRoute('app_login');
+        }
+
         if ($request->isMethod('POST')) {
             $email    = $request->request->get('email');
             $password = $request->request->get('password');
@@ -63,6 +80,7 @@ final class AdminController extends AbstractController
     }
 
     #[Route('/admin/users/edit/{id}', name: 'admin_user_edit', methods: ['GET','POST'])]
+    #[IsGranted("ROLE_ADMIN", statusCode: 403, message: 'Access denied.')]
     public function editUser(
         int $id,
         Request $request,
@@ -70,6 +88,12 @@ final class AdminController extends AbstractController
         UserRepository $userRepo,
         UserPasswordHasherInterface $hasher
     ): Response {
+
+        if (!$this->getUser()) {
+            $this->addFlash('warning', 'Please log in to continue.');
+            return $this->redirectToRoute('app_login');
+        }
+
         $user = $userRepo->find($id);
         if (!$user) {
             throw $this->createNotFoundException('User not found');
@@ -98,8 +122,15 @@ final class AdminController extends AbstractController
      * @Route("/admin/users/delete", name="admin_users_delete", methods={"POST"})
      */
     #[Route('/admin/users/delete', name:'admin_users_delete', methods:['POST'])]
+    #[IsGranted("ROLE_ADMIN", statusCode: 403, message: 'Access denied.')]
     public function deleteUsers(Request $request, EntityManagerInterface $em): Response
     {
+
+        if (!$this->getUser()) {
+            $this->addFlash('warning', 'Please log in to continue.');
+            return $this->redirectToRoute('app_login');
+        }
+
         $ids = array_filter(explode(',', $request->request->get('ids', '')));
 //        dd($ids);
         if ($ids) {
@@ -124,8 +155,15 @@ final class AdminController extends AbstractController
     // ###########################  ADMIN FORMS  ###################################################
 
     #[Route('/admin/forms', name:'admin_forms')]
+    #[IsGranted("ROLE_ADMIN", statusCode: 403, message: 'Access denied.')]
     public function listForms(TemplateRepository $repo): Response
     {
+
+        if (!$this->getUser()) {
+            $this->addFlash('warning', 'Please log in to continue.');
+            return $this->redirectToRoute('app_login');
+        }
+
         return $this->render('admin/forms.html.twig', [
             'forms' => $repo->findBy([], ['createdAt' => 'DESC']),
         ]);
@@ -133,8 +171,15 @@ final class AdminController extends AbstractController
 
     /** Toggle visibility for selected forms */
     #[Route('/admin/forms/toggle', name:'admin_forms_toggle', methods:['POST'])]
+    #[IsGranted("ROLE_ADMIN", statusCode: 403, message: 'Access denied.')]
     public function toggleForms(Request $request, EntityManagerInterface $em): Response
     {
+
+        if (!$this->getUser()) {
+            $this->addFlash('warning', 'Please log in to continue.');
+            return $this->redirectToRoute('app_login');
+        }
+
         $ids = array_filter(explode(',', $request->request->get('ids', '')));
         if ($ids) {
             $repo = $em->getRepository(Template::class);
@@ -153,8 +198,15 @@ final class AdminController extends AbstractController
 
     /** Delete selected forms */
     #[Route('/admin/forms/delete', name:'admin_forms_delete', methods:['POST'])]
+    #[IsGranted("ROLE_ADMIN", statusCode: 403, message: 'Access denied.')]
     public function deleteForms(Request $request, EntityManagerInterface $em): Response
     {
+
+        if (!$this->getUser()) {
+            $this->addFlash('warning', 'Please log in to continue.');
+            return $this->redirectToRoute('app_login');
+        }
+
         $ids = array_filter(explode(',', $request->request->get('ids', '')));
         if ($ids) {
             $repo = $em->getRepository(Template::class);
@@ -174,8 +226,8 @@ final class AdminController extends AbstractController
 
     /** Show all submissions for one form */
 
-
     #[Route('/admin/forms/{id}/responses', name: 'admin_form_responses', methods: ['GET','POST'])]
+    #[IsGranted("ROLE_ADMIN", statusCode: 403, message: 'Access denied.')]
     public function responses(
         int $id,
         Request $request,
@@ -183,6 +235,12 @@ final class AdminController extends AbstractController
         FormSubmitRepository $submitRepo,
         EntityManagerInterface $em
     ): Response {
+
+        if (!$this->getUser()) {
+            $this->addFlash('warning', 'Please log in to continue.');
+            return $this->redirectToRoute('app_login');
+        }
+
         // 1) Load the form template
         $template = $templateRepo->find($id);
         if (!$template) {
@@ -217,12 +275,19 @@ final class AdminController extends AbstractController
 
     /** View single response */
     #[Route('/admin/forms/{formId}/responses/{responseId}', name:'admin_form_response')]
+    #[IsGranted("ROLE_ADMIN", statusCode: 403, message: 'Access denied.')]
     public function showResponse(
         int $formId,
         int $responseId,
         TemplateRepository $templateRepo,
         FormSubmitRepository $submitRepo
     ): Response {
+
+        if (!$this->getUser()) {
+            $this->addFlash('warning', 'Please log in to continue.');
+            return $this->redirectToRoute('app_login');
+        }
+
         // 1) Load the form
         $template = $templateRepo->find($formId);
         if (!$template) {
@@ -247,6 +312,7 @@ final class AdminController extends AbstractController
     // ###########################  ADMIN PROFILE  ###################################################
 
     #[Route('/admin/profile', name: 'admin_profile', methods: ['GET','POST'])]
+    #[IsGranted("ROLE_ADMIN", statusCode: 403, message: 'Access denied.')]
     public function profile(
         Request $request,
         EntityManagerInterface $em,
@@ -254,6 +320,12 @@ final class AdminController extends AbstractController
         CsrfTokenManagerInterface $csrfManager
     ): Response
     {
+
+        if (!$this->getUser()) {
+            $this->addFlash('warning', 'Please log in to continue.');
+            return $this->redirectToRoute('app_login');
+        }
+
         /** @var User $user */
         $user = $this->getUser();
 

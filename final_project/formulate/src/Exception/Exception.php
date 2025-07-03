@@ -68,6 +68,17 @@ class Exception implements EventSubscriberInterface
             }
         }
 
+        /* ---------- custom 403 page ---------- */
+        if ($statusCode === Response::HTTP_FORBIDDEN) {
+            $html = $this->twig->render('exception/403.html.twig', [
+                'statusCode' => $statusCode,
+                'pathInfo'   => $request->getPathInfo(),
+            ]);
+
+            $event->setResponse(new Response($html, $statusCode));
+            return;            // stop here for 403
+        }
+
         // 3) EVERYTHING ELSE → custom 500 page
         $html = $this->twig->render('exception/500.html.twig', [
             'errorFile'       => $throwable->getFile(),

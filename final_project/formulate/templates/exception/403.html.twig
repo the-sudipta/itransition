@@ -1,0 +1,96 @@
+{# templates/exception/403.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Formulate • 403 Forbidden{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        :root {
+            --bg-page:      #CCCCCC;
+            --accent-main:  #F2613F;
+            --text-dark:    #212121;
+            --text-muted:   #424242;
+            --box-bg:       #FFFFFF;
+            --box-border:   #E0E0E0;
+        }
+
+        body {
+            background: var(--bg-page);
+            margin: 0;
+            font-family: "Segoe UI", sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .error-wrap {
+            width: 90%;
+            max-width: 600px;
+            padding: 2rem;
+            text-align: center;
+            transform: scale(0.78);
+            transform-origin: center center;
+            margin: 0 auto;
+        }
+
+        .error-video {
+            width: 690px;
+            max-width: 100%;
+            border-radius: .5rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .error-title {
+            font-size: 2.25rem;
+            color: var(--text-dark);
+            margin: 1rem 0 .5rem;
+        }
+
+        .error-text {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+
+        .btn-back {
+            background: var(--accent-main);
+            color: #fff;
+            border: none;
+            padding: .75rem 1.5rem;
+            border-radius: .25rem;
+            text-decoration: none;
+            transition: background .2s;
+        }
+        .btn-back:hover {
+            background: #d85034;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="error-wrap">
+        {# 403 animation/video #}
+        <video
+            class="error-video"
+            autoplay
+            loop
+            muted
+            playsinline
+        >
+            <source src="{{ asset('videos/Forbidden Error 403.mp4') }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+
+        <h1 class="error-title">403 • Forbidden</h1>
+        <p class="error-text">
+            Sorry, you don’t have permission to access this resource.
+        </p>
+
+        <a href="{{ path('app_home_index') }}" class="btn-back">
+            <i class="bi bi-house-door-fill me-1"></i> Back to Home
+        </a>
+    </div>
+{% endblock %}
