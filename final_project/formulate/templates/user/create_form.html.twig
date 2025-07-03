@@ -33,6 +33,14 @@
         }
         #tagsList .tag-item input { width:auto; min-width:150px }
     </style>
+
+    <style>
+        .error-text {
+            color: #dc3545;
+            margin-top: .25rem;
+            font-size: .875em;
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
@@ -50,7 +58,7 @@
 
             <div class="mb-3">
                 <label>Title</label>
-                <input type="text" name="title" class="form-control" required>
+                <input type="text" name="title" class="form-control">
             </div>
             <div class="mb-3">
                 <label>Description</label>
@@ -58,7 +66,7 @@
             </div>
             <div class="mb-3">
                 <label>Type</label>
-                <select name="type" class="form-select" required>
+                <select name="type" class="form-select">
                     <option value="">Select type…</option>
                     <option value="survey">Survey</option>
                     <option value="quiz">Quiz</option>
@@ -199,4 +207,103 @@
             });
         });
     </script>
+
+    <script>
+        {#    validations    #}
+        document.addEventListener('DOMContentLoaded', () => {
+            const form           = document.querySelector('form');
+            const titleInput     = form.querySelector('input[name="title"]');
+            const descInput      = form.querySelector('textarea[name="description"]');
+            const typeSelect     = form.querySelector('select[name="type"]');
+            const tagInputs      = () => Array.from(form.querySelectorAll('input[name^="tags"]'));
+            const questionElems  = () => Array.from(form.querySelectorAll('.question'));
+
+            // helper: clear prior errors
+            function clearErrors() {
+                form.querySelectorAll('.error-text').forEach(el => el.remove());
+            }
+
+            // helper: show one error under a field
+            function showError(el, msg) {
+                const err = document.createElement('div');
+                err.className = 'error-text';
+                err.textContent = msg;
+                el.insertAdjacentElement('afterend', err);
+            }
+
+            form.addEventListener('submit', e => {
+                clearErrors();
+                let valid = true;
+
+                // Title: required, min 3 chars
+                if (titleInput.value.trim().length < 3) {
+                    valid = false;
+                    showError(titleInput, 'Title must be at least 3 characters.');
+                }
+
+                // Description: required
+                if (descInput.value.trim() === '') {
+                    valid = false;
+                    showError(descInput, 'Description is required.');
+                }
+
+                // Type: required
+                if (!typeSelect.value) {
+                    valid = false;
+                    showError(typeSelect, 'Please select a type.');
+                }
+
+                // Tags: at least one
+                if (tagInputs().length === 0) {
+                    valid = false;
+                    // attach to container label
+                    const lbl = form.querySelector('#tagsContainer label');
+                    showError(lbl, 'Add at least one tag.');
+                } else {
+                    tagInputs().forEach(input => {
+                        if (input.value.trim() === '') {
+                            valid = false;
+                            showError(input, 'Tag cannot be empty.');
+                        }
+                    });
+                }
+
+                // Questions & options
+                questionElems().forEach(q => {
+                    const qText = q.querySelector('input[name$="[text]"]');
+                    const qType = q.querySelector('select[name$="[type]"]');
+                    if (!qText.value.trim()) {
+                        valid = false;
+                        showError(qText, 'Question text is required.');
+                    }
+                    if (!qType.value) {
+                        valid = false;
+                        showError(qType, 'Please choose a question type.');
+                    }
+                    // If multiple‐choice or checkbox, require ≥2 options
+                    if (['radio','checkbox'].includes(qType.value)) {
+                        const opts = Array.from(q.querySelectorAll('input[name*="[options]"]'));
+                        if (opts.length < 2) {
+                            valid = false;
+                            showError(qType, 'Add at least two options.');
+                        }
+                        opts.forEach(opt => {
+                            if (!opt.value.trim()) {
+                                valid = false;
+                                showError(opt, 'Option cannot be empty.');
+                            }
+                        });
+                    }
+                });
+
+                if (!valid) {
+                    // scroll to first error
+                    const firstErr = form.querySelector('.error-text');
+                    firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+
 {% endblock %}

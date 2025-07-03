@@ -1,17 +1,213 @@
+{% set current_route = app.request.attributes.get('_route') %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <link rel="icon" href="{{ asset('images/formulate_logo_icon.png') }}">
-    <title>{% block title %}Welcome!{% endblock %}</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-    {% block stylesheets %}
-    {% endblock %}
+    <title>Formulate • {% block title %}{% endblock %}</title>
 
-    {% block javascripts %}
-    {% endblock %}
+    <style>
+        /*-------------------------
+         Base and reset
+        -------------------------*/
+        * { box-sizing: border-box; margin: 0; padding: 0 }
+        body {
+            font-family: "Work Sans", sans-serif;
+            background: #f0f0f0;
+        }
+
+        /* overlay behind the menus */
+        .menu_overlay {
+            display: none;
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 90;
+        }
+        body.menuOpened .menu_overlay {
+            display: block;
+        }
+
+        /* your floating trigger */
+        .cornerMenu {
+            position: fixed;
+            right: 45px; bottom: 130px;
+            width: 60px; height: 60px;
+            background: #4cab80;
+            border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            transition: background .3s, transform .3s;
+        }
+        .cornerMenu:hover {
+            background: #398a67;
+            transform: scale(1.1);
+        }
+        .cornerMenu i {
+            color: #fff; font-size: 1.5rem;
+        }
+
+        /* each menu item sits absolutely around the cornerMenu */
+        .menu1, .menu2, .menu3, .menu4, .menu5 {
+            position: fixed;
+            width: 48px; height: 48px;
+            background: #4cab80;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-size: 1.25rem;
+            opacity: 0; transform: scale(0);
+            transition: transform .3s ease, opacity .3s ease;
+            z-index: 95;
+        }
+        .menu1 a, .menu2 a, .menu3 a, .menu4 a, .menu5 a {
+            color: #fff; width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        /* Positions around the trigger */
+        .menu1 { right: 45px;  bottom: 270px; }  /* straight up */
+        .menu2 { right: 115px; bottom: 222px; }  /* up-right */
+        .menu3 { right: 145px; bottom: 136px; }  /* straight right */
+        .menu4 { right: 115px; bottom: 50px;  }  /* down-right */
+        .menu5 { right: 45px;  bottom: 10px;  }  /* straight down */
+
+        /* open state: scale up & fade in */
+        body.menuOpened .menu1,
+        body.menuOpened .menu2,
+        body.menuOpened .menu3,
+        body.menuOpened .menu4,
+        body.menuOpened .menu5 {
+            opacity: 1; transform: scale(1);
+        }
+        /* staggered delays */
+        body.menuOpened .menu1 { transition-delay: 0.05s; }
+        body.menuOpened .menu2 { transition-delay: 0.10s; }
+        body.menuOpened .menu3 { transition-delay: 0.15s; }
+        body.menuOpened .menu4 { transition-delay: 0.20s; }
+        body.menuOpened .menu5 { transition-delay: 0.25s; }
+
+        /* hover state */
+        .menu1:hover,
+        .menu2:hover,
+        .menu3:hover,
+        .menu4:hover,
+        .menu5:hover {
+            background: #398a67;
+            transform: scale(1.2) !important;
+        }
+
+        /* —— ACTIVE STATE —— */
+        .menu1.active,
+        .menu2.active,
+        .menu3.active,
+        .menu4.active,
+        .menu5.active {
+            background: #1a6a3c;    /* your primary green */
+            box-shadow: 0 0 8px rgba(39,174,96,0.6);
+            transform: scale(1.1) !important;
+        }
+    </style>
+
+    <style>
+        /* hide the “X” by default */
+        .cornerMenu .close-icon {
+            display: none;
+        }
+
+        /* when menu is opened: hide the bars, show the X */
+        body.menuOpened .cornerMenu .open-icon {
+            display: none;
+        }
+        body.menuOpened .cornerMenu .close-icon {
+            display: block;
+        }
+
+        /* optional: add a little spin/scale animation */
+        .cornerMenu i {
+            transition: transform .3s, opacity .3s;
+        }
+        body.menuOpened .cornerMenu .close-icon {
+            transform: rotate(90deg) scale(1.1);
+        }
+    </style>
+
+    {# Fonts & icons #}
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+    {% block stylesheets %}{% endblock %}
 </head>
-<body>
-{% block body %}{% endblock %}
+
+<body class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+
+    {# =============================================== #}
+    {# Flash messages (positioned in the bottom‐right) #}
+    {# =============================================== #}
+    <div class="position-fixed bottom-0 end-0 ps-3 pb-3" style="z-index:1080;">
+        {% for label, messages in app.flashes %}
+            {% set alertClass = (label == 'error' ? 'danger' : label) %}
+            {% for message in messages %}
+                <div
+                    class="alert alert-{{ alertClass }} alert-dismissible fade show"
+                    role="alert"
+                >
+                    {{ message }}
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Close"
+                    ></button>
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+
+    <div class="menu_overlay"></div>
+
+    <div class="cornerMenu">
+        <i class="fa fa-bars open-icon"></i>
+        <i class="fa fa-times close-icon"></i>
+    </div>
+
+    {# 1: Users #}
+    <div class="menu1 {{ current_route starts with 'admin_users' ? 'active' }}">
+        <a href="{{ path('admin_users') }}" title="Manage Users"><i class="fa fa-users"></i></a>
+    </div>
+    {# 2: Forms #}
+    <div class="menu2 {{ current_route starts with 'admin_forms' ? 'active' }}">
+        <a href="{{ path('admin_forms') }}" title="Manage Forms"><i class="fa fa-file-text-o"></i></a>
+    </div>
+    {# 3: Dashboard #}
+    <div class="menu3 {{ current_route == 'admin_dashboard' ? 'active' }}">
+        <a href="{{ path('admin_dashboard') }}" title="Dashboard"><i class="fa fa-tachometer"></i></a>
+    </div>
+    {# 4: Profile #}
+    <div class="menu4 {{ current_route starts with 'admin_profile' ? 'active' }}">
+        <a href="{{ path('admin_profile') }}" title="Profile"><i class="fa fa-user"></i></a>
+    </div>
+    {# 5: Logout #}
+    <div class="menu5 {{ current_route == 'app_logout' ? 'active' }}">
+        <a href="{{ path('app_logout') }}" title="Logout"><i class="fa fa-sign-out"></i></a>
+    </div>
+
+    <div class="container">
+        {% block body %}{% endblock %}
+    </div>
+
+    {# JS #}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(function(){
+            $('.cornerMenu, .menu_overlay').on('click', ()=> {
+                $('body').toggleClass('menuOpened');
+            });
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    {% block javascripts %}{% endblock %}
 </body>
 </html>

@@ -161,7 +161,7 @@
             deleteBtn.onclick = ()=> {
                 const ids = Array.from(tableBody.querySelectorAll('.rowCheckbox:checked'))
                     .map(cb => cb.value);
-                if (!ids.length || !confirm('Delete selected responses?')) return;
+                // if (!ids.length || !confirm('Delete selected responses?')) return;
                 // send via POST form
                 const form = document.createElement('form');
                 form.method = 'POST';

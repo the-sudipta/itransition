@@ -1,0 +1,222 @@
+{% extends 'admin_layout.html.twig' %}
+
+{% block title %}Edit User{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .edit-container {
+            max-width: 700px;
+            margin: 3rem auto;
+            padding: 0 1rem;
+        }
+        .edit-card {
+            background: #fff;
+            border-radius: 1.25rem;
+            box-shadow: 0 16px 48px rgba(0,0,0,0.1);
+            padding: 2.5rem 2rem;
+            transition: transform .2s, box-shadow .2s;
+        }
+        .edit-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 24px 64px rgba(0,0,0,0.15);
+        }
+        .edit-card h2 {
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            color: #1a6a3c;
+            font-weight: 600;
+            text-align: center;
+        }
+        .edit-card .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .edit-card label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: .5rem;
+        }
+        .edit-card input.form-control,
+        .edit-card .form-control-plaintext {
+            width: 100%;
+            padding: .75rem 1rem;
+            border: 1px solid #cbd5e0;
+            border-radius: .75rem;
+            font-size: 1rem;
+            transition: border-color .2s, box-shadow .2s;
+        }
+        .edit-card input.form-control:focus {
+            border-color: #48bb78;
+            box-shadow: 0 0 0 4px rgba(72,187,120,0.2);
+            outline: none;
+        }
+        .edit-card .form-control-plaintext {
+            background: transparent;
+            border: none;
+            padding-left: 0;
+            color: #555;
+        }
+        .edit-card .note {
+            font-size: .875rem;
+            color: #718096;
+        }
+        .edit-card .actions {
+            margin-top: 2.5rem;
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+        .edit-card .actions .btn {
+            padding: .75rem 2rem;
+            border-radius: 2rem;
+            font-weight: 600;
+        }
+        .error-text {
+            color: #dc3545;
+            margin-top: .25rem;
+            padding-left: 1.25rem;
+            font-size: .875rem;
+        }
+        .is-invalid {
+            border-color: #dc3545;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="edit-container">
+        <div class="edit-card">
+            <h2>Edit User Details</h2>
+
+            <form
+                id="editUserForm"
+                method="post"
+                action="{{ path('admin_user_edit', { id: user.id }) }}"
+                novalidate
+            >
+                <input type="hidden" name="roles" value="{{ user.roles|join(',') }}"/>
+
+                <div class="form-group">
+                    <label for="user_id">User ID</label>
+                    <input
+                        type="text"
+                        id="user_id"
+                        class="form-control-plaintext"
+                        readonly
+                        value="{{ user.id }}"
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="created_at">Registered At</label>
+                    <input
+                        type="text"
+                        id="created_at"
+                        class="form-control-plaintext"
+                        readonly
+                        value="{{ user.createdAt|date('Y-m-d H:i') }}"
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        class="form-control"
+                        required
+                        value="{{ user.email }}"
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="password">
+                        New Password
+                        <span class="note">(leave blank to keep current password)</span>
+                    </label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        class="form-control"
+                        autocomplete="new-password"
+                    />
+                </div>
+
+                <div class="actions">
+                    <button type="submit" class="btn btn-success">Save Changes</button>
+                    <a href="{{ path('admin_users') }}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('editUserForm');
+            const emailInput = form.querySelector('#email');
+            const passwordInput = form.querySelector('#password');
+
+            function clearErrors() {
+                form.querySelectorAll('.error-text').forEach(el => el.remove());
+                form.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+            }
+
+            function showError(inputEl, message) {
+                inputEl.classList.add('is-invalid');
+                const err = document.createElement('div');
+                err.className = 'error-text';
+                err.textContent = message;
+                inputEl.insertAdjacentElement('afterend', err);
+            }
+
+            function validateEmail(email) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            }
+
+            form.addEventListener('submit', e => {
+                clearErrors();
+                let valid = true;
+
+                // Email cannot be null or invalid
+                const emailVal = emailInput.value.trim();
+                if (!emailVal) {
+                    valid = false;
+                    showError(emailInput, 'User email cannot be empty.');
+                } else if (!validateEmail(emailVal)) {
+                    valid = false;
+                    showError(emailInput, 'Enter a valid email address.');
+                }
+
+                // If password is provided, enforce strength rules
+                const pwd = passwordInput.value;
+                if (pwd) {
+                    const rules = [
+                        { test: pwd.length >= 8, msg: 'Password must be at least 8 characters long.' },
+                        { test: /[A-Z]/.test(pwd), msg: 'Must have at least 1 uppercase letter.' },
+                        { test: /[a-z]/.test(pwd), msg: 'Must have at least 1 lowercase letter.' },
+                        { test: /\d/.test(pwd), msg: 'Must have at least 1 number.' },
+                        { test: /[!@#$%^&*(),.?":{}|<>]/.test(pwd), msg: 'Must have at least 1 special character.' }
+                    ];
+                    rules.forEach(rule => {
+                        if (!rule.test) {
+                            valid = false;
+                            showError(passwordInput, rule.msg);
+                        }
+                    });
+                }
+
+                if (!valid) {
+                    e.preventDefault();
+                    const firstErr = form.querySelector('.error-text');
+                    if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            });
+        });
+    </script>
+{% endblock %}

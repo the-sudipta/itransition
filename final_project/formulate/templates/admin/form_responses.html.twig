@@ -1,0 +1,104 @@
+{% extends 'admin_layout.html.twig' %}
+
+{% block title %}Responses{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+
+
+{% block body %}
+    <div class="container py-5">
+        <h3>Responses — {{ template.title }}</h3>
+        <div class="table-controls mb-3 d-flex justify-content-end">
+            <button id="deleteBtn" class="btn btn-danger" disabled data-bs-toggle="modal" data-bs-target="#modalDel">Delete</button>
+        </div>
+        <table class="table mb-0">
+            <thead>
+            <tr>
+                <th><input type="checkbox" id="selectAll"></th>
+                <th>Responder</th><th>Submitted At</th>
+            </tr>
+            </thead>
+            <tbody id="tableBody">
+            {% for sub in responses %}
+                <tr data-id="{{sub.id}}"
+                    data-edit-url="{{ path('admin_form_response',{formId:template.id,responseId:sub.id}) }}"
+                style="cursor: pointer">
+                    <td><input type="checkbox" class="rowCheckbox" value="{{sub.id}}" style="cursor: pointer"></td>
+                    <td>{{sub.user.email}}</td>
+                    <td>{{sub.createdAt|date('Y-m-d H:i')}}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <nav><ul class="pagination justify-content-center" id="pagination"></ul></nav>
+    </div>
+
+    <div class="modal fade" id="modalDel"><div class="modal-dialog modal-dialog-centered"><div class="modal-content">
+                <div class="modal-header"><h5>Confirm Delete</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body">Delete selected responses?</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button id="confirmDelete" class="btn btn-danger">Yes</button>
+                </div>
+            </div></div></div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        // identical JS to forms.html.twig but only delete
+        document.addEventListener('DOMContentLoaded',()=>{
+            const rowsPerPage=5, bodyEl=document.getElementById('tableBody'),
+                allRows=Array.from(bodyEl.querySelectorAll('tr[data-id]')),
+                pagUl=document.getElementById('pagination'),
+                selectAll=document.getElementById('selectAll'),
+                deleteBtn=document.getElementById('deleteBtn'),
+                confirmDelete=document.getElementById('confirmDelete');
+            let page=1, filtered=allRows.slice();
+
+            function render(){
+                bodyEl.innerHTML='';
+                const slice=filtered.slice((page-1)*rowsPerPage, page*rowsPerPage);
+                if(!slice.length) bodyEl.innerHTML='<tr><td colspan=3 class="text-center">No responses</td></tr>';
+                else slice.forEach(r=>bodyEl.appendChild(r));
+                bind();
+            }
+            function paginate(){
+                pagUl.innerHTML='';
+                const total=Math.ceil(filtered.length/rowsPerPage)||1;
+                for(let i=1;i<=total;i++){
+                    const li=document.createElement('li'), a=document.createElement('a');
+                    li.className='page-item'+(i===page?' active':'');
+                    a.className='page-link'; a.href='#'; a.textContent=i;
+                    a.onclick=e=>{e.preventDefault();page=i;render();paginate()};
+                    li.appendChild(a); pagUl.appendChild(li);
+                }
+            }
+            function bind(){
+                bodyEl.querySelectorAll('tr[data-id]').forEach(r=>{
+                    r.onclick=e=>{if(e.target.type!=='checkbox')window.location=r.dataset.editUrl};
+                });
+                bodyEl.querySelectorAll('.rowCheckbox').forEach(cb=>cb.onchange=updateBtn);
+                selectAll.onchange=()=>{
+                    bodyEl.querySelectorAll('.rowCheckbox').forEach(cb=>cb.checked=selectAll.checked);
+                    updateBtn();
+                };
+                updateBtn();
+            }
+            function updateBtn(){ deleteBtn.disabled=!bodyEl.querySelector('.rowCheckbox:checked'); }
+            confirmDelete.onclick=()=>{
+                const ids=[...bodyEl.querySelectorAll('.rowCheckbox:checked')].map(cb=>cb.value).join(',');
+                fetch("{{ path('admin_form_responses',{id:template.id}) }}",{
+                    method:'POST',
+                    headers:{'Content-Type':'application/x-www-form-urlencoded'},
+                    body:new URLSearchParams({ids})
+                }).then(_=>location.reload());
+            };
+
+            render();paginate();
+        });
+    </script>
+{% endblock %}

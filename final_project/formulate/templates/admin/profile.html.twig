@@ -1,7 +1,6 @@
-{% extends 'user_layout.html.twig' %}
+{% extends 'admin_layout.html.twig' %}
 
 {% block title %}Profile{% endblock %}
-{% block breadcrumb %}Profile{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -77,7 +76,6 @@
             font-size: .875rem;
         }
 
-
         /* Update button */
         .profile-card .btn-update {
             background-color: #48bb78;
@@ -100,14 +98,16 @@
 
 {% block body %}
     <div class="profile-container">
+        {# Account Details #}
         <div class="profile-card">
             <h2>Account Details</h2>
             <p><strong>Email:</strong> {{ email }}</p>
         </div>
 
+        {# Change Password Form #}
         <div class="profile-card">
             <h2>Change Password</h2>
-            {{ form_start(form) }}
+            {{ form_start(form, { attr: { novalidate: 'novalidate' } }) }}
             <div class="form-group">
                 {{ form_label(form.newPassword.first) }}
                 {{ form_widget(form.newPassword.first) }}

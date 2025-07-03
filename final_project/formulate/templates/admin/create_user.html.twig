@@ -1,0 +1,129 @@
+{# templates/admin/create_user.html.twig #}
+{% extends 'admin_layout.html.twig' %}
+
+{% block title %}Create User{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .error-text {
+            color: #dc3545;
+            margin-top: .25rem;
+            padding-left: 1.25rem;
+            font-size: .875em;
+        }
+        .is-invalid {
+            border-color: #dc3545;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="card create-user-card shadow-sm">
+            <div class="card-body">
+                <h3 class="card-title mb-4">Add New User</h3>
+                <form id="createUserForm" action="{{ path('admin_user_create') }}" method="post">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input
+                            type="email" id="email" name="email"
+                            class="form-control"
+                            autofocus
+                        >
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input
+                            type="password" id="password" name="password"
+                            class="form-control"
+                        >
+                    </div>
+                    <input type="hidden" name="roles" value="ROLE_USER">
+                    <div class="d-flex justify-content-end">
+                        <a href="{{ path('admin_users') }}" class="btn btn-secondary me-2">
+                            Cancel
+                        </a>
+                        <button type="submit" class="btn btn-success">
+                            Create User
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form          = document.getElementById('createUserForm');
+            const emailInput    = form.querySelector('#email');
+            const passwordInput = form.querySelector('#password');
+
+            function clearErrors() {
+                form.querySelectorAll('.error-text').forEach(el => el.remove());
+                form.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+            }
+
+            function showError(inputEl, message) {
+                inputEl.classList.add('is-invalid');
+                const err = document.createElement('div');
+                err.className = 'error-text';
+                err.textContent = message;
+                inputEl.insertAdjacentElement('afterend', err);
+            }
+
+            function validateEmail(email) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            }
+
+            form.addEventListener('submit', e => {
+                clearErrors();
+                let valid = true;
+
+                // — Email validation —
+                const emailVal = emailInput.value.trim();
+                if (!emailVal) {
+                    valid = false;
+                    showError(emailInput, 'Email is required.');
+                } else if (!validateEmail(emailVal)) {
+                    valid = false;
+                    showError(emailInput, 'Enter a valid email address.');
+                }
+
+                // — Password strength validation —
+                const pwd = passwordInput.value;
+                const rules = [
+                    { test: pwd.length >= 8,               msg: 'Password must be at least 8 characters long.' },
+                    { test: /[A-Z]/.test(pwd),             msg: 'Must have at least 1 uppercase letter.' },
+                    { test: /[a-z]/.test(pwd),             msg: 'Must have at least 1 lowercase letter.' },
+                    { test: /\d/.test(pwd),                msg: 'Must have at least 1 number.' },
+                    { test: /[!@#$%^&*(),.?":{}|<>]/.test(pwd), msg: 'Must have at least 1 special character.' }
+                ];
+
+                if (!pwd) {
+                    valid = false;
+                    showError(passwordInput, 'Password is required.');
+                } else {
+                    // apply each rule
+                    rules.forEach(rule => {
+                        if (!rule.test) {
+                            valid = false;
+                            showError(passwordInput, rule.msg);
+                        }
+                    });
+                }
+
+                if (!valid) {
+                    e.preventDefault();
+                    const firstErr = form.querySelector('.error-text');
+                    if (firstErr) {
+                        firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}

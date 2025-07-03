@@ -18,16 +18,38 @@ class ChangePasswordType extends AbstractType
                     'label'       => 'New Password',
                     'attr'        => ['placeholder' => '••••••••'],
                     'constraints' => [
-                        new Assert\NotBlank(),
-                        new Assert\Length(['min' => 6]),
+                        new Assert\NotBlank([
+                            'message' => 'Please enter a password',
+                        ]),
+                        new Assert\Length([
+                            'min'        => 8,
+                            'minMessage' => 'Your password must be at least {{ limit }} characters long',
+                        ]),
+                        new Assert\Regex([
+                            'pattern' => '/[A-Z]/',
+                            'message' => 'Your password must contain at least one uppercase letter',
+                        ]),
+                        new Assert\Regex([
+                            'pattern' => '/[a-z]/',
+                            'message' => 'Your password must contain at least one lowercase letter',
+                        ]),
+                        new Assert\Regex([
+                            'pattern' => '/\d/',
+                            'message' => 'Your password must contain at least one number',
+                        ]),
+                        new Assert\Regex([
+                            'pattern' => '/[\W]/',
+                            'message' => 'Your password must contain at least one special character',
+                        ]),
                     ],
                 ],
                 'second_options'  => [
-                    'label'       => 'Confirm Password',
-                    'attr'        => ['placeholder' => '••••••••'],
+                    'label' => 'Confirm Password',
+                    'attr'  => ['placeholder' => '••••••••'],
                 ],
                 'invalid_message' => 'The password fields must match.',
                 'mapped'          => false,
             ]);
+
     }
 }

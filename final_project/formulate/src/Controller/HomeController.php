@@ -80,6 +80,10 @@ final class HomeController extends AbstractController
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
 
+        // 1) If an ADMIN is already logged in, send them to the admin dashboard
+        if ($this->isGranted('ROLE_ADMIN')) {
+            return $this->redirectToRoute('admin_dashboard');
+        }
 
         // If the user already has ROLE_USER, send them straight to registration:
         if ($this->isGranted('ROLE_USER')) {

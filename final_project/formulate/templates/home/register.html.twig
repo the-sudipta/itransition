@@ -156,14 +156,18 @@
             <div class="mb-3">
                 <label for="{{ registrationForm.email.vars.id }}" class="form-label">Email</label>
                 {{ form_widget(registrationForm.email, { attr: { class: 'form-control', placeholder: 'you@example.com' } }) }}
-                {{ form_errors(registrationForm.email) }}
+                {% for error in registrationForm.email.vars.errors %}
+                    <div class="error-text" style="padding-left: 1.5rem;">{{ error.message }}</div>
+                {% endfor %}
             </div>
 
             {# Plain password #}
             <div class="mb-3">
                 <label for="{{ registrationForm.plainPassword.vars.id }}" class="form-label">Password</label>
                 {{ form_widget(registrationForm.plainPassword, { attr: { class: 'form-control', placeholder: 'Choose a password' } }) }}
-                {{ form_errors(registrationForm.plainPassword) }}
+                {% for error in registrationForm.plainPassword.vars.errors %}
+                    <div class="error-text" style="padding-left: 1.5rem;">{{ error.message }}</div>
+                {% endfor %}
             </div>
 
             {# Terms checkbox #}
@@ -172,7 +176,9 @@
                     {{ form_widget(registrationForm.agreeTerms, { attr: { class: 'form-check-input me-2' } }) }}
                     {{ form_label(registrationForm.agreeTerms, '<span class="text-secondary">I agree to the <a href="https://crimson-dani-92.tiiny.site" target="_blank" class="text-decoration-none small-link">Terms & Conditions</a></span>', { label_html: true, attr: { class: 'form-check-label' } }) }}
                 </div>
-                {{ form_errors(registrationForm.agreeTerms) }}
+                {% for error in registrationForm.agreeTerms.vars.errors %}
+                    <div class="error-text" style="padding-left: 1.5rem;">{{ error.message }}</div>
+                {% endfor %}
             </div>
 
             <button type="submit" class="btn btn-submit mb-3">
