@@ -29,7 +29,7 @@
             </thead>
             <tbody id="tableBody">
             {% for f in forms %}
-                <tr data-id="{{ f.id }}" data-edit-url="{{ path('admin_form_responses', { id: f.id }) }}">
+                <tr data-id="{{ f.id }}" data-edit-url="{{ path('admin_form_responses', { id: f.id }) }}" style="cursor: pointer">
                     <td>
                         <input type="checkbox" class="rowCheckbox" value="{{ f.id }}">
                     </td>

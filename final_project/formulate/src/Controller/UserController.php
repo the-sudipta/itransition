@@ -315,7 +315,8 @@ final class UserController extends AbstractController
             }
 
             // handle image
-            $uploadDir = $this->getParameter('kernel.project_dir').'/public/uploads/forms';
+            $uploadDir = $this->getParameter('kernel.project_dir')
+                .'/../public_html/formulate/uploads/forms';
             $imageFile = $request->files->get('image');
             if ($imageFile) {
                 $safeName = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);

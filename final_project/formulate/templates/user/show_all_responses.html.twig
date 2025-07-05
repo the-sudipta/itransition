@@ -47,7 +47,14 @@
             </thead>
             <tbody id="tableBody">
             {% for s in submits %}
-                <tr data-id="{{ s.id }}" style="cursor: pointer;">
+                <tr
+                    data-id="{{ s.id }}"
+                    data-edit-url="{{ path('app_user_single_response', {
+                        formId: template.id,
+                        responseId: s.id
+                    }) }}"
+                    style="cursor: pointer;"
+                >
                     <td><input type="checkbox" class="rowCheckbox" value="{{ s.id }}"></td>
                     <td>{{ s.user.email }}</td>
                     <td>{{ s.createdAt|date('Y-m-d H:i') }}</td>
@@ -137,13 +144,11 @@
             // (re)bind click & change handlers on visible rows
             function bindRowEvents() {
                 // row click to view single response
-                tableBody.querySelectorAll('tr[data-id]').forEach(r => {
-                    r.onclick = e => {
+                tableBody.querySelectorAll('tr[data-edit-url]').forEach(r => {
+                    r.addEventListener('click', e => {
                         if (e.target.type === 'checkbox') return;
-                        window.location.href =
-                            '{{ path("app_user_form_responses", {id: template.id}) }}'
-                            + '/' + r.dataset.id;
-                    };
+                        window.location.href = r.dataset.editUrl;
+                    });
                 });
                 // per-row checkbox
                 tableBody.querySelectorAll('.rowCheckbox')

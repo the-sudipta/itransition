@@ -41,7 +41,11 @@
                 </thead>
                 <tbody id="tableBody">
                 {% for form in forms %}
-                    <tr data-id="{{ form.id }}">
+                    <tr
+                        data-id="{{ form.id }}"
+                        data-edit-url="{{ path('app_user_form_edit', { id: form.id }) }}"
+                        STYLE="cursor: pointer"
+                    >
                         <td><input type="checkbox" class="rowCheckbox" value="{{ form.id }}"></td>
                         <td>{{ form.title }}</td>
                         <td>{{ form.description|striptags|slice(0,50) ~ '…' }}</td>
@@ -151,10 +155,13 @@
                     cb.onchange = updateButtons;
                     cb.onclick = e=>e.stopPropagation();
                 });
-                bodyEl.querySelectorAll('tr[data-id]').forEach(r=>{
-                    r.onclick = () => {
-                        window.location.href = '/user/forms/' + r.dataset.id + '/edit';
-                    }
+                bodyEl.querySelectorAll('tr[data-edit-url]').forEach(r => {
+                    r.addEventListener('click', e => {
+                        // if you ever have checkboxes in the same row, ignore those
+                        if (e.target.type !== 'checkbox') {
+                            window.location.href = r.dataset.editUrl;
+                        }
+                    });
                 });
             }
 
