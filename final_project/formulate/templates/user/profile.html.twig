@@ -128,13 +128,30 @@
         <div class="profile-card">
             <h2>Salesforce Integration</h2>
 
-{#            {% if app.user.salesforceAccount %}#}
-{#                <p>Your Salesforce account is already connected.</p>#}
-{#            {% else %}#}
+            {% set sf  = app.user.salesforceAccount %}
+            {% set now = date() %}
+
+            {% if sf is null %}
+                {# never connected #}
                 <a href="{{ path('salesforce_connect') }}" class="btn-update">
                     Connect to Salesforce
                 </a>
-{#            {% endif %}#}
+
+            {% elseif sf.expiresAt is not null and sf.expiresAt < now %}
+                {# explicitly expired #}
+                <p>Your Salesforce connection has expired.</p>
+                <a href="{{ path('salesforce_connect') }}" class="btn-update">
+                    Re-connect to Salesforce
+                </a>
+
+            {% else %}
+                {# still connected (expiry in future, or no expiry set) #}
+                {% if sf.expiresAt is not null %}
+                    <p>Connected until {{ sf.expiresAt|date('Y-m-d H:i') }}.</p>
+                {% else %}
+                    <p>Connected (no expiry set).</p>
+                {% endif %}
+            {% endif %}
 
         </div>
     </div>

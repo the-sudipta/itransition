@@ -2,6 +2,7 @@
 // src/Controller/SalesforceController.php
 namespace App\Controller;
 
+use App\Service\SalesforceClientService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -48,7 +49,7 @@ class SalesforceController extends AbstractController
      * Step 2: Salesforce calls back here with ?code=…
      */
     #[Route('/salesforce/callback', name: 'salesforce_callback')]
-    public function callback(Request $request): RedirectResponse
+    public function callback(Request $request,  SalesforceClientService $salesforceClientService): RedirectResponse
     {
         $homeRoute = $this->isGranted('ROLE_ADMIN')
             ? 'admin_dashboard'
@@ -86,6 +87,21 @@ class SalesforceController extends AbstractController
         $data = $response->toArray();
         // ← here you have $data['access_token'], $data['refresh_token'], $data['instance_url'], etc.
         // TODO: persist them in your database, linked to $this->getUser()
+
+
+//        dd($data);
+
+        // **hand it off** to your service, along with the current User:
+        try {
+            /** @var \App\Entity\User $user */
+            $user = $this->getUser();
+//            dd($user);
+            $salesforceClientService->persistAuthData($data, $user);
+
+            $this->addFlash('success', 'Salesforce account connected successfully!');
+        } catch (\Throwable $e) {
+            $this->addFlash('danger', 'Could not save Salesforce credentials: '.$e->getMessage());
+        }
 
         $this->addFlash('success', 'Salesforce account connected successfully!');
         return $this->redirectToRoute($homeRoute);

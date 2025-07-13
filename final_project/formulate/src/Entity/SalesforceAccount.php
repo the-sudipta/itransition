@@ -29,8 +29,8 @@ class SalesforceAccount
     private ?\DateTime $expiresAt = null;
 
     #[ORM\OneToOne(inversedBy: 'salesforceAccount', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    private ?User $User = null;
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
 
     public function getId(): ?int
     {
@@ -90,7 +90,7 @@ class SalesforceAccount
         return $this->expiresAt;
     }
 
-    public function setExpiresAt(?\DateTime $expiresAt): static
+    public function setExpiresAt(\DateTime $expiresAt): static
     {
         $this->expiresAt = $expiresAt;
 
@@ -99,12 +99,12 @@ class SalesforceAccount
 
     public function getUser(): ?User
     {
-        return $this->User;
+        return $this->user;
     }
 
-    public function setUser(User $User): static
+    public function setUser(User $user): static
     {
-        $this->User = $User;
+        $this->user = $user;
 
         return $this;
     }
