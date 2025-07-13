@@ -67,6 +67,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $comments;
 
+    #[ORM\OneToOne(mappedBy: 'User', cascade: ['persist', 'remove'])]
+    private ?SalesforceAccount $salesforceAccount = null;
+
     public function __construct()
     {
         $this->templates = new ArrayCollection();
@@ -272,6 +275,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $comment->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSalesforceAccount(): ?SalesforceAccount
+    {
+        return $this->salesforceAccount;
+    }
+
+    public function setSalesforceAccount(SalesforceAccount $salesforceAccount): static
+    {
+        // set the owning side of the relation if necessary
+        if ($salesforceAccount->getUser() !== $this) {
+            $salesforceAccount->setUser($this);
+        }
+
+        $this->salesforceAccount = $salesforceAccount;
 
         return $this;
     }

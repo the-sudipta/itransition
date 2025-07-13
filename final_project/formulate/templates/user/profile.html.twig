@@ -100,11 +100,13 @@
 
 {% block body %}
     <div class="profile-container">
+        {# — Account Details — #}
         <div class="profile-card">
             <h2>Account Details</h2>
             <p><strong>Email:</strong> {{ email }}</p>
         </div>
 
+        {# — Change Password — #}
         <div class="profile-card">
             <h2>Change Password</h2>
             {{ form_start(form) }}
@@ -120,6 +122,20 @@
             </div>
             <button type="submit" class="btn-update">Update Password</button>
             {{ form_end(form) }}
+        </div>
+
+        {# — Salesforce Connect Button — #}
+        <div class="profile-card">
+            <h2>Salesforce Integration</h2>
+
+{#            {% if app.user.salesforceAccount %}#}
+{#                <p>Your Salesforce account is already connected.</p>#}
+{#            {% else %}#}
+                <a href="{{ path('salesforce_connect') }}" class="btn-update">
+                    Connect to Salesforce
+                </a>
+{#            {% endif %}#}
+
         </div>
     </div>
 {% endblock %}
