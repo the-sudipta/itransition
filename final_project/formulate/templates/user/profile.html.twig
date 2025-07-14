@@ -125,6 +125,7 @@
         </div>
 
         {# — Salesforce Connect Button — #}
+        {# — Salesforce Connect Button — #}
         <div class="profile-card">
             <h2>Salesforce Integration</h2>
 
@@ -133,14 +134,18 @@
 
             {% if sf is null %}
                 {# never connected #}
-                <a href="{{ path('salesforce_connect') }}" class="btn-update">
+                <a href="{{ path('salesforce_connect') }}"
+                   style="background: #38BDF8; color: #fff; padding: .75rem 1.5rem; border-radius: 2rem;
+                  box-shadow: 0 8px 20px rgba(56,189,248,0.3); text-decoration: none; display: inline-block;">
                     Connect to Salesforce
                 </a>
 
             {% elseif sf.expiresAt is not null and sf.expiresAt < now %}
                 {# explicitly expired #}
                 <p>Your Salesforce connection has expired.</p>
-                <a href="{{ path('salesforce_connect') }}" class="btn-update">
+                <a href="{{ path('salesforce_connect') }}"
+                   style="background: #FB923C; color: #fff; padding: .75rem 1.5rem; border-radius: 2rem;
+                  box-shadow: 0 8px 20px rgba(251,146,60,0.3); text-decoration: none; display: inline-block;">
                     Re-connect to Salesforce
                 </a>
 
@@ -148,12 +153,22 @@
                 {# still connected (expiry in future, or no expiry set) #}
                 {% if sf.expiresAt is not null %}
                     <p>Connected until {{ sf.expiresAt|date('Y-m-d H:i') }}.</p>
+                    <a href="{{ path('salesforce_sync') }}"
+                       style="background: #A78BFA; color: #fff; padding: .75rem 1.5rem; border-radius: 2rem;
+                      box-shadow: 0 8px 20px rgba(167,139,250,0.3); text-decoration: none; display: inline-block;">
+                        Sync Salesforce
+                    </a>
                 {% else %}
                     <p>Connected (no expiry set).</p>
+                    <a href="{{ path('salesforce_sync') }}"
+                       style="background: #A78BFA; color: #fff; padding: .75rem 1.5rem; border-radius: 2rem;
+                      box-shadow: 0 8px 20px rgba(167,139,250,0.3); text-decoration: none; display: inline-block;">
+                        Sync Salesforce
+                    </a>
                 {% endif %}
             {% endif %}
-
         </div>
+
     </div>
 {% endblock %}
 

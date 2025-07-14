@@ -2,12 +2,14 @@
 // src/Controller/SalesforceController.php
 namespace App\Controller;
 
+use App\Repository\SalesforceAccountRepository;
 use App\Service\SalesforceClientService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class SalesforceController extends AbstractController
 {
@@ -19,8 +21,8 @@ class SalesforceController extends AbstractController
     {
         // where to send them home after a failure
         $homeRoute = $this->isGranted('ROLE_ADMIN')
-            ? 'admin_dashboard'
-            : 'app_user_index';
+            ? 'admin_profile'
+            : 'app_user_profile';
 
         // read from $_SERVER (Dotenv injects here)
         $clientId    = $_SERVER['SALESFORCE_CLIENT_ID']    ?? null;
@@ -52,8 +54,8 @@ class SalesforceController extends AbstractController
     public function callback(Request $request,  SalesforceClientService $salesforceClientService): RedirectResponse
     {
         $homeRoute = $this->isGranted('ROLE_ADMIN')
-            ? 'admin_dashboard'
-            : 'app_user_index';
+            ? 'admin_profile'
+            : 'app_user_profile';
 
         $code         = $request->query->get('code', '');
         $clientId     = $_SERVER['SALESFORCE_CLIENT_ID']     ?? null;
@@ -98,7 +100,7 @@ class SalesforceController extends AbstractController
 //            dd($user);
             $salesforceClientService->persistAuthData($data, $user);
 
-            $this->addFlash('success', 'Salesforce account connected successfully!');
+//            $this->addFlash('success', 'Salesforce account connected successfully!');
         } catch (\Throwable $e) {
             $this->addFlash('danger', 'Could not save Salesforce credentials: '.$e->getMessage());
         }
@@ -106,4 +108,95 @@ class SalesforceController extends AbstractController
         $this->addFlash('success', 'Salesforce account connected successfully!');
         return $this->redirectToRoute($homeRoute);
     }
+
+
+    #[Route('/salesforce/sync', name: 'salesforce_sync')]
+    public function sync(
+        SalesforceClientService     $sfService,
+        SalesforceAccountRepository $sfAccountRepo
+    ): RedirectResponse {
+        $user = $this->getUser();
+        if (!$user) {
+            $this->addFlash('error', 'Login required to sync.');
+            return $this->redirectToRoute('app_login');
+        }
+
+        $acct = $sfAccountRepo->findOneBy(['user' => $user]);
+        if (!$acct) {
+            $this->addFlash('error', 'Connect Salesforce first.');
+            return $this->redirectToRoute('app_login');
+        }
+
+        // 1) ask service for payloads for Templates, Comments & Likes
+        $payloads = $sfService->prepareAllPayloads();
+
+        // 2) prepare HTTP client and endpoint URL
+        $http     = HttpClient::create();
+        $base     = rtrim($acct->getInstanceUrl(), '/');
+        $ver      = 'v56.0';
+        // true upsert by external ID
+        $endpoint = sprintf(
+            '%s/services/data/%s/composite/sobjects?externalIdField=Original_ID__c',
+            $base,
+            $ver
+        );
+        $token    = $acct->getAccessToken();
+
+        $total = 0;
+
+        try {
+            foreach ($payloads as $records) {
+                if (empty($records)) {
+                    continue;
+                }
+
+                // Salesforce composite supports max 200 records per batch
+                foreach (array_chunk($records, 200) as $batch) {
+                    $response = $http->request(
+                        'POST',
+                        $endpoint,
+                        [
+                            'headers' => [
+                                'Authorization' => "Bearer $token",
+                                'Content-Type'  => 'application/json',
+                            ],
+                            'json' => [
+                                'allOrNone' => false,
+                                'records'   => $batch,
+                            ],
+                        ]
+                    );
+
+                    // 3) HTTP-level check
+                    $status = $response->getStatusCode();
+                    if ($status >= 300) {
+                        $content = $response->getContent(false);
+                        throw new \RuntimeException("HTTP $status: $content");
+                    }
+
+                    // 4) Salesforce composite result
+                    $body = $response->toArray(false);
+
+                    $body = $response->toArray(false);
+//                    dd($body);
+
+                    if (!empty($body['hasErrors'])) {
+                        $errs = json_encode($body['results']);
+                        throw new \RuntimeException("Salesforce upsert errors: $errs");
+                    }
+
+                    // count how many records we sent
+                    $total += count($batch);
+                }
+            }
+
+            $this->addFlash('success', "Synced $total records (Templates, Comments & Likes).");
+        } catch (\Throwable $e) {
+            $this->addFlash('error', 'Sync failed: ' . $e->getMessage());
+        }
+
+        return $this->redirectToRoute('app_user_profile');
+    }
+
+
 }
