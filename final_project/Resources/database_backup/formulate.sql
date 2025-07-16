@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 22, 2025 at 04:09 AM
+-- Generation Time: Jul 15, 2025 at 11:36 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -47,25 +47,6 @@ INSERT INTO `answer` (`id`, `question_id`, `choosen_option_id`, `form_submit_id`
 (5, 6, NULL, 2, 'Quia quia et doloremque maxime ut sit.'),
 (6, 7, NULL, 2, '4'),
 (7, 8, NULL, 2, 'Enim beatae aut quaerat qui eaque.'),
-(8, 11, NULL, 3, '0'),
-(9, 12, NULL, 3, '2'),
-(10, 11, NULL, 4, '5'),
-(11, 12, NULL, 4, '4'),
-(12, 11, NULL, 5, '6'),
-(13, 12, NULL, 5, '1'),
-(14, 11, NULL, 6, '9'),
-(15, 12, NULL, 6, '10'),
-(16, 16, NULL, 7, 'Illum repudiandae sequi sed eos nobis.'),
-(17, 17, NULL, 7, '10'),
-(18, 18, NULL, 7, 'Vitae natus non quas aspernatur molestiae et corporis.'),
-(19, 19, NULL, 7, '7'),
-(20, 16, NULL, 8, 'Et dolorem velit culpa dolorum.'),
-(21, 17, NULL, 8, '2'),
-(22, 18, NULL, 8, 'Non necessitatibus nostrum incidunt voluptatem alias debitis culpa.'),
-(23, 19, NULL, 8, '3'),
-(24, 21, NULL, 9, 'Impedit odit laboriosam optio quia ea commodi qui.'),
-(25, 22, NULL, 9, 'Quo et quidem culpa rerum at.'),
-(26, 24, NULL, 9, 'Nihil sunt ut quibusdam atque at.'),
 (27, 21, NULL, 10, 'Ut quo excepturi eveniet aut at.'),
 (28, 22, NULL, 10, 'Quod voluptatem et sunt recusandae consequuntur laudantium.'),
 (29, 24, NULL, 10, 'Voluptates consequatur sed eligendi sed.'),
@@ -87,69 +68,37 @@ INSERT INTO `answer` (`id`, `question_id`, `choosen_option_id`, `form_submit_id`
 (45, 32, NULL, 16, '2'),
 (46, 34, NULL, 16, '0'),
 (47, 35, NULL, 16, '5'),
-(48, 32, NULL, 17, '4'),
-(49, 34, NULL, 17, '2'),
-(50, 35, NULL, 17, '1'),
-(51, 36, NULL, 18, 'Cum maiores est eligendi et veniam.'),
-(52, 37, NULL, 18, 'Aspernatur id voluptas veniam soluta quas.'),
-(53, 36, NULL, 19, 'Repudiandae qui sit aut quisquam voluptates assumenda repellat quia.'),
-(54, 37, NULL, 19, 'Voluptas nisi itaque alias hic et voluptas.'),
-(55, 36, NULL, 20, 'Omnis similique laudantium temporibus.'),
-(56, 37, NULL, 20, 'Sapiente ex mollitia nemo qui.'),
-(57, 36, NULL, 21, 'Aut ipsa aspernatur incidunt aliquam quis.'),
-(58, 37, NULL, 21, 'Laboriosam vitae maiores suscipit consequuntur.'),
-(59, 44, NULL, 22, '9'),
-(60, 45, NULL, 22, 'Qui dicta est accusantium totam odit minus.'),
 (61, 44, NULL, 23, '6'),
 (62, 45, NULL, 23, 'Ducimus ut ea suscipit magni.'),
 (63, 44, NULL, 24, '8'),
 (64, 45, NULL, 24, 'Qui nostrum deserunt aut et id atque minima.'),
-(65, 44, NULL, 25, '8'),
-(66, 45, NULL, 25, 'Eum itaque voluptatibus qui nemo qui et.'),
-(67, 49, NULL, 26, '1'),
-(68, 49, NULL, 27, '9'),
-(69, 49, NULL, 28, '8'),
-(70, 49, NULL, 29, '7'),
-(71, 51, NULL, 30, '7'),
-(72, 52, NULL, 30, '4'),
-(73, 54, NULL, 30, 'Omnis minima at provident itaque necessitatibus sed.'),
-(74, 51, NULL, 31, '0'),
-(75, 52, NULL, 31, '6'),
-(76, 54, NULL, 31, 'Iste tempore ex explicabo officiis similique.'),
-(77, 51, NULL, 32, '2'),
-(78, 52, NULL, 32, '1'),
-(79, 54, NULL, 32, 'Et reiciendis numquam voluptates nam iste.'),
-(80, 51, NULL, 33, '9'),
-(81, 52, NULL, 33, '8'),
-(82, 54, NULL, 33, 'Ullam iusto labore alias doloribus est inventore cum et.'),
-(83, 57, NULL, 34, '0'),
-(84, 58, NULL, 34, '0'),
-(85, 59, NULL, 34, 'Explicabo tempore impedit error.'),
-(86, 61, NULL, 35, 'Qui nostrum nesciunt ad aperiam.'),
-(87, 62, NULL, 35, 'Voluptatibus quia delectus aut numquam.'),
-(88, 63, NULL, 35, 'Laudantium itaque ducimus nulla quae unde.'),
-(89, 64, NULL, 35, 'Delectus ipsam ipsa ut at in ratione.'),
-(90, 65, NULL, 35, 'Dolores illo mollitia necessitatibus culpa sapiente dolorum.'),
-(91, 66, NULL, 36, 'Et id nemo ad delectus fugiat necessitatibus accusamus.'),
-(92, 67, NULL, 36, 'Assumenda sint voluptate sed minus voluptatem excepturi.'),
-(93, 69, NULL, 36, 'Reiciendis enim non aliquid.'),
-(94, 70, NULL, 36, '4'),
-(95, 71, NULL, 37, 'Quia dolorem autem dolor non.'),
-(96, 72, NULL, 37, 'Ut tempore consectetur eos.'),
-(97, 74, NULL, 37, '0'),
-(98, 75, NULL, 37, 'Totam id at labore natus similique.'),
-(99, 71, NULL, 38, 'Qui deleniti cum autem enim cupiditate dolores.'),
-(100, 72, NULL, 38, 'Et enim hic quod et asperiores non aperiam.'),
-(101, 74, NULL, 38, '5'),
-(102, 75, NULL, 38, 'Laudantium minima qui ea ullam.'),
-(103, 71, NULL, 39, 'Beatae qui dolor molestias et et accusantium vel.'),
-(104, 72, NULL, 39, 'Qui laborum ut voluptatibus aspernatur molestias adipisci.'),
-(105, 74, NULL, 39, '4'),
-(106, 75, NULL, 39, 'Error minima perferendis doloremque autem recusandae accusamus.'),
-(107, 71, NULL, 40, 'Excepturi qui ex corrupti provident quidem recusandae non sint.'),
-(108, 72, NULL, 40, 'Molestiae magnam placeat non nihil et et.'),
-(109, 74, NULL, 40, '9'),
-(110, 75, NULL, 40, 'Doloremque est reprehenderit ipsam id asperiores.');
+(111, 80, 93, 42, 'Yes'),
+(112, 91, 118, 43, 'dasdas'),
+(113, 92, NULL, 43, 'fasdfsdfas'),
+(114, 93, 93, 43, 'Yes'),
+(115, 93, 121, 43, 'Nostrum'),
+(116, 93, 122, 43, 'asdfasd');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `api_token`
+--
+
+CREATE TABLE `api_token` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `token` varchar(256) NOT NULL,
+  `created_at` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `api_token`
+--
+
+INSERT INTO `api_token` (`id`, `user_id`, `token`, `created_at`) VALUES
+(1, 23, 'c1aa206c2964d5ffbc51ce021ea29a44aa5b31d532a817331bb4f142b0cb53d4', '2025-07-16 00:45:36'),
+(2, 17, '9bc8f05f91e6fa1b28aa52ddbc8ceab7e8310e7e9f69e80d3e9a695222afe67d', '2025-07-16 00:54:37');
 
 -- --------------------------------------------------------
 
@@ -172,34 +121,17 @@ CREATE TABLE `comment` (
 INSERT INTO `comment` (`id`, `template_id`, `user_id`, `content`, `created_at`) VALUES
 (1, 1, 11, 'Ad dolorem reprehenderit voluptatem.', '2025-05-08 05:19:16'),
 (2, 1, 13, 'At explicabo voluptas sit iusto optio alias.', '2025-06-06 18:36:02'),
-(3, 2, 14, 'Dolorem sed omnis nihil numquam voluptatem et maiores.', '2025-05-19 06:33:49'),
 (4, 2, 12, 'Perspiciatis perferendis ipsa reiciendis perferendis voluptatem sit.', '2025-05-31 03:01:22'),
-(5, 3, 15, 'Similique eaque ea est iste dolorem cum.', '2025-05-28 21:41:22'),
-(6, 3, 14, 'Sit odit alias aut sint ratione libero quia.', '2025-06-08 13:08:04'),
-(7, 4, 13, 'Atque temporibus cum id repellat quam vero praesentium.', '2025-04-12 13:18:29'),
-(8, 4, 14, 'Debitis magni dolor quae eveniet eveniet.', '2025-03-27 00:04:24'),
 (9, 5, 12, 'Dolorum magnam doloremque labore dignissimos modi rerum consequatur.', '2025-04-20 09:33:42'),
-(10, 5, 14, 'Vitae ut sit perferendis voluptates quod.', '2025-04-23 16:15:38'),
 (11, 6, 11, 'Inventore molestiae voluptatem inventore et.', '2025-05-21 10:12:47'),
-(12, 6, 15, 'Et eveniet adipisci facere et.', '2025-04-23 12:03:44'),
-(13, 7, 14, 'Iusto dicta et minus voluptatem reprehenderit.', '2025-06-20 21:19:16'),
-(14, 7, 14, 'Nostrum quaerat laborum et et aut.', '2025-02-05 10:26:11'),
-(15, 8, 14, 'Excepturi asperiores tempore nemo voluptatem assumenda ut sequi.', '2025-06-22 00:21:38'),
-(16, 8, 15, 'Quaerat aspernatur itaque accusamus saepe perspiciatis nostrum quia.', '2025-06-21 07:47:47'),
 (17, 9, 12, 'Quisquam non rerum a repellat et.', '2025-05-03 22:58:35'),
 (18, 9, 13, 'Et architecto qui sed quasi.', '2025-04-10 03:57:30'),
 (19, 10, 13, 'Mollitia enim sed voluptatibus ea ipsa harum vero.', '2025-06-14 08:56:37'),
 (20, 10, 13, 'Consequuntur rem architecto aspernatur aliquam ut similique et.', '2025-06-17 04:46:44'),
-(21, 11, 15, 'Nihil odit qui ea.', '2025-05-15 18:41:58'),
-(22, 11, 11, 'Ut maxime tempora quod unde est.', '2025-02-06 16:38:26'),
-(23, 12, 15, 'Quia repellat non et et repellat porro modi suscipit.', '2025-05-23 14:44:37'),
-(24, 12, 14, 'Ex quasi sunt unde sit perferendis accusantium.', '2025-04-27 12:26:16'),
-(25, 13, 12, 'Aperiam fuga quia excepturi sed animi.', '2025-05-15 02:03:53'),
-(26, 13, 14, 'Sit sapiente autem vitae ut tempora.', '2025-02-02 03:35:57'),
-(27, 14, 13, 'Sunt ea recusandae harum nostrum qui quo.', '2025-03-25 03:06:43'),
-(28, 14, 15, 'Commodi et dolorum perferendis beatae maiores et.', '2025-03-18 10:11:45'),
-(29, 15, 12, 'Natus assumenda eum dignissimos placeat eius.', '2025-05-14 15:36:31'),
-(30, 15, 13, 'Quisquam laborum qui fuga id nesciunt.', '2025-06-15 11:39:02');
+(31, 10, 17, 'A test Comment', '2025-07-01 08:14:07'),
+(32, 18, 17, 'I Loved it !', '2025-07-02 04:42:41'),
+(33, 18, 17, 'Test 2', '2025-07-03 13:00:02'),
+(34, 21, 21, 'Hii there !', '2025-07-08 19:45:12');
 
 -- --------------------------------------------------------
 
@@ -219,7 +151,13 @@ CREATE TABLE `doctrine_migration_versions` (
 
 INSERT INTO `doctrine_migration_versions` (`version`, `executed_at`, `execution_time`) VALUES
 ('DoctrineMigrations\\Version20250621233153', '2025-06-22 01:32:52', 12638),
-('DoctrineMigrations\\Version20250621235915', '2025-06-22 01:59:25', 128);
+('DoctrineMigrations\\Version20250621235915', '2025-06-22 01:59:25', 128),
+('DoctrineMigrations\\Version20250628182305', '2025-06-28 20:24:42', 210),
+('DoctrineMigrations\\Version20250713062850', '2025-07-13 08:29:05', 935),
+('DoctrineMigrations\\Version20250713103518', '2025-07-13 12:35:31', 946),
+('DoctrineMigrations\\Version20250713120707', '2025-07-13 14:07:12', 1076),
+('DoctrineMigrations\\Version20250713122542', '2025-07-13 14:25:51', 427),
+('DoctrineMigrations\\Version20250715162828', '2025-07-15 18:28:36', 979);
 
 -- --------------------------------------------------------
 
@@ -241,13 +179,6 @@ CREATE TABLE `form_submit` (
 INSERT INTO `form_submit` (`id`, `template_id`, `user_id`, `created_at`) VALUES
 (1, 1, 12, '2025-05-29 02:19:40'),
 (2, 2, 12, '2025-05-24 07:14:54'),
-(3, 3, 15, '2025-06-12 09:59:09'),
-(4, 3, 12, '2025-05-26 10:06:16'),
-(5, 3, 13, '2025-05-23 01:50:56'),
-(6, 3, 14, '2025-06-20 22:12:23'),
-(7, 4, 14, '2025-03-20 01:56:36'),
-(8, 4, 15, '2025-06-14 16:14:36'),
-(9, 5, 15, '2025-06-04 19:49:48'),
 (10, 5, 13, '2025-05-20 19:27:18'),
 (11, 6, 11, '2025-04-11 02:23:54'),
 (12, 6, 13, '2025-03-28 07:58:17'),
@@ -255,30 +186,10 @@ INSERT INTO `form_submit` (`id`, `template_id`, `user_id`, `created_at`) VALUES
 (14, 6, 13, '2025-05-14 13:41:45'),
 (15, 7, 11, '2025-03-19 06:44:16'),
 (16, 7, 12, '2025-05-23 15:33:32'),
-(17, 7, 15, '2025-04-22 10:49:09'),
-(18, 8, 12, '2025-06-18 07:45:35'),
-(19, 8, 11, '2025-06-19 17:44:09'),
-(20, 8, 13, '2025-06-17 04:41:36'),
-(21, 8, 15, '2025-06-21 00:45:10'),
-(22, 9, 15, '2025-04-22 15:55:43'),
 (23, 9, 12, '2025-05-07 15:39:42'),
 (24, 9, 12, '2025-05-03 14:01:14'),
-(25, 9, 15, '2025-03-27 16:25:22'),
-(26, 10, 11, '2025-06-17 11:50:11'),
-(27, 10, 15, '2025-06-13 15:14:31'),
-(28, 10, 15, '2025-06-21 07:12:37'),
-(29, 10, 11, '2025-06-19 08:06:44'),
-(30, 11, 11, '2025-03-07 23:16:23'),
-(31, 11, 14, '2025-02-10 17:00:36'),
-(32, 11, 11, '2025-05-23 03:48:56'),
-(33, 11, 12, '2025-04-19 02:33:23'),
-(34, 12, 15, '2025-05-07 19:07:00'),
-(35, 13, 14, '2025-04-19 05:27:05'),
-(36, 14, 13, '2025-01-13 12:08:12'),
-(37, 15, 13, '2025-04-13 09:23:49'),
-(38, 15, 11, '2025-06-19 12:08:09'),
-(39, 15, 14, '2025-04-29 21:19:55'),
-(40, 15, 14, '2025-03-16 15:24:52');
+(42, 18, 17, '2025-07-02 06:44:56'),
+(43, 22, 21, '2025-07-08 19:48:53');
 
 -- --------------------------------------------------------
 
@@ -298,35 +209,14 @@ CREATE TABLE `like` (
 
 INSERT INTO `like` (`id`, `template_id`, `user_id`) VALUES
 (1, 1, 13),
-(2, 1, 15),
-(3, 2, 15),
 (4, 2, 13),
 (5, 3, 11),
-(6, 3, 15),
-(7, 4, 15),
-(8, 4, 13),
-(9, 5, 14),
-(10, 5, 15),
-(11, 6, 15),
-(12, 6, 14),
-(13, 7, 14),
 (14, 7, 13),
-(15, 8, 14),
-(16, 8, 11),
-(17, 9, 14),
-(18, 9, 15),
 (19, 10, 11),
 (20, 10, 11),
-(21, 11, 13),
-(22, 11, 12),
-(23, 12, 11),
-(24, 12, 15),
-(25, 13, 13),
-(26, 13, 12),
-(27, 14, 13),
-(28, 14, 12),
-(29, 15, 11),
-(30, 15, 14);
+(32, 10, 17),
+(35, 18, 17),
+(37, 21, 21);
 
 -- --------------------------------------------------------
 
@@ -364,9 +254,6 @@ INSERT INTO `option` (`id`, `question_id`, `text`, `position`) VALUES
 (16, 15, 'Et', '1'),
 (17, 15, 'Expedita', '2'),
 (18, 15, 'Dolorem', '3'),
-(19, 20, 'Suscipit', '1'),
-(20, 20, 'Eius', '2'),
-(21, 20, 'Numquam', '3'),
 (22, 23, 'Ea', '1'),
 (23, 23, 'Eius', '2'),
 (24, 23, 'Nihil', '3'),
@@ -385,15 +272,6 @@ INSERT INTO `option` (`id`, `question_id`, `text`, `position`) VALUES
 (37, 33, 'Dolores', '1'),
 (38, 33, 'Fugit', '2'),
 (39, 33, 'Eum', '3'),
-(40, 38, 'Et', '1'),
-(41, 38, 'Nam', '2'),
-(42, 38, 'Nam', '3'),
-(43, 39, 'In', '1'),
-(44, 39, 'In', '2'),
-(45, 39, 'Est', '3'),
-(46, 40, 'Neque', '1'),
-(47, 40, 'Dolores', '2'),
-(48, 40, 'Et', '3'),
 (49, 41, 'Aliquid', '1'),
 (50, 41, 'Repellendus', '2'),
 (51, 41, 'Nisi', '3'),
@@ -403,36 +281,38 @@ INSERT INTO `option` (`id`, `question_id`, `text`, `position`) VALUES
 (55, 43, 'Dignissimos', '1'),
 (56, 43, 'Harum', '2'),
 (57, 43, 'Qui', '3'),
-(58, 46, 'Non', '1'),
-(59, 46, 'Et', '2'),
-(60, 46, 'Alias', '3'),
-(61, 47, 'Nostrum', '1'),
-(62, 47, 'Debitis', '2'),
-(63, 47, 'Nostrum', '3'),
-(64, 48, 'Ea', '1'),
-(65, 48, 'Earum', '2'),
-(66, 48, 'Adipisci', '3'),
-(67, 50, 'In', '1'),
-(68, 50, 'Iure', '2'),
-(69, 50, 'Qui', '3'),
-(70, 53, 'Unde', '1'),
-(71, 53, 'Aut', '2'),
-(72, 53, 'Aut', '3'),
-(73, 55, 'Excepturi', '1'),
-(74, 55, 'Aliquam', '2'),
-(75, 55, 'Itaque', '3'),
-(76, 56, 'Dolores', '1'),
-(77, 56, 'Molestiae', '2'),
-(78, 56, 'Quis', '3'),
-(79, 60, 'Velit', '1'),
-(80, 60, 'Voluptate', '2'),
-(81, 60, 'Ut', '3'),
-(82, 68, 'Laudantium', '1'),
-(83, 68, 'Tempore', '2'),
-(84, 68, 'Vitae', '3'),
-(85, 73, 'Asperiores', '1'),
-(86, 73, 'Deserunt', '2'),
-(87, 73, 'Temporibus', '3');
+(93, 80, 'Yes', '0'),
+(94, 80, 'No', '1'),
+(95, 81, 'Non', '0'),
+(96, 81, 'Et', '1'),
+(97, 81, 'Alias', '2'),
+(98, 82, 'Nostrum', '0'),
+(99, 82, 'Debitis', '1'),
+(100, 82, 'Nostrum', '2'),
+(101, 83, 'Ea', '0'),
+(102, 83, 'Earum', '1'),
+(103, 83, 'Adipisci', '2'),
+(104, 85, 'In', '0'),
+(105, 85, 'Iure', '1'),
+(106, 85, 'Qui', '2'),
+(107, 86, 'Russia', '0'),
+(108, 86, 'India', '1'),
+(109, 86, 'Thailand', '2'),
+(110, 86, 'Germany', '3'),
+(111, 86, 'Switzerland', '4'),
+(112, 88, 'ASFDSFSDF', '0'),
+(113, 88, 'ASFDFADSFSD', '1'),
+(114, 88, 'SDFSASDGA', '2'),
+(115, 89, 'ASDFASF', '0'),
+(116, 89, 'ASDFFASDFAA', '1'),
+(117, 89, 'ASDFASDFASDA SD FASDFASF DSA F', '2'),
+(118, 91, 'dasdas', '0'),
+(119, 91, 'It is best', '1'),
+(120, 91, 'No', '2'),
+(121, 93, 'Nostrum', '0'),
+(122, 93, 'asdfasd', '1'),
+(123, 93, 'ASDFASDFASDA SD FASDFASF DSA F', '2'),
+(124, 93, 'fasfa', '3');
 
 -- --------------------------------------------------------
 
@@ -470,11 +350,6 @@ INSERT INTO `question` (`id`, `template_id`, `type`, `title`, `description`, `sh
 (13, 3, 'checkbox', 'Voluptatem voluptates impedit fugit libero occaecati.', 'Iste asperiores et occaecati praesentium est ut modi.', 0, '3'),
 (14, 3, 'checkbox', 'Minima quam assumenda quia modi nesciunt.', 'Quisquam qui autem a magni eligendi modi et.', 1, '4'),
 (15, 3, 'radio', 'Unde dolores dignissimos numquam.', 'Consequatur hic quaerat enim quas.', 1, '5'),
-(16, 4, 'string', 'Blanditiis quae blanditiis.', 'Est id officia quidem qui quo.', 0, '1'),
-(17, 4, 'integer', 'Laboriosam autem mollitia voluptatum non.', 'Sequi autem qui ut voluptas tenetur atque eaque.', 0, '2'),
-(18, 4, 'text', 'Nemo quis sit dolores quisquam.', 'Perferendis corporis laudantium ea placeat consequatur.', 1, '3'),
-(19, 4, 'integer', 'Officiis laudantium veritatis.', 'Aliquid sequi eum deserunt nihil facilis ea quia.', 1, '4'),
-(20, 4, 'checkbox', 'Explicabo voluptatem laudantium est.', 'Ex est ratione ratione aut fuga soluta dolore eligendi.', 1, '5'),
 (21, 5, 'string', 'Et hic corporis quaerat fugit eos.', 'Saepe quod ut ut et quibusdam cum.', 0, '1'),
 (22, 5, 'string', 'Quia sunt beatae.', 'Nihil dolorem distinctio soluta recusandae suscipit.', 1, '2'),
 (23, 5, 'radio', 'Totam debitis et saepe.', 'Quia quibusdam et cupiditate dolor officia et alias et.', 0, '3'),
@@ -490,46 +365,49 @@ INSERT INTO `question` (`id`, `template_id`, `type`, `title`, `description`, `sh
 (33, 7, 'checkbox', 'Enim iusto commodi cum sunt.', 'Temporibus libero rerum odio aut.', 1, '3'),
 (34, 7, 'integer', 'Velit suscipit et.', 'Magni voluptas et impedit iste dolores hic.', 1, '4'),
 (35, 7, 'integer', 'Et nam corporis natus excepturi sunt.', 'Earum nulla commodi beatae rerum officiis vero vitae.', 1, '5'),
-(36, 8, 'text', 'Libero officiis consequatur.', 'Accusantium ipsum voluptates perspiciatis dolor error eligendi aperiam temporibus.', 0, '1'),
-(37, 8, 'text', 'Expedita debitis sequi reprehenderit.', 'Et sint molestias minima.', 1, '2'),
-(38, 8, 'checkbox', 'Adipisci ex sed a repellat.', 'Eaque assumenda soluta omnis exercitationem adipisci aut.', 0, '3'),
-(39, 8, 'radio', 'Doloribus et sed quis expedita ducimus.', 'Et dolorem assumenda porro odio.', 0, '4'),
-(40, 8, 'checkbox', 'Temporibus veritatis consequatur quia cupiditate alias.', 'Voluptas aliquam corporis velit ullam est libero expedita rem.', 0, '5'),
 (41, 9, 'checkbox', 'Aut quos facere commodi.', 'Voluptatem saepe facilis laudantium amet dolores commodi.', 0, '1'),
 (42, 9, 'radio', 'Fuga corporis vitae numquam.', 'Laborum iure beatae eaque non qui maiores dicta.', 0, '2'),
 (43, 9, 'radio', 'Itaque qui natus fuga corporis similique.', 'Aut sunt quia omnis reiciendis.', 0, '3'),
 (44, 9, 'integer', 'Quibusdam ut voluptatibus.', 'Cum deserunt similique dolor voluptatem.', 0, '4'),
 (45, 9, 'string', 'Accusamus expedita sint ullam.', 'Perspiciatis aliquam a quis voluptas voluptate qui.', 0, '5'),
-(46, 10, 'radio', 'Perferendis velit aut voluptatibus beatae nemo.', 'Officiis vitae quo sequi.', 0, '1'),
-(47, 10, 'radio', 'Et voluptatum et commodi eos consequatur.', 'Est placeat et vero.', 0, '2'),
-(48, 10, 'radio', 'Facere et reprehenderit tempora ea reprehenderit.', 'Eum nemo quo sit mollitia.', 0, '3'),
-(49, 10, 'integer', 'Inventore cupiditate natus aspernatur aliquam.', 'Enim pariatur minus sint dignissimos sint velit.', 0, '4'),
-(50, 10, 'checkbox', 'Numquam ut nihil enim.', 'Sit vero vel eos.', 0, '5'),
-(51, 11, 'integer', 'Ipsam error illum beatae qui.', 'Praesentium ipsa unde esse velit corporis.', 0, '1'),
-(52, 11, 'integer', 'Voluptas natus culpa aspernatur.', 'Est qui omnis sunt aut error aliquid exercitationem.', 0, '2'),
-(53, 11, 'checkbox', 'Repellat explicabo non.', 'Officia iure iste debitis quia explicabo quasi possimus neque.', 0, '3'),
-(54, 11, 'text', 'Dolorem laboriosam neque repellendus non.', 'Quasi ipsa aspernatur necessitatibus ullam.', 0, '4'),
-(55, 11, 'checkbox', 'In facere occaecati saepe.', 'Autem omnis id corrupti velit hic voluptas expedita.', 1, '5'),
-(56, 12, 'checkbox', 'Tempore et aliquid.', 'Soluta ea soluta officiis.', 0, '1'),
-(57, 12, 'integer', 'Voluptatem est iusto.', 'Assumenda quaerat in ut illum qui occaecati omnis.', 0, '2'),
-(58, 12, 'integer', 'A et praesentium nulla.', 'Ut perferendis architecto qui et.', 0, '3'),
-(59, 12, 'text', 'Ea officiis quod quo.', 'Atque natus iste repudiandae rerum laboriosam.', 0, '4'),
-(60, 12, 'radio', 'Id necessitatibus dolorum nisi.', 'Veritatis qui enim voluptatem dolor architecto.', 0, '5'),
-(61, 13, 'text', 'At beatae ut.', 'Sunt eius ab eum in corporis nesciunt.', 0, '1'),
-(62, 13, 'text', 'Quod ab quidem sit porro.', 'Mollitia quisquam sunt blanditiis sit dolorem.', 0, '2'),
-(63, 13, 'string', 'Sed ducimus non sed eaque.', 'Optio corporis quisquam eius nulla.', 0, '3'),
-(64, 13, 'string', 'Atque repellendus cupiditate necessitatibus ratione.', 'Aperiam corrupti quia consequatur nesciunt sit.', 0, '4'),
-(65, 13, 'text', 'Adipisci voluptatem voluptas qui.', 'Optio adipisci est iusto laboriosam ut et tempore.', 1, '5'),
-(66, 14, 'string', 'Sint cumque voluptate non.', 'Aut sapiente molestiae ut nisi tempora voluptas quas.', 1, '1'),
-(67, 14, 'text', 'Nisi et dignissimos autem quo non.', 'Accusamus quo accusamus sint sunt adipisci.', 0, '2'),
-(68, 14, 'checkbox', 'Ipsam sunt sit qui qui ipsa.', 'Rerum dolorum quos accusantium vero.', 1, '3'),
-(69, 14, 'text', 'Architecto rem iure dolores ducimus.', 'Vel omnis dolorum culpa sed iste sequi et distinctio.', 0, '4'),
-(70, 14, 'integer', 'Ut ex asperiores quia.', 'Voluptas vel esse eum maxime dolor.', 1, '5'),
-(71, 15, 'text', 'Esse in laudantium doloremque.', 'Sint eos repudiandae velit sunt architecto.', 0, '1'),
-(72, 15, 'string', 'Quia dolores modi vel.', 'Omnis et illo neque est quia expedita.', 1, '2'),
-(73, 15, 'radio', 'Corrupti incidunt quia qui est.', 'Voluptas molestiae aut quia earum.', 1, '3'),
-(74, 15, 'integer', 'Et a provident quasi.', 'Eligendi quidem nisi omnis iste autem aut.', 0, '4'),
-(75, 15, 'text', 'Optio est adipisci.', 'Esse facilis ipsam totam.', 1, '5');
+(80, 18, 'radio', 'Did you like the project?', 'N/A', 0, '0'),
+(81, 10, 'radio', 'Perferendis velit aut voluptatibus beatae nemo.', 'N/A', 0, '0'),
+(82, 10, 'radio', 'Et voluptatum et commodi eos consequatur.', 'N/A', 0, '1'),
+(83, 10, 'radio', 'Facere et reprehenderit tempora ea reprehenderit.', 'N/A', 0, '2'),
+(84, 10, 'text', 'Inventore cupiditate natus aspernatur aliquam.', 'N/A', 0, '3'),
+(85, 10, 'checkbox', 'Numquam ut nihil enim.', 'N/A', 0, '4'),
+(86, 19, 'radio', 'Which country are you from?', 'N/A', 0, '0'),
+(87, 19, 'text', 'What is your name?', 'N/A', 0, '1'),
+(88, 20, 'radio', 'ASFASDFASD', 'N/A', 0, '0'),
+(89, 20, 'checkbox', 'AFASDF ASDFAS ASD FASD', 'N/A', 0, '1'),
+(91, 22, 'radio', 'My First Question', 'N/A', 0, '0'),
+(92, 22, 'text', 'fasdfasd saf asdf asd', 'N/A', 0, '2'),
+(93, 22, 'checkbox', 'This is my 2nd Question', 'N/A', 0, '1'),
+(94, 21, 'text', ' ASFASDF SADFSAD F ASSADF ASD SDF?', 'N/A', 0, '0');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `salesforce_account`
+--
+
+CREATE TABLE `salesforce_account` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `access_token` varchar(255) NOT NULL,
+  `refresh_token` varchar(255) NOT NULL,
+  `instance_url` varchar(255) NOT NULL,
+  `issued_at` datetime NOT NULL,
+  `expires_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `salesforce_account`
+--
+
+INSERT INTO `salesforce_account` (`id`, `user_id`, `access_token`, `refresh_token`, `instance_url`, `issued_at`, `expires_at`) VALUES
+(10, 17, '00Dd200000HWEMD!AQEAQNT8.m1VRmHbwpY3Z.whZ.5VNv7K8YprI07cz2H79qN66y_QjaIwduXIC2jo_f23I1Xx7MMitY8w5RNi4LF19b2XZ9G6', '5Aep861Jfo34KnkW6KTwsrywtA_dwxrJmLY5IOLIWyz50W68oQrdUhks8_5N9x_WucHkdyp0w85zDFJovTjD0cD', 'https://intransition-dev-ed.develop.my.salesforce.com', '2025-07-16 04:32:59', '2025-07-16 04:32:59'),
+(11, 23, '00Dd200000HWEMD!AQEAQD0cMoH8w_oDDAcOfWKRssNIymoLPccIjwZL1cl5sh7HKVaRm3LWrTMBx85OmCxY5FHZg9LOOkeTAOvw8_8j8xs0o9PW', '5Aep861Jfo34KnkW6KTwsrywtA_dwxrJmLY5IOLIWyz50W68oSX_QKIOOUSjU7xJRXhs9Xy3qMVMJ8T9ekxxq08', 'https://intransition-dev-ed.develop.my.salesforce.com', '2025-07-16 01:53:13', '2025-07-16 01:53:13');
 
 -- --------------------------------------------------------
 
@@ -556,20 +434,18 @@ CREATE TABLE `template` (
 
 INSERT INTO `template` (`id`, `user_id`, `topic`, `title`, `description`, `image`, `is_public`, `version`, `created_at`, `last_updated_at`) VALUES
 (1, 11, 'Poll', 'Repellat et ut quisquam.', 'Quidem qui sunt et voluptatem tempora nam voluptas. Vel eum excepturi quod molestiae assumenda. Dolor fugit minus et dolores est voluptatem. Molestias aut illo praesentium numquam blanditiis.', 'https://via.placeholder.com/600x400.png/0044ff?text=architecto', 1, '1', '2025-03-13 19:42:50', '2025-01-06 02:28:45'),
-(2, 11, 'Feedback', 'Quia quis explicabo possimus.', 'Exercitationem quia qui consequuntur. Quasi et blanditiis est rerum quisquam enim. Illo tenetur eum et est fugiat quis. Hic recusandae quos et ipsa voluptas sit a.', 'https://via.placeholder.com/600x400.png/00ddbb?text=nihil', 0, '1', '2025-03-16 00:38:15', '2025-01-28 06:31:33'),
+(2, 17, 'Feedback', 'Quia quis explicabo possimus.', 'Exercitationem quia qui consequuntur. Quasi et blanditiis est rerum quisquam enim. Illo tenetur eum et est fugiat quis. Hic recusandae quos et ipsa voluptas sit a.', 'https://via.placeholder.com/600x400.png/00ddbb?text=nihil', 0, '1', '2025-03-16 00:38:15', '2025-01-28 06:31:33'),
 (3, 11, 'Poll', 'Voluptatem optio eos.', 'Ea temporibus velit debitis assumenda porro doloribus. Sint et odio at id. Consectetur cum ullam consequuntur ea dolorum. Quisquam cum nihil repellat eius.', 'https://via.placeholder.com/600x400.png/00cccc?text=eos', 1, '1', '2025-05-18 18:18:39', '2025-01-23 08:59:06'),
-(4, 12, 'Quiz', 'Tempora et tempore.', 'Et ut maxime et delectus dolore. Natus blanditiis et qui aperiam dolores. A harum distinctio recusandae sunt perspiciatis soluta.', 'https://via.placeholder.com/600x400.png/00ee33?text=exercitationem', 1, '1', '2025-03-12 10:41:30', '2025-03-24 04:06:58'),
-(5, 12, 'Survey', 'Incidunt dolorem ut eius.', 'Eos occaecati voluptatem provident aperiam. Officiis nihil iste architecto enim. Animi id omnis dicta atque.', 'https://via.placeholder.com/600x400.png/00dd44?text=eos', 1, '1', '2025-04-12 12:08:06', '2025-02-08 06:33:16'),
+(5, 17, 'Survey', 'Incidunt dolorem ut eius.', 'Eos occaecati voluptatem provident aperiam. Officiis nihil iste architecto enim. Animi id omnis dicta atque.', 'https://via.placeholder.com/600x400.png/00dd44?text=eos', 0, '1', '2025-04-12 12:08:06', '2025-02-08 06:33:16'),
 (6, 12, 'Poll', 'Assumenda labore numquam aut.', 'Quam nam et eveniet qui. Est quisquam rerum asperiores et sequi. Inventore atque aut velit quo quos ut consequuntur. Eum a libero est consequuntur.', 'https://via.placeholder.com/600x400.png/00cc11?text=omnis', 1, '1', '2025-03-20 08:16:44', '2025-03-30 14:12:59'),
 (7, 13, 'Poll', 'Earum placeat inventore fugit.', 'Animi quam error qui aut doloribus. Libero et illum aut quasi exercitationem.', 'https://via.placeholder.com/600x400.png/0033bb?text=ipsa', 1, '1', '2025-01-23 05:17:06', '2025-05-11 12:06:04'),
-(8, 13, 'Poll', 'Aperiam iste nesciunt.', 'Totam culpa corporis enim corrupti voluptatem officia itaque. Consectetur possimus qui perspiciatis magnam eveniet recusandae. Accusamus sapiente hic nostrum illum perspiciatis reiciendis.', 'https://via.placeholder.com/600x400.png/0044dd?text=beatae', 1, '1', '2025-06-16 16:56:57', '2025-04-03 02:58:36'),
 (9, 13, 'Survey', 'Ad incidunt.', 'Accusamus quae ut molestiae exercitationem voluptatem praesentium. Natus et et aliquid vitae adipisci eius ipsam. Eum amet autem libero optio delectus quia. Quisquam nobis totam rerum qui eum eos laborum.', 'https://via.placeholder.com/600x400.png/0011bb?text=dicta', 1, '1', '2024-12-27 15:56:31', '2025-02-25 17:12:54'),
-(10, 14, 'Feedback', 'Doloremque aspernatur.', 'Magni ut dolores excepturi. Corporis totam aut beatae sit hic quo tenetur. Omnis nemo distinctio sequi praesentium magni quis non. Aut amet ipsa numquam.', 'https://via.placeholder.com/600x400.png/00cc66?text=facilis', 1, '1', '2025-06-11 23:03:19', '2025-04-26 03:32:10'),
-(11, 14, 'Survey', 'Aperiam laudantium culpa id.', 'Laborum est ab enim cumque ullam. Ipsam sapiente distinctio reiciendis. Voluptate molestiae nobis consectetur culpa.', 'https://via.placeholder.com/600x400.png/0088bb?text=nemo', 1, '1', '2025-01-19 09:00:41', '2024-12-30 16:45:54'),
-(12, 14, 'Survey', 'Cum amet delectus dolorem.', 'Voluptatem recusandae soluta non iusto eius ab quia vel. Voluptatem saepe veniam dolorem voluptas ut atque. Occaecati sit eveniet qui fugit. Quasi dolores doloribus saepe voluptatem et tempore omnis.', 'https://via.placeholder.com/600x400.png/00aa11?text=nihil', 1, '1', '2025-04-02 14:06:35', '2025-05-30 05:16:34'),
-(13, 15, 'Survey', 'Ipsum temporibus magni est quam.', 'Sit nisi ex est omnis quaerat natus. Expedita omnis dicta dolores eaque delectus dignissimos placeat rerum. Rem quia accusantium voluptatem eum ut modi. Laudantium in doloribus est sit repellat eos aliquid.', 'https://via.placeholder.com/600x400.png/0099cc?text=iste', 1, '1', '2025-01-29 23:57:43', '2025-04-23 06:46:34'),
-(14, 15, 'Survey', 'Quae neque eum excepturi.', 'Et distinctio culpa est ab aut. Dolorem quae fugiat veniam eos voluptates aliquam corrupti. Beatae nisi doloribus ea quia odit.', 'https://via.placeholder.com/600x400.png/00cc55?text=nemo', 1, '1', '2025-01-09 22:22:37', '2025-03-18 13:28:11'),
-(15, 15, 'Survey', 'Consequatur eum et qui.', 'Nisi cum doloribus vel inventore. Temporibus quisquam ipsa nobis voluptate quasi. Nihil omnis cupiditate beatae occaecati vel. Fugit rerum dolores aliquid et quis sed.', 'https://via.placeholder.com/600x400.png/009922?text=aut', 1, '1', '2025-02-18 06:42:11', '2025-02-23 05:59:44');
+(10, 17, 'survey', 'Doloremque aspernatur.', 'Magni ut dolores excepturi. Corporis totam aut beatae sit hic quo tenetur. Omnis nemo distinctio sequi praesentium magni quis non. Aut amet ipsa numquam.', 'uploads/forms/unsplash-Denys-Nevozhai_6864830c27368.jpg', 1, '2', '2025-06-11 23:03:19', '2025-07-02 06:53:32'),
+(18, 17, 'poll', 'My First Form', 'Excited to submit. Updating also done !', 'uploads/forms/unsplash-Jesse-Bowser_686440aa7396d.jpg', 0, '4', '2025-07-02 02:10:18', '2025-07-02 04:40:11'),
+(19, 17, 'survey', 'test sad', 'Final Test', 'uploads/forms/unsplash-Rachel-Davis_68662afa975d9.jpg', 0, '1', '2025-07-03 13:02:19', '2025-07-03 13:02:19'),
+(20, 17, 'survey', 'TST', 'FASFASDFFSF', 'uploads/forms/unsplash-Peter-Conlan_6868f7ea84006.jpg', 0, '1', '2025-07-05 16:01:15', '2025-07-05 16:01:15'),
+(21, 17, 'survey', 'ASDFA S SDAF AS', 'FADSF ASF FASDF ADSF DSF ASF ASDASDF DSFAS', 'uploads/forms/photo-1552819686-670bdfa2b85b_686f46717a8e2.jpg', 1, '2', '2025-07-05 23:59:54', '2025-07-10 10:49:53'),
+(22, 21, 'survey', 'Exam', 'Please help me out', 'uploads/forms/unsplash-Nathan-Anderson-1_686d218c73b09.jpg', 1, '1', '2025-07-08 19:47:56', '2025-07-08 19:47:56');
 
 -- --------------------------------------------------------
 
@@ -597,9 +473,6 @@ INSERT INTO `template_tag` (`id`, `template_id`, `tag`) VALUES
 (7, 3, 'placeat'),
 (8, 3, 'eos'),
 (9, 3, 'minima'),
-(10, 4, 'at'),
-(11, 4, 'necessitatibus'),
-(12, 4, 'reprehenderit'),
 (13, 5, 'laboriosam'),
 (14, 5, 'vitae'),
 (15, 5, 'perspiciatis'),
@@ -609,30 +482,24 @@ INSERT INTO `template_tag` (`id`, `template_id`, `tag`) VALUES
 (19, 7, 'quas'),
 (20, 7, 'rerum'),
 (21, 7, 'non'),
-(22, 8, 'dolorum'),
-(23, 8, 'illum'),
-(24, 8, 'veniam'),
 (25, 9, 'dolores'),
 (26, 9, 'a'),
 (27, 9, 'perferendis'),
-(28, 10, 'architecto'),
-(29, 10, 'repudiandae'),
-(30, 10, 'reiciendis'),
-(31, 11, 'quasi'),
-(32, 11, 'quo'),
-(33, 11, 'minima'),
-(34, 12, 'distinctio'),
-(35, 12, 'necessitatibus'),
-(36, 12, 'veritatis'),
-(37, 13, 'sed'),
-(38, 13, 'quos'),
-(39, 13, 'ex'),
-(40, 14, 'vitae'),
-(41, 14, 'dignissimos'),
-(42, 14, 'unde'),
-(43, 15, 'asperiores'),
-(44, 15, 'ut'),
-(45, 15, 'reiciendis');
+(60, 18, 'firstform'),
+(61, 18, 'beautiful'),
+(62, 10, 'architecto'),
+(63, 10, 'repudiandae'),
+(64, 10, 'reiciendis'),
+(65, 19, 'survey'),
+(66, 19, 'india'),
+(67, 19, 'russia'),
+(68, 20, 'ADSA'),
+(69, 20, 'ASDFAS'),
+(73, 22, 'architecto'),
+(74, 22, 'beautiful'),
+(75, 21, 'FASDF '),
+(76, 21, 'AS DFDS F'),
+(77, 21, 'ASF ASD');
 
 -- --------------------------------------------------------
 
@@ -644,20 +511,24 @@ CREATE TABLE `user` (
   `id` int(11) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `role` varchar(255) NOT NULL,
-  `created_at` datetime NOT NULL
+  `created_at` datetime NOT NULL,
+  `roles` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '(DC2Type:json)' CHECK (json_valid(`roles`))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id`, `email`, `password`, `role`, `created_at`) VALUES
-(11, 'hblanda@gerlach.biz', 'password', 'admin', '2024-08-28 02:20:45'),
-(12, 'vwolff@langosh.com', 'password', 'user', '2025-04-01 06:07:32'),
-(13, 'torrance.reichert@hettinger.com', 'password', 'user', '2024-07-21 11:43:42'),
-(14, 'hassie.bernhard@yahoo.com', 'password', 'user', '2025-04-27 21:47:26'),
-(15, 'brenden.kulas@gmail.com', 'password', 'user', '2025-05-05 06:35:50');
+INSERT INTO `user` (`id`, `email`, `password`, `created_at`, `roles`) VALUES
+(11, 'baxoso6606@baxima.com', '$2y$13$k3RGKUyJ2YsktvvNmTVcKOXOrEJ1AVdUuqVNBh0qIlDxaW6SB8r/C', '2024-08-28 02:20:45', '[\"ROLE_USER\"]'),
+(12, 'vwolff@langosh.com', '$2y$13$k3RGKUyJ2YsktvvNmTVcKOXOrEJ1AVdUuqVNBh0qIlDxaW6SB8r/C', '2025-04-01 06:07:32', '[\"ROLE_USER\"]'),
+(13, 'torrance.reicherte@hettinger.com', '$2y$13$k3RGKUyJ2YsktvvNmTVcKOXOrEJ1AVdUuqVNBh0qIlDxaW6SB8r/C', '2024-07-21 11:43:42', '[\"ROLE_USER\"]'),
+(17, 'test1@gmail.com', '$2y$13$phbCyDYM3oButpIEkG6o6OR57XzX9vG3MGi0Hcr0q7qc05w6YB1Ee', '2025-06-28 21:24:35', '[\"ROLE_USER\"]'),
+(18, 'admin@gmail.com', '$2y$13$qwWFdBObgFoDyPwxaM3W8OaUg74tM5O8ESbTHPWbgP.hh2cEyutJO', '2025-06-28 21:24:35', '[\"ROLE_ADMIN\"]'),
+(19, 'test3@gmail.com', '$2y$13$yhnmMnIkOXVnKfuGdDW5hO9MTB4.Z1X8D2maI9Oy1Ok6hwUmB7g.m', '2025-07-03 13:24:08', '[\"ROLE_USER\"]'),
+(21, 'test5@gmail.com', '$2y$13$jpwSj/RW5c2m.UBHdQbwTO/.iLYQNL8UxrXEOhwp17hHISz.oIeZ.', '2025-07-08 19:44:41', '[\"ROLE_USER\"]'),
+(22, 'test6@gmail.com', '$2y$13$JYByBYNCNsVvdvOapC/QueNodvkJlgCYUw5BaApYMn.SShUS8emtC', '2025-07-12 21:01:28', '[\"ROLE_USER\"]'),
+(23, 'test2@gmail.com', '$2y$13$aj/VTqdYaakuW.PE14wtlOpEyDRxEbSriFPxnCinJJwYdFwfbOcGG', '2025-07-16 00:45:17', '[\"ROLE_USER\"]');
 
 --
 -- Indexes for dumped tables
@@ -671,6 +542,13 @@ ALTER TABLE `answer`
   ADD KEY `IDX_DADD4A251E27F6BF` (`question_id`),
   ADD KEY `IDX_DADD4A25D3823036` (`choosen_option_id`),
   ADD KEY `IDX_DADD4A25FBABB4DB` (`form_submit_id`);
+
+--
+-- Indexes for table `api_token`
+--
+ALTER TABLE `api_token`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `UNIQ_7BA2F5EBA76ED395` (`user_id`);
 
 --
 -- Indexes for table `comment`
@@ -717,6 +595,13 @@ ALTER TABLE `question`
   ADD KEY `IDX_B6F7494E5DA0FB8` (`template_id`);
 
 --
+-- Indexes for table `salesforce_account`
+--
+ALTER TABLE `salesforce_account`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `UNIQ_DB842773A76ED395` (`user_id`);
+
+--
 -- Indexes for table `template`
 --
 ALTER TABLE `template`
@@ -734,7 +619,8 @@ ALTER TABLE `template_tag`
 -- Indexes for table `user`
 --
 ALTER TABLE `user`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `UNIQ_IDENTIFIER_EMAIL` (`email`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -744,55 +630,67 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `answer`
 --
 ALTER TABLE `answer`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=111;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=117;
+
+--
+-- AUTO_INCREMENT for table `api_token`
+--
+ALTER TABLE `api_token`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `comment`
 --
 ALTER TABLE `comment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT for table `form_submit`
 --
 ALTER TABLE `form_submit`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT for table `like`
 --
 ALTER TABLE `like`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `option`
 --
 ALTER TABLE `option`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=125;
 
 --
 -- AUTO_INCREMENT for table `question`
 --
 ALTER TABLE `question`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
+
+--
+-- AUTO_INCREMENT for table `salesforce_account`
+--
+ALTER TABLE `salesforce_account`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `template`
 --
 ALTER TABLE `template`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `template_tag`
 --
 ALTER TABLE `template_tag`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- Constraints for dumped tables
@@ -805,6 +703,12 @@ ALTER TABLE `answer`
   ADD CONSTRAINT `FK_DADD4A251E27F6BF` FOREIGN KEY (`question_id`) REFERENCES `question` (`id`),
   ADD CONSTRAINT `FK_DADD4A25D3823036` FOREIGN KEY (`choosen_option_id`) REFERENCES `option` (`id`),
   ADD CONSTRAINT `FK_DADD4A25FBABB4DB` FOREIGN KEY (`form_submit_id`) REFERENCES `form_submit` (`id`);
+
+--
+-- Constraints for table `api_token`
+--
+ALTER TABLE `api_token`
+  ADD CONSTRAINT `FK_7BA2F5EBA76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
 
 --
 -- Constraints for table `comment`
@@ -838,6 +742,12 @@ ALTER TABLE `option`
 --
 ALTER TABLE `question`
   ADD CONSTRAINT `FK_B6F7494E5DA0FB8` FOREIGN KEY (`template_id`) REFERENCES `template` (`id`);
+
+--
+-- Constraints for table `salesforce_account`
+--
+ALTER TABLE `salesforce_account`
+  ADD CONSTRAINT `FK_DB842773A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
 
 --
 -- Constraints for table `template`

@@ -70,6 +70,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
     private ?SalesforceAccount $salesforceAccount = null;
 
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?ApiToken $apiToken = null;
+
     public function __construct()
     {
         $this->templates = new ArrayCollection();
@@ -292,6 +295,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         $this->salesforceAccount = $salesforceAccount;
+
+        return $this;
+    }
+
+    public function getApiToken(): ?ApiToken
+    {
+        return $this->apiToken;
+    }
+
+    public function setApiToken(ApiToken $apiToken): static
+    {
+        // set the owning side of the relation if necessary
+        if ($apiToken->getUser() !== $this) {
+            $apiToken->setUser($this);
+        }
+
+        $this->apiToken = $apiToken;
 
         return $this;
     }

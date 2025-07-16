@@ -1,0 +1,5 @@
+dbname   : 
+username : sudittpi
+pass     : jitlEyiF0qd7
+host     : localhost
+port     : 3306

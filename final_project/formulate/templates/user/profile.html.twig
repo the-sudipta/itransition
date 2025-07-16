@@ -96,6 +96,28 @@
             transform: translateY(-2px);
         }
     </style>
+
+    <style>
+        /* API Access card */
+        .profile-card .api-access-group {
+            margin-top: 2rem;
+        }
+        .profile-card .token-input-group {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: .5rem;
+        }
+        .profile-card #token-label {
+            display: inline-block;
+            max-width: 100%;
+            background: #EDF2F7;
+            padding: .5rem 1rem;
+            border-radius: .75rem;
+            font-family: monospace;
+            word-break: break-all;
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
@@ -169,9 +191,64 @@
             {% endif %}
         </div>
 
+        {# — API Access — #}
+        <div class="profile-card">
+            <h2>API Access</h2>
+            <div class="api-access-group">
+                <div class="token-input-group">
+                    {% if app.user.apiToken is null %}
+                        <span id="token-label">Not generated yet</span>
+                        <form action="{{ path('api_token_generate') }}" method="POST" style="display:inline;">
+                            <button
+                                type="submit"
+                                style="background:#D69E2E;color:#fff;padding:.5rem 1rem;border:none;border-radius:1rem;cursor:pointer;"
+                            >Generate</button>
+                        </form>
+                    {% else %}
+                        <span id="token-label">{{ app.user.apiToken.token }}</span>
+                        <button
+                            id="copy-token-btn"
+                            type="button"
+                            style="background:#D69E2E;color:#fff;padding:.5rem 1rem;border:none;border-radius:1rem;cursor:pointer;"
+                        >Copy</button>
+                        <form
+                            action="{{ path('api_token_generate') }}"
+                            method="POST"
+                            style="display:inline;margin-left:.5rem;"
+                        >
+                            <button
+                                type="submit"
+                                style="background:#D69E2E;color:#fff;padding:.5rem 1rem;border:none;border-radius:1rem;cursor:pointer;"
+                            >Re-generate</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
     </div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const copyBtn    = document.getElementById('copy-token-btn');
+            const tokenLabel = document.getElementById('token-label');
+            if (copyBtn && tokenLabel) {
+                copyBtn.addEventListener('click', () => {
+                    navigator.clipboard.writeText(tokenLabel.textContent.trim()).then(() => {
+                        const original   = copyBtn.textContent;
+                        copyBtn.textContent      = 'Copied!';
+                        copyBtn.style.background = '#48BB78';
+                        setTimeout(() => {
+                            copyBtn.textContent      = original;
+                            copyBtn.style.background = '#D69E2E';
+                        }, 5000);
+                    });
+                });
+            }
+        });
+    </script>
 {% endblock %}

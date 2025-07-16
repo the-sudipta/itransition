@@ -1,0 +1,127 @@
+/* style.css */
+
+/* Reset & Base */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: Arial, sans-serif;
+    /*background: #f8f8f8;*/
+    /*background: #e1e1e1;*/
+    background: #d6d6d6;
+    color: #111;
+}
+
+/* Header */
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 40px;
+    background: #323232;              /* changed to white for elegance */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+header .logo img {
+    height: 40px;
+}
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+}
+nav ul li a {
+    text-decoration: none;
+    color: #ffffff;
+    padding-bottom: 5px;
+    font-weight: 500;
+    transition: color .2s, border-bottom .2s;
+}
+nav ul li a:hover {
+    color: #C49F60;
+}
+nav ul li a.active {
+    border-bottom: 2px solid #C49F60;
+    color: #C49F60;
+}
+
+/* Main Content Container */
+main {
+    max-width: 800px;                /* narrow so cards don't stretch too far */
+    margin: 60px auto;
+    padding: 0 20px;
+    text-align: center;
+}
+
+/* Page Title */
+main h1 {
+    font-size: 2.5rem;
+    display: inline-block;
+    position: relative;
+    margin-bottom: 40px;
+}
+main h1::after {
+    content: "";
+    display: block;
+    height: 3px;
+    width: 60px;
+    background: #C49F60;
+    margin: 8px auto 0;
+}
+
+/* Services Grid */
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 160px);  /* fixed 4 columns */
+    justify-content: center;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1100px) {
+    .services-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 800px) {
+    .services-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 500px) {
+    .services-grid { grid-template-columns: 1fr; }
+}
+
+/* === SERVICE CARD === */
+.service-item {
+    background: #fff;                  /* white cards */
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    width: 160px;
+    height: 160px;
+    display: flex;
+    flex-direction: column;            /* stack icon above text */
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: transform .2s, box-shadow .2s;
+}
+
+/* hover lift */
+.service-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+/* icon size + spacing */
+.service-icon {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 12px;
+}
+
+/* label style */
+.service-item span {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #111;
+    text-align: center;
+}
+
